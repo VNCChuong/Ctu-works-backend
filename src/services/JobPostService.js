@@ -22,7 +22,7 @@ const createJobPost = (newJobPost) => {
                 recruiter: recruiter,
                 keywords,
                 postViews: 0,
-                status: true,
+                statusSeeking: true,
             })
             if (createdJobPost) {
                 resolve({
@@ -93,10 +93,24 @@ const deleteJobPost = (id) => {
 
 
 
-const getAllJobPost = (id) => {
+const getAllJobPost = (filter) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const totalJobPost = await JobPost.find().sort({ createdAt: -1, updatedAt: -1 })
+            const { jobTitle, location, ...otherFilters } = filter;
+
+            // Create a filter object based on the provided filter
+            const filterObject = {
+                $and: [
+                    jobTitle ? { jobTitle: { $regex: jobTitle, $options: 'i' } } : {},
+                    location ? { location: { $regex: location, $options: 'i' } } : {},
+                    // Add other filters as needed
+                    ...Object.entries(otherFilters).map(([key, value]) => ({ [key]: { $regex: value, $options: 'i' } }))
+                ]
+            };
+            console.log(filterObject)
+            // Find job posts based on the filter object and sort them
+            const totalJobPost = await JobPost.find(filterObject).sort({ createdAt: -1, updatedAt: -1 });
+            // const totalJobPost = await JobPost.find({ "jobInformation.industry": "Kế Toán" })
             resolve({
                 status: 'OK',
                 message: 'SUCESSS',
@@ -137,28 +151,21 @@ const getMyJobPost = (id) => {
 const getDetailsJobPost = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const jobPost = await JobPost.findById({
-                _id: id
-            })
+            const jobPost = await JobPost.findByIdAndUpdate(
+                {
+                    _id: id
+                }, {
+                $inc: {
+                    postViews: + 1
+                }
+            }
+            )
             if (jobPost === null) {
                 resolve({
                     status: 'ERR',
                     message: 'The jobPost is not defined'
                 })
             }
-            // const productImage = [];
-            // const productPromises = order.orderItems.map(async (orderItem) => {
-            //     return await Product.findOne({ _id: orderItem.product.toString() });
-            // });
-            // const products = await Promise.all(productPromises);
-            // try {
-            //     products?.forEach((product) => {
-            //         productImage.push(product.image);
-            //     });
-
-            // } catch (error) {
-            //     // console.log(error)
-            // }
             resolve({
                 status: 'OK',
                 message: 'SUCESSS',

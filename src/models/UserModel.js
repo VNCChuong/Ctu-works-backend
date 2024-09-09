@@ -3,39 +3,42 @@ const userSchema = new mongoose.Schema(
     {
         role: {
             type: String,
-            enum: ['jobSeeker', 'recruiter'],
-            required: true
+            default: "jobSeeker",
+            // required: true
         },
         email: {
             type: String,
-            required: true,
+            // required: true,
             unique: true
         },
         password: {
             type: String,
-            required: true,
+            // required: true,
         },
-        firstName: {
+        fullName: {
             type: String,
-            required: true,
-        },
-        lastName: {
-            type: String,
-            required: true,
+            // required: true,
         },
         dateOfBirth: {
             // type: Date,
             type: String,
-            required: true,
+            // required: true,
         },
         phoneNumber: {
             type: String,
-            required: true,
+            // required: true,
             unique: true
         },
         desiredFields: {
             type: [String],
-            required: true,
+            // required: true,
+        },
+        avatar: {
+            type: String,
+            default: ''
+        },
+        introduce: {
+            type: String,
         },
         seekJobMode: {
             type: Boolean,
@@ -51,6 +54,18 @@ const userSchema = new mongoose.Schema(
             type: Boolean,
             default: false
         },
+        lastOnline: {
+            type: Date
+        },
+        gender: {
+            type: String
+        },
+        MSSV: {
+            type: String
+        },
+        industry: {
+            type: String
+        }
     },
     {
         timestamps: true

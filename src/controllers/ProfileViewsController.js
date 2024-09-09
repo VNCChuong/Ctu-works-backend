@@ -19,25 +19,6 @@ const createProfileViews = async (req, res) => {
 }
 
 
-const deleteSaveJob = async (req, res) => {
-    try {
-        const id = req.params.id
-        if (!id) {
-            return res.status(200).json({
-                status: 'ERR',
-                message: 'The id is required'
-            })
-        }
-        const response = await SaveJobService.deleteSaveJob(id)
-        return res.status(200).json(response)
-    } catch (e) {
-        return res.status(404).json({
-            message: e
-        })
-    }
-}
-
-
 const getMyProfileViews = async (req, res) => {
     try {
         const id = req.params.id
@@ -59,7 +40,6 @@ const getMyProfileViews = async (req, res) => {
 
 module.exports = {
     createProfileViews,
-    deleteSaveJob,
     getMyProfileViews,
 
 }

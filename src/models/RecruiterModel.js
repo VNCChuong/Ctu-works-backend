@@ -3,7 +3,7 @@ const recruiterSchema = new mongoose.Schema(
     {
         role: {
             type: String,
-            enum: ['jobSeeker', 'recruiter'],
+            enum: ['recruiter'],
             required: true
         },
         email: {
@@ -59,6 +59,9 @@ const recruiterSchema = new mongoose.Schema(
             type: Boolean,
             default: false
         },
+        lastOnline: {
+            type: Date
+        }
     },
     {
         timestamps: true

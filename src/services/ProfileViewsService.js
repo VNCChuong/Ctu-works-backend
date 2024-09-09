@@ -22,29 +22,6 @@ const createProfileViews = (newProfileViews) => {
     })
 }
 
-const deleteSaveJob = (id) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const checkSaveJob = await SaveJob.findOne({
-                _id: id
-            })
-            if (checkSaveJob === null) {
-                resolve({
-                    status: 'OK',
-                    message: 'The SaveJob is not defined'
-                })
-            }
-            await SaveJob.findByIdAndDelete(id)
-            resolve({
-                status: 'OK',
-                message: "Delete SaveJob success",
-            })
-        } catch (e) {
-            reject(e)
-        }
-    })
-}
-
 
 
 const getMyProfileViews = (id) => {
@@ -74,6 +51,5 @@ const getMyProfileViews = (id) => {
 
 module.exports = {
     createProfileViews,
-    deleteSaveJob,
     getMyProfileViews,
 }

@@ -1,0 +1,26 @@
+components:
+  schemas:
+    LoginBody:
+      type: object
+      properties:
+        email:
+          type: string
+          example: nguyenvana@gmail.com
+        password:
+          type: string
+          example: nguyenvana123
+    SuccessLogin:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        message:
+          type: string
+          example: Success
+        access_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZDg5YTRhZjVkZTJlNTBlNjNkZmQzZiIsImlhdCI6MTcyNTU2Mzk3MiwiZXhwIjoxNzI1NTY0MDAyfQ.h-_VdUIvxPz57WkUZWSc7Z4z6XJufzR7HODdqJnUBx0
+        refresh_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZDg5YTRhZjVkZTJlNTBlNjNkZmQzZiIsImlhdCI6MTcyNTU2Mzk3MiwiZXhwIjoxNzU3MDk5OTcyfQ.Gh8RxZrjYIp1GQjTkv19JkHWd7SPQAsDyBdaGViTXx

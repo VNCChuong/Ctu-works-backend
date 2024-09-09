@@ -27,7 +27,7 @@ const updateApply = (newApply) => {
     return new Promise(async (resolve, reject) => {
         try {
             const { id, status } = newApply
-            const apply = await Apply.find({
+            const apply = await Apply.findById({
                 _id: id
             })
             if (apply === null) {
@@ -36,7 +36,10 @@ const updateApply = (newApply) => {
                     message: 'The apply is not defined'
                 })
             }
-            const createdApply = await Apply.findOneAndUpdate(
+            const createdApply = await Apply.findByIdAndUpdate(
+                {
+                    _id: id
+                },
                 {
                     status: status,
                 },
@@ -58,7 +61,7 @@ const updateApply = (newApply) => {
 const deleteApply = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const checkApply = await Apply.findOne({
+            const checkApply = await Apply.findById({
                 _id: id
             })
             if (checkApply === null) {
@@ -113,8 +116,6 @@ const getMyApply = (id) => {
         }
     })
 }
-
-
 
 module.exports = {
     createApply,

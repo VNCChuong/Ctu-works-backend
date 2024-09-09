@@ -3,9 +3,12 @@ const bcrypt = require("bcrypt")
 const { genneralAccessToken, genneralRefreshToken } = require("./JwtService")
 const { sendVerificationEmail } = require('./EmailService')
 const crypto = require('crypto');
+const fs = require('fs')
+const excelToJson = require('convert-excel-to-json')
+
 const createUser = (newUser) => {
     return new Promise(async (resolve, reject) => {
-        const { role, firstName, lastName, dateOfBirth, phoneNumber, desiredFields, email, password } = newUser
+        const { role, fullName, dateOfBirth, phoneNumber, desiredFields, email, password } = newUser
         try {
             const checkUser = await User.findOne({
                 email: email
@@ -28,9 +31,7 @@ const createUser = (newUser) => {
             const hash = bcrypt.hashSync(password, 10)
             const verificationToken = crypto.randomBytes(32).toString('hex');
             const createdUser = await User.create({
-                role,
-                firstName,
-                lastName,
+                fullName,
                 dateOfBirth,
                 phoneNumber,
                 desiredFields,
@@ -303,6 +304,48 @@ const updateSeekJob = (id) => {
     })
 }
 
+const uploadfile = (path) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            // -> Read Excel File to Json Data
+            const excelData = excelToJson({
+                sourceFile: path,
+                sheets: [{
+                    // Excel Sheet Name
+                    name: 'Table',
+
+                    // Header Row -> be skipped and will not be present at our result object.
+                    header: {
+                        rows: 1
+                    },
+
+                    // Mapping columns to keys
+                    columnToKey:
+                    {
+                        A: 'email',
+                        B: 'phoneNumber',
+                        C: 'MSSV',
+                        D: 'lastName',
+                        E: 'dateOfBirth',
+                        F: 'gender',
+                        G: 'industry'
+
+                    }
+                }]
+            });
+            User.insertMany(excelData.Table)
+            fs.unlinkSync(path)
+            resolve({
+                status: 'OK',
+                message: 'create user in file success',
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+
 module.exports = {
     createUser,
     loginUser,
@@ -312,5 +355,6 @@ module.exports = {
     getDetailsUser,
     deleteManyUser,
     changePassword,
-    updateSeekJob
+    updateSeekJob,
+    uploadfile
 }

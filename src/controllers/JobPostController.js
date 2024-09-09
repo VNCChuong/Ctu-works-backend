@@ -60,7 +60,10 @@ const deleteJobPost = async (req, res) => {
 
 const getAllJobPost = async (req, res) => {
     try {
-        const response = await JobPostService.getAllJobPost()
+        // const response = await JobPostService.getAllJobPost()
+        const { g, level } = req.query
+        // console.log(filter)
+        const response = await JobPostService.getAllJobPost(req.query)
         return res.status(200).json(response)
     } catch (e) {
         return res.status(404).json({

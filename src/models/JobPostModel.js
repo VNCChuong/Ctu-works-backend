@@ -89,9 +89,13 @@ const jobPostSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    status: {
+    statusSeeking: {
         type: Boolean,
     },
+    statusApproval:{
+        type: Boolean,
+        default: false
+    }
 });
 
 const jobPost = mongoose.model('jobPost', jobPostSchema);

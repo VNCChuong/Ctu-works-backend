@@ -3,32 +3,28 @@ const JwtService = require('../services/JwtService')
 
 const createUser = async (req, res) => {
     try {
-        if (req.body.role == "jobSeeker") {
-            const { role, firstName, lastName, dateOfBirth, phoneNumber, desiredFields, email, password, confirmPassword } = req.body
-            const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
-            const isCheckEmail = reg.test(email)
-            if (!role || !firstName || !lastName || !dateOfBirth || !phoneNumber ||
-                !desiredFields || !email || !password || !confirmPassword) {
-                return res.status(200).json({
-                    status: 'ERR',
-                    message: 'The input is required'
-                })
-            } else if (!isCheckEmail) {
-                return res.status(200).json({
-                    status: 'ERR',
-                    message: 'The input is email'
-                })
-            } else if (password !== confirmPassword) {
-                return res.status(200).json({
-                    status: 'ERR',
-                    message: 'The password is equal confirmPassword'
-                })
-            }
-            const response = await UserService.createUser(req.body)
-            return res.status(200).json(response)
-        } else {
-
+        const { fullName, dateOfBirth, phoneNumber, desiredFields, email, password, confirmPassword } = req.body
+        const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
+        const isCheckEmail = reg.test(email)
+        if (!fullName || !dateOfBirth || !phoneNumber ||
+            !desiredFields || !email || !password || !confirmPassword) {
+            return res.status(200).json({
+                status: 'ERR',
+                message: 'The input is required'
+            })
+        } else if (!isCheckEmail) {
+            return res.status(200).json({
+                status: 'ERR',
+                message: 'The input is email'
+            })
+        } else if (password !== confirmPassword) {
+            return res.status(200).json({
+                status: 'ERR',
+                message: 'The password is equal confirmPassword'
+            })
         }
+        const response = await UserService.createUser(req.body)
+        return res.status(200).json(response)
     } catch (e) {
         return res.status(404).json({
             message: e
@@ -215,7 +211,7 @@ const changePassword = async (req, res) => {
 
 const updateSeekJob = async (req, res) => {
     try {
-        const id  = req.params.id
+        const id = req.params.id
         if (!id) {
             return res.status(200).json({
                 status: "ERR",
@@ -223,6 +219,24 @@ const updateSeekJob = async (req, res) => {
             })
         }
         const response = await UserService.updateSeekJob(id)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+const uploadfile = async (req, res) => {
+    try {
+        const path = req.file.path
+        if (!path) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await UserService.uploadfile(path)
         return res.status(200).json(response)
     } catch (e) {
         return res.status(404).json({
@@ -241,5 +255,6 @@ module.exports = {
     logoutUser,
     deleteMany,
     changePassword,
-    updateSeekJob
+    updateSeekJob,
+    uploadfile
 }

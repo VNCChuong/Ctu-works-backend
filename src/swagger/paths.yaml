@@ -1,0 +1,351 @@
+openapi: 3.0.3
+info:
+  title: Swagger Petstore - OpenAPI 3.0
+  description: |-
+    This is a sample Pet Store Server based on the OpenAPI 3.0 specification.  You can find out more about
+    Swagger at [https://swagger.io](https://swagger.io). In the third iteration of the pet store, we've switched to the design first approach!
+    You can now help us improve the API whether it's by making changes to the definition itself or to the code.
+    That way, with time, we can improve the API in general, and expose some of the new features in OAS3.
+
+    _If you're looking for the Swagger 2.0/OAS 2.0 version of Petstore, then click [here](https://editor.swagger.io/?url=https://petstore.swagger.io/v2/swagger.yaml). Alternatively, you can load via the `Edit > Load Petstore OAS 2.0` menu option!_
+
+    Some useful links:
+    - [The Pet Store repository](https://github.com/swagger-api/swagger-petstore)
+    - [The source API definition for the Pet Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/resources/openapi.yaml)
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://localhost:3001/
+tags:
+  - name: user
+    description: Người tìm việc
+paths:
+  /api/user/sign-in:
+    post:
+      tags:
+        - user
+      summary: Đăng nhập người tìm việc
+      operationId: login
+      requestBody:
+        description: "Đăng nhập"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginBody"
+        required: true
+      responses:
+        "200":
+          description: Đăng nhập thành công
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessLogin"
+        "422":
+          description: Invalid input
+  /api/user/sign-up:
+    post:
+      tags:
+        - user
+      summary: Đăng kí người tìm việc
+      operationId: signup
+      requestBody:
+        description: "Đăng kí"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignUpBody"
+        required: true
+      responses:
+        "200":
+          description: Đăng kí thành công
+        "422":
+          description: Invalid input
+  /api/user/log-out:
+    get:
+      tags:
+        - user
+      summary: Đăng xuất
+      description: ""
+      operationId: logoutUser
+      parameters: []
+      responses:
+        default:
+          description: successful operation
+  /api/user/delete-user/{id}:
+    delete:
+      tags:
+        - user
+      summary: Xóa tài khoản người tìm việc.
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          description: Xóa tài khoản người tìm việc
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Xóa tài khoản thành công
+        "400":
+          description: Invalid username supplied
+        "404":
+          description: User not found
+  /api/user/change-password:
+    put:
+      tags:
+        - user
+      summary: Đổi mật khẩu người tìm việc
+      operationId: changePassword
+      requestBody:
+        description: "Đổi mật khẩu người tìm việc"
+        content:
+          application/json:
+            schema:
+              properties:
+                userId:
+                  type: string
+                oldPassword:
+                  type: string
+                newPassword:
+                  type: string
+        required: true
+      responses:
+        "200":
+          description: Đăng nhập thành công
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessLogin"
+        "422":
+          description: Invalid input
+  /api/user/update-user/{id}:
+    put:
+      tags:
+        - user
+      summary: Cập nhập thông tin người tìm việc
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          description: Cập nhật thông tin người tìm việc
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                fullName:
+                  type: string
+                  example: "Vo Nguyen Chuong 1"
+                dateOfBirth:
+                  type: string
+                  example: "28/01/2002"
+                phoneNumber:
+                  type: number
+                  example: "0345494705"
+                desiredFields:
+                  type: array
+                  example: ["IT", "Ke Toan", "Phan Mem"]
+                MSSV:
+                  type: string
+                  example: "B1234567"
+                gender:
+                  type: string
+                  example: "Nam"
+                introduce:
+                  type: string
+                  example: "Gioi thieu ve ban than"
+                industry:
+                  type: string
+                  example: "Cong nghe thong tin"
+        required: true
+      responses:
+        "200":
+          description: Cập nhật thông tin thành công
+          content:
+            application/json:
+              schema:
+                properties:
+                  role:
+                    type: string
+                    example: "jobSeeker"
+                  fullName:
+                    type: string
+                    example: "Vo Nguyen Chuong 1"
+                  dateOfBirth:
+                    type: string
+                    example: "28/01/2002"
+                  phoneNumber:
+                    type: number
+                    example: "0345494705"
+                  desiredFields:
+                    type: array
+                    example: ["IT", "Ke Toan", "Phan Mem"]
+                  email:
+                    type: string
+                    example: "chuongvo900@gmail.com"
+                  MSSV:
+                    type: string
+                    example: "B1234567"
+                  gender:
+                    type: string
+                    example: "Nam"
+                  introduce:
+                    type: string
+                    example: ""
+                  industry:
+                    type: string
+                    example: "Cong nghe thong tin"
+        "422":
+          description: Invalid input
+  /api/user/update-seek-job-mode/{id}:
+    put:
+      tags:
+        - user
+      summary: Bật chế độ tìm việc
+      operationId: seekJobMode
+      parameters:
+        - name: id
+          in: path
+          description: id của người tìm việc
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Bật chế độ tìm việc thành công
+        "422":
+          description: Invalid input
+  /api/user/getAll:
+    get:
+      tags:
+        - user
+      summary: Lấy tất cả tài khoản người tìm việc
+      operationId: getAllUser
+      responses:
+        "200":
+          description: Lấy thông tin người dùng thành công
+        "422":
+          description: Invalid input
+  /api/user/get-details/{id}:
+    get:
+      tags:
+        - user
+      summary: Lấy thông tin người tìm việc cụ thể
+      operationId: getDetailUser
+      parameters:
+        - name: id
+          in: path
+          description: "Lấy thông tin người tìm việc cụ thể"
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Lấy thông tin người tìm việc cụ thể thành công
+        "422":
+          description: Invalid input
+  /api/user/delete-many:
+    post:
+      tags:
+        - user
+      summary: Xóa nhiều tài khoản người tìm việc cùng lúc
+      operationId: deleteManyUser
+      requestBody:
+        description: "Xóa nhiều tài khoản người tìm việc cùng lúc"
+        content:
+          application/json:
+            schema:
+              properties:
+                userId:
+                  type: array
+                  example:
+                    [
+                      "66dcb19ef533c72b0b0b94d4",
+                      "66dcb19ef533c72b0b0b94d5",
+                      "66dcb19ef533c72b0b0b94d6",
+                    ]
+        required: true
+      responses:
+        "200":
+          description: Xóa người dùng thành công
+        "422":
+          description: Invalid input
+components:
+  schemas:
+    LoginBody:
+      type: object
+      properties:
+        email:
+          type: string
+          example: nguyenvana@gmail.com
+        password:
+          type: string
+          example: nguyenvana123
+    SuccessLogin:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        message:
+          type: string
+          example: Success
+        access_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZDg5YTRhZjVkZTJlNTBlNjNkZmQzZiIsImlhdCI6MTcyNTU2Mzk3MiwiZXhwIjoxNzI1NTY0MDAyfQ.h-_VdUIvxPz57WkUZWSc7Z4z6XJufzR7HODdqJnUBx0
+        refresh_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZDg5YTRhZjVkZTJlNTBlNjNkZmQzZiIsImlhdCI6MTcyNTU2Mzk3MiwiZXhwIjoxNzU3MDk5OTcyfQ.Gh8RxZrjYIp1GQjTkv19JkHWd7SPQAsDyBdaGViTXx
+    SignUpBody:
+      type: object
+      properties:
+        email:
+          type: string
+          example: nguyenvana@gmail.com
+        fullName:
+          type: string
+          example: Nguyen Van A
+        password:
+          type: string
+          example: nguyenvana123
+        confirmPassword:
+          type: string
+          example: nguyenvana123
+        dateOfBirth:
+          type: string
+          example: 01/01/2000
+        phoneNumber:
+          type: number
+          example: 0123456789
+        desiredFields:
+          type: array
+          example: ["nguyenvana123", "IT", "Test"]
+        MSSV:
+          type: string
+          example: B1234567
+        industry:
+          type: string
+          example: Công nghệ thông tin
+        gender:
+          type: string
+          example: "Nam"

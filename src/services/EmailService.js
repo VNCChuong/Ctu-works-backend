@@ -52,7 +52,7 @@ const sendVerificationEmail = async (email, verificationLink) => {
       name: 'Ctu-works',
       address: process.env.MAIL_ACCOUNT,
     },
-    to: email,
+    to: "chuongvo900@gmail.com",
     subject: 'Xác nhận đăng ký tài khoản',
     html: `
       <h1>Xác nhận đăng ký tài khoản</h1>
