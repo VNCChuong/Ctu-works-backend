@@ -298,6 +298,27 @@ paths:
           description: Xóa người dùng thành công
         "422":
           description: Invalid input
+  /api/user/uploadfile:
+    post:
+      tags:
+        - user
+      summary: Upfile dữ liệu để tạo người dùng
+      operationId: uploadFileUser
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: Thêm người dùng từ file thành công
+        "422":
+          description: Invalid input
   /api/recruiter/sign-in-recruiter:
     post:
       tags:
@@ -824,6 +845,336 @@ paths:
           description: Invalid input
         "404":
           description: Not found
+  /api/jobpost/create:
+    post:
+      tags:
+        - jobpost
+      summary: Tạo đơn tuyển dụng
+      operationId: createjobpost
+      requestBody:
+        description: "Tạo đơn tuyển dụng"
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                companyName:
+                  type: string
+                  example: "CTU Company"
+                companyScale:
+                  type: string
+                  example: "700-900"
+                companyAddress:
+                  type: string
+                  example: "Khu II D 3 thang 2, Xuan Khanh, Ninh Kieu, Can Tho"
+                staffName:
+                  type: string
+                  example: "Mr/Mrs Name"
+                jobTitle:
+                  type: string
+                  example: "Tuyen nhan vien BE"
+                expirationDate:
+                  type: string
+                  example: "05/09/2024"
+                location:
+                  type: array
+                  example: ["Can Tho", "Ho Chi Minh", "Ha Noi"]
+                jobDescription:
+                  type: array
+                  example:
+                    [
+                      "Receive requirements and propose solutions.",
+                      "Define the appropriate approach to the project (Waterfall, Agile/Scrum) and related processes.",
+                      "Propose the final project plan, including: scope of works, final deliverables, milestones, resources, budgets, quality control, risks and issues management.",
+                    ]
+                jobRequirements:
+                  type: array
+                  example:
+                    [
+                      "Bachelor degree in Computer Science, Computer Information Systems or equivalent.",
+                      "At least 5 years of hand-on experiences in software development and project management (or equivalent).",
+                      "Experiences in completing a project full life cycle.",
+                    ]
+                benefits:
+                  type: object
+                  example:
+                    [
+                      {
+                        "title": "Thưởng",
+                        "content": "From 12 days Annual leave, 13th month salary",
+                      },
+                      {
+                        "title": "Chăm sóc sức khoẻ",
+                        "content": "Support lunch fee and premium health care",
+                      },
+                    ]
+                jobInformation:
+                  type: object
+                  example:
+                    {
+                      jobLevel: "Nhân viên",
+                      industry: "Tiếp Viên Hàng Không",
+                      skills: ["Ky nang 1", "Ky nang 2", "Ky nang 3"],
+                      field: "Phần Mềm CNTT/Dịch vụ Phần mềm",
+                      languageForApplications: "Tieng viet",
+                      minimumExperience: 2,
+                      nationality: "Any",
+                      minimumEducation: "Any",
+                      gender: "Any",
+                      preferredAge: 20,
+                    }
+                salary:
+                  type: string
+                  example: "700-900"
+                keywords:
+                  type: array
+                  example: ["CNTT", "IT", "Tester", "HCM"]
+                recruiterId:
+                  type: string
+                  format: MongoId
+                  example: "66dcb19ef533c72b0b0b94d4"
+
+      responses:
+        "200":
+          description: Tạo đơn ứng tuyển thành công
+        "422":
+          description: Invalid input
+        "404":
+          description: Not found
+  /api/jobpost/update/{id}:
+    put:
+      tags:
+        - jobpost
+      summary: Cập nhập trạng thái của đơn tuyển dụng
+      operationId: updatejobpost
+      parameters:
+        - name: id
+          in: path
+          description: Cập nhập trạng thái của đơn tuyển dụng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        description: "Cập nhật đơn tuyển dụng"
+        content:
+          application/json:
+            schema:
+              properties:
+                companyName:
+                  type: string
+                  example: "CTU Company"
+                companyScale:
+                  type: string
+                  example: "700-900"
+                companyAddress:
+                  type: string
+                  example: "Khu II D 3 thang 2, Xuan Khanh, Ninh Kieu, Can Tho"
+                staffName:
+                  type: string
+                  example: "Mr/Mrs Name"
+                jobTitle:
+                  type: string
+                  example: "Tuyen nhan vien BE"
+                expirationDate:
+                  type: string
+                  example: "05/09/2024"
+                location:
+                  type: array
+                  example: ["Can Tho", "Ho Chi Minh", "Ha Noi"]
+                jobDescription:
+                  type: array
+                  example:
+                    [
+                      "Receive requirements and propose solutions.",
+                      "Define the appropriate approach to the project (Waterfall, Agile/Scrum) and related processes.",
+                      "Propose the final project plan, including: scope of works, final deliverables, milestones, resources, budgets, quality control, risks and issues management.",
+                    ]
+                jobRequirements:
+                  type: array
+                  example:
+                    [
+                      "Bachelor degree in Computer Science, Computer Information Systems or equivalent.",
+                      "At least 5 years of hand-on experiences in software development and project management (or equivalent).",
+                      "Experiences in completing a project full life cycle.",
+                    ]
+                benefits:
+                  type: object
+                  example:
+                    [
+                      {
+                        "title": "Thưởng",
+                        "content": "From 12 days Annual leave, 13th month salary",
+                      },
+                      {
+                        "title": "Chăm sóc sức khoẻ",
+                        "content": "Support lunch fee and premium health care",
+                      },
+                    ]
+                jobInformation:
+                  type: object
+                  example:
+                    {
+                      jobLevel: "Nhân viên",
+                      industry: "Tiếp Viên Hàng Không",
+                      skills: ["Ky nang 1", "Ky nang 2", "Ky nang 3"],
+                      field: "Phần Mềm CNTT/Dịch vụ Phần mềm",
+                      languageForApplications: "Tieng viet",
+                      minimumExperience: 2,
+                      nationality: "Any",
+                      minimumEducation: "Any",
+                      gender: "Any",
+                      preferredAge: 20,
+                    }
+                salary:
+                  type: string
+                  example: "700-900"
+                keywords:
+                  type: array
+                  example: ["CNTT", "IT", "Tester", "HCM"]
+      responses:
+        "200":
+          description: Cập nhật trạng thái đơn ứng tuyển thành công
+        "422":
+          description: Invalid input
+  /api/jobpost/delete/{id}:
+    delete:
+      tags:
+        - jobpost
+      summary: Xóa đơn tuyển dụng.
+      operationId: deletejobpost
+      parameters:
+        - name: id
+          in: path
+          description: Xóa đơn tuyển dụng.
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Xóa đơn ứng tuyển thành công
+        "400":
+          description: Invalid input
+        "404":
+          description: User not found
+  /api/jobpost/get-all-jobpost:
+    get:
+      tags:
+        - jobpost
+      summary: Lấy tất cả đơn tuyển dụng.
+      operationId: getAlljobpost
+      # parameters:
+      #   - name: id
+      #     in: path
+      #     description: Lấy tất cả đơn tuyển dụng.
+      #     required: true
+      #     schema:
+      #       type: string
+      #       format: MongoId
+      #       example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Lấy tất cả đơn tuyển dụng thành công
+        "400":
+          description: Invalid input
+        "404":
+          description: User not found
+  /api/jobpost/get-my-jobpost/{id}:
+    get:
+      tags:
+        - jobpost
+      summary: Lấy tất cả thông tin của đơn tuyển dụng của bản thân
+      operationId: getMyjobpost
+      parameters:
+        - name: id
+          in: path
+          description: "Lấy tất cả thông tin của đơn tuyển dụng của bản thân"
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Lấy tất cả thông tin của đơn tuyển dụng của bản thân thành công
+        "422":
+          description: Invalid input
+        "404":
+          description: Not found
+  /api/jobpost/get-details-jobpost/{id}:
+    get:
+      tags:
+        - jobpost
+      summary: Lấy thông tin của đơn tuyển dụng của cụ thể
+      operationId: getDetailsjobpost
+      parameters:
+        - name: id
+          in: path
+          description: "Lấy thông tin của đơn tuyển dụng của cụ thể"
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Lấy thông tin của đơn tuyển dụng của cụ thể thành công
+        "422":
+          description: Invalid input
+        "404":
+          description: Not found
+  /api/jobpost/cancel-jobpost/{id}:
+    put:
+      tags:
+        - jobpost
+      summary: Thay đổi trạng thái của đơn tuyển dụng.
+      operationId: canceljobpost
+      parameters:
+        - name: id
+          in: path
+          description: Thay đổi trạng thái của đơn tuyển dụng.
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Thay đổi trạng thái của đơn tuyển dụng thành công
+        "400":
+          description: Invalid input
+        "404":
+          description: User not found
+  /api/jobpost/delete-many-jobpost:
+    post:
+      tags:
+        - jobpost
+      summary: Xóa nhiều đơn tuyển dụng
+      operationId: deleteManyJobpost
+      requestBody:
+        description: "Xóa nhiều đơn tuyển dụng"
+        content:
+          application/json:
+            schema:
+              properties:
+                jobpostId:
+                  type: array
+                  format: MongoId
+                  example:
+                    [
+                      "66dcb19ef533c72b0b0b94d4",
+                      "66dcb19ef533c72b0b0b94d5",
+                      "66dcb19ef533c72b0b0b94d6",
+                    ]
+        required: true
+      responses:
+        "200":
+          description: Xóa đơn tuyển dụng thành công
+        "422":
+          description: Invalid input
 
 components:
   schemas:

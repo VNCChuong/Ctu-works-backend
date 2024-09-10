@@ -4,34 +4,34 @@ const userSchema = new mongoose.Schema(
         role: {
             type: String,
             default: "jobSeeker",
-            // required: true
+            required: true
         },
         email: {
             type: String,
-            // required: true,
+            required: true,
             unique: true
         },
         password: {
             type: String,
-            // required: true,
+            required: true,
         },
         fullName: {
             type: String,
-            // required: true,
+            required: true,
         },
         dateOfBirth: {
             // type: Date,
             type: String,
-            // required: true,
+            required: true,
         },
         phoneNumber: {
             type: String,
-            // required: true,
+            required: true,
             unique: true
         },
         desiredFields: {
             type: [String],
-            // required: true,
+            required: true,
         },
         avatar: {
             type: String,

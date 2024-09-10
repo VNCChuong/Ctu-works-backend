@@ -80,24 +80,31 @@ const loginUser = (userLogin) => {
                     message: "The password is incorrect 1"
                 })
             }
+            if (!checkUser.isVerified) {
+                resolve({
+                    status: 'ERR',
+                    message: "Account not verified"
+                })
+            }
             const access_token = await genneralAccessToken({
-                id: checkUser.id,
-                isAdmin: checkUser.isAdmin
+                userid: checkUser.id,
+                email: checkUser.email,
+                fullName: checkUser.fullName,
+                role: checkUser.role
             })
 
             const refresh_token = await genneralRefreshToken({
-                id: checkUser.id,
-                isAdmin: checkUser.isAdmin
+                userid: checkUser.id,
+                email: checkUser.email,
+                fullName: checkUser.fullName,
+                role: checkUser.role
             })
-            // console.log('access_token',access_token)
             resolve({
                 status: 'OK',
-                message: "Success",
+                message: "Login success",
                 access_token,
                 refresh_token
             })
-
-
         } catch (e) {
             reject(e)
         }
@@ -249,13 +256,17 @@ const changePassword = (userInfo) => {
                 }
             )
             const access_token = await genneralAccessToken({
-                id: checkUser.id,
-                isAdmin: checkUser.isAdmin
+                userid: checkUser.id,
+                email: checkUser.email,
+                fullName: checkUser.fullName,
+                role: checkUser.role
             })
 
             const refresh_token = await genneralRefreshToken({
-                id: checkUser.id,
-                isAdmin: checkUser.isAdmin
+                userid: checkUser.id,
+                email: checkUser.email,
+                fullName: checkUser.fullName,
+                role: checkUser.role
             })
             // console.log('access_token',access_token)
             resolve({
@@ -337,7 +348,7 @@ const uploadfile = (path) => {
             fs.unlinkSync(path)
             resolve({
                 status: 'OK',
-                message: 'create user in file success',
+                message: 'Create user from file success',
             })
         } catch (e) {
             reject(e)
