@@ -13,7 +13,7 @@ router.put('/update-recruiter/:id', RecruiterController.updateRecruiter)
 router.delete('/delete-recruiter/:id', RecruiterController.deleteRecruiter)
 
 router.get('/getAll-recruiter', RecruiterController.getAllRecruiter)
-router.get('/get-details/:id', RecruiterController.getDetailsRecruiter)
+router.get('/get-details-recruiter/:id', RecruiterController.getDetailsRecruiter)
 router.post('/refresh-token', RecruiterController.refreshToken)
 router.post('/delete-many-recruiter', RecruiterController.deleteManyRecruiter)
 

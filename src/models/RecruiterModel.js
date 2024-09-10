@@ -3,8 +3,7 @@ const recruiterSchema = new mongoose.Schema(
     {
         role: {
             type: String,
-            enum: ['recruiter'],
-            required: true
+            default: 'recruiter',
         },
         email: {
             type: String,
@@ -17,11 +16,7 @@ const recruiterSchema = new mongoose.Schema(
 
         },
         // Fields specific to job seekers
-        firstName: {
-            type: String,
-            required: true,
-        },
-        lastName: {
+        fullName: {
             type: String,
             required: true,
         },

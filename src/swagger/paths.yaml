@@ -27,6 +27,18 @@ servers:
 tags:
   - name: user
     description: Người tìm việc
+  - name: recruiter
+    description: Nhà tuyển dụng
+  - name: jobpost
+    description: Bài tuyển dụng (nhà tuyển dụng)
+  - name: saveJob
+    description: Bài tuyển dụng đã lưu (người tìm việc)
+  - name: applyJob
+    description: Các job đã được ứng tuyển (người tìm việc)
+  - name: profileViews
+    description: Lượt xem hồ sơ (người tìm việc)
+  - name: news
+    description: Các bài tin tức,... (admin)
 paths:
   /api/user/sign-in:
     post:
@@ -122,11 +134,7 @@ paths:
         required: true
       responses:
         "200":
-          description: Đăng nhập thành công
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SuccessLogin"
+          description: Đổi mật khẩu thành công
         "422":
           description: Invalid input
   /api/user/update-user/{id}:
@@ -290,6 +298,533 @@ paths:
           description: Xóa người dùng thành công
         "422":
           description: Invalid input
+  /api/recruiter/sign-in-recruiter:
+    post:
+      tags:
+        - recruiter
+      summary: Đăng nhập nhà tuyển dụng
+      operationId: loginRecruiter
+      requestBody:
+        description: "Đăng nhập nhà tuyển đụng"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginBody"
+        required: true
+      responses:
+        "200":
+          description: Đăng nhập thành công
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessLogin"
+        "422":
+          description: Invalid input
+  /api/recruiter/sign-up-recruiter:
+    post:
+      tags:
+        - recruiter
+      summary: Đăng kí nhà tuyển dụng
+      operationId: signupRecruiter
+      requestBody:
+        description: "Đăng kí nhà tuyển dụng"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignUpBodyRecruiter"
+        required: true
+      responses:
+        "200":
+          description: Đăng kí thành công
+        "422":
+          description: Invalid input
+  /api/recruiter/log-out-recruiter:
+    post:
+      tags:
+        - recruiter
+      summary: Đăng xuất nhà tuyển dụng
+      description: "Đăng xuất nhà tuyển dụng"
+      operationId: logoutRecruiter
+      parameters: []
+      responses:
+        default:
+          description: Đăng xuất thành công
+  /api/recruiter/delete-recruiter/{id}:
+    delete:
+      tags:
+        - recruiter
+      summary: Xóa tài khoản nhà tuyển dụng.
+      operationId: deleteRecruiter
+      parameters:
+        - name: id
+          in: path
+          description: Xóa tài khoản nhà tuyển dụng.
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Xóa tài khoản thành công
+        "400":
+          description: Invalid input
+        "404":
+          description: User not found
+  /api/recruiter/change-password-recruiter:
+    put:
+      tags:
+        - recruiter
+      summary: Đổi mật khẩu nhà tuyển dụng
+      operationId: changePasswordRecruiter
+      requestBody:
+        description: "Đổi mật khẩu nhà tuyển dụng"
+        content:
+          application/json:
+            schema:
+              properties:
+                userId:
+                  type: string
+                oldPassword:
+                  type: string
+                newPassword:
+                  type: string
+        required: true
+      responses:
+        "200":
+          description: Đổi mật khẩu thành công
+        "422":
+          description: Invalid input
+  /api/recruiter/update-recruiter/{id}:
+    put:
+      tags:
+        - recruiter
+      summary: Cập nhập thông tin nhà tuyển dụng
+      operationId: updateRecruiter
+      parameters:
+        - name: id
+          in: path
+          description: Cập nhập thông tin nhà tuyển dụng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                fullName:
+                  type: string
+                  example: Nguyen Van A
+                companyName:
+                  type: string
+                  example: Ctu company
+                companyWebsite:
+                  type: string
+                  example: https://ctu.edu.vn
+                companyFacebook:
+                  type: string
+                  example: https://www.facebook.com/CTUDHCT/?locale=vi_VN
+                phoneNumber:
+                  type: number
+                  example: 0123456789
+                companyDescription:
+                  type: string
+                  example: Thông tin công ty
+                companyAddress:
+                  type: string
+                  example: Khu II, Đ. 3 Tháng 2, Xuân Khánh, Ninh Kiều, Cần Thơ
+                businessLicense:
+                  type: string
+                  example: "http://image.html"
+      responses:
+        "200":
+          description: Cập nhật thông tin thành công
+        "422":
+          description: Invalid input
+  /api/recruiter/getAll-recruiter:
+    get:
+      tags:
+        - recruiter
+      summary: Lấy tất cả tài khoản nhà tuyển dụng
+      operationId: getAllRecruiter
+      responses:
+        "200":
+          description: Lấy thông tin người dùng thành công
+        "422":
+          description: Invalid input
+  /api/recruiter/get-details-recruiter/{id}:
+    get:
+      tags:
+        - recruiter
+      summary: Lấy thông tin nhà tuyển dụng cụ thể
+      operationId: getDetailRecruiter
+      parameters:
+        - name: id
+          in: path
+          description: "Lấy thông tin nhà tuyển dụng cụ thể"
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Lấy thông tin nhà tuyển dụng cụ thể thành công
+        "422":
+          description: Invalid input
+  /api/recruiter/delete-many-recruiter:
+    post:
+      tags:
+        - recruiter
+      summary: Xóa nhiều tài khoản nhà tuyển dụng cùng lúc
+      operationId: deleteManyRecruiter
+      requestBody:
+        description: "Xóa nhiều tài khoản nhà tuyển dụng cùng lúc"
+        content:
+          application/json:
+            schema:
+              properties:
+                userId:
+                  type: array
+                  example:
+                    [
+                      "66dcb19ef533c72b0b0b94d4",
+                      "66dcb19ef533c72b0b0b94d5",
+                      "66dcb19ef533c72b0b0b94d6",
+                    ]
+        required: true
+      responses:
+        "200":
+          description: Xóa người dùng thành công
+        "422":
+          description: Invalid input
+  /api/apply/create:
+    post:
+      tags:
+        - applyJob
+      summary: Tạo đơn ứng tuyển
+      operationId: createApplyJob
+      requestBody:
+        description: "Đơn ứng tuyển được tạo khi người tìm việc ứng tuyển vào một công việc"
+        content:
+          application/json:
+            schema:
+              properties:
+                userId:
+                  type: string
+                  example: "66dcb19ef533c72b0b0b94d4"
+                recruiterId:
+                  type: string
+                  example: "66dcb19ef533c72b0b0b94d5"
+                jobPostId:
+                  type: string
+                  example: "66dcb19ef533c72b0b0b94d6"
+        required: true
+      responses:
+        "200":
+          description: Tạo đơn ứng tuyển thành công
+        "422":
+          description: Invalid input
+  /api/apply/update/{id}:
+    put:
+      tags:
+        - applyJob
+      summary: Cập nhập trạng thái của đơn ứng tuyển
+      operationId: updateApplyJob
+      parameters:
+        - name: id
+          in: path
+          description: Cập nhập trạng thái của đơn ứng tuyển
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                status:
+                  type: string
+                  example: "Đã duyệt"
+      responses:
+        "200":
+          description: Cập nhật trạng thái đơn ứng tuyển thành công
+        "422":
+          description: Invalid input
+  /api/apply/delete/{id}:
+    delete:
+      tags:
+        - applyJob
+      summary: Xóa đơn ứng tuyển.
+      operationId: deleteApplyJob
+      parameters:
+        - name: id
+          in: path
+          description: Xóa đơn ứng tuyển.
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Xóa đơn ứng tuyển thành công
+        "400":
+          description: Invalid input
+        "404":
+          description: User not found
+  /api/apply/get-my-apply/{id}:
+    get:
+      tags:
+        - applyJob
+      summary: Lấy tất cả thông tin của đơn ứng tuyển của bản thân
+      operationId: getMyApply
+      parameters:
+        - name: id
+          in: path
+          description: "Lấy tất cả thông tin của đơn ứng tuyển của bản thân"
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Lấy tất cả thông tin của đơn ứng tuyển của bản thân thành công
+        "422":
+          description: Invalid input
+        "404":
+          description: Not found
+  /api/news/create:
+    post:
+      tags:
+        - news
+      summary: Tạo bài viết
+      operationId: createNews
+      requestBody:
+        description: "Tạo bài viết"
+        content:
+          application/json:
+            schema:
+              properties:
+                title:
+                  type: string
+                  example: "Tiêu đề bài viết"
+                summary:
+                  type: string
+                  example: "Đoạn tóm tắt bài viết"
+                content:
+                  type: string
+                  example: "Nội dung bài viết"
+        required: true
+      responses:
+        "200":
+          description: Tạo bài viết thành công
+        "422":
+          description: Invalid input
+  /api/news/update/{id}:
+    put:
+      tags:
+        - news
+      summary: Cập nhập bài viết
+      operationId: updateNews
+      parameters:
+        - name: id
+          in: path
+          description: Cập nhập bài viết
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                title:
+                  type: string
+                  example: "Tiêu đề bài viết"
+                summary:
+                  type: string
+                  example: "Đoạn tóm tắt bài viết"
+                content:
+                  type: string
+                  example: "Nội dung bài viết"
+      responses:
+        "200":
+          description: Cập nhập bài viết thành công
+        "422":
+          description: Invalid input
+        "404":
+          description: Not found
+  /api/news/delete/{id}:
+    delete:
+      tags:
+        - news
+      summary: Xóa bài viết.
+      operationId: deleteNews
+      parameters:
+        - name: id
+          in: path
+          description: Xóa bài viết.
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Xóa bài viết thành công
+        "400":
+          description: Invalid input
+        "404":
+          description: User not found
+  /api/news/get-detail-news/{id}:
+    get:
+      tags:
+        - news
+      summary: Lấy tất cả thông tin của bài viết cụ thể
+      operationId: getDetailNews
+      parameters:
+        - name: id
+          in: path
+          description: "Lấy tất cả thông tin của bài viết cụ thể"
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Lấy tất cả thông tin của bài viết cụ thể thành công
+        "422":
+          description: Invalid input
+        "404":
+          description: Not found
+  /api/savejob/create:
+    post:
+      tags:
+        - saveJob
+      summary: Lưu công việc
+      operationId: createSaveJob
+      requestBody:
+        description: "Lưu công việc"
+        content:
+          application/json:
+            schema:
+              properties:
+                userId:
+                  type: string
+                  example: "66dcb19ef533c72b0b0b94d4"
+                # recruiterId:
+                #   type: string
+                #   example: "66dcb19ef533c72b0b0b94d5"
+                jobPostId:
+                  type: string
+                  example: "66dcb19ef533c72b0b0b94d6"
+        required: true
+      responses:
+        "200":
+          description: Lưu công việc thành công
+        "422":
+          description: Invalid input
+  /api/savejob/delete/{id}:
+    delete:
+      tags:
+        - saveJob
+      summary: Hủy lưu công việc.
+      operationId: deleteSaveJob
+      parameters:
+        - name: id
+          in: path
+          description: Hủy lưu công việc.
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Hủy lưu công việc thành công
+        "400":
+          description: Invalid input
+        "404":
+          description: User not found
+  /api/savejob/get-my-savejob/{id}:
+    get:
+      tags:
+        - saveJob
+      summary: Lấy tất cả công việc đã lưu của bản thân
+      operationId: getMySaveJob
+      parameters:
+        - name: id
+          in: path
+          description: "Lấy tất cả công việc đã lưu của bản thân"
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Lấy tất cả công việc đã lưu của bản thân thành công
+        "422":
+          description: Invalid input
+        "404":
+          description: Not found
+  /api/profile-views/create:
+    post:
+      tags:
+        - profileViews
+      summary: Lưu người đã xem hồ sơ của bạn
+      operationId: createProfileViews
+      requestBody:
+        description: "Lưu người đã xem hồ sơ của bạn"
+        content:
+          application/json:
+            schema:
+              properties:
+                userId:
+                  type: string
+                  example: "66dcb19ef533c72b0b0b94d4"
+                recruiterId:
+                  type: string
+                  example: "66dcb19ef533c72b0b0b94d5"
+        required: true
+      responses:
+        "200":
+          description: Lưu người đã xem hồ sơ của bạn thành công
+        "422":
+          description: Invalid input
+  /api/profile-views/get-my-profile-views/{id}:
+    get:
+      tags:
+        - profileViews
+      summary: Lấy tất cả nhà tuyển dụng đã lưu của người tìm việc
+      operationId: getMyProfileViews
+      parameters:
+        - name: id
+          in: path
+          description: "Lấy tất cả nhà tuyển dụng đã lưu của người tìm việc"
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Lấy tất cả nhà tuyển dụng đã lưu của người tìm việc thành công
+        "422":
+          description: Invalid input
+        "404":
+          description: Not found
+
 components:
   schemas:
     LoginBody:
@@ -349,3 +884,39 @@ components:
         gender:
           type: string
           example: "Nam"
+    SignUpBodyRecruiter:
+      type: object
+      properties:
+        email:
+          type: string
+          example: nguyenvana@gmail.com
+        fullName:
+          type: string
+          example: Nguyen Van A
+        password:
+          type: string
+          example: nguyenvana123
+        confirmPassword:
+          type: string
+          example: nguyenvana123
+        companyName:
+          type: string
+          example: Ctu company
+        companyWebsite:
+          type: string
+          example: https://ctu.edu.vn
+        companyFacebook:
+          type: string
+          example: https://www.facebook.com/CTUDHCT/?locale=vi_VN
+        phoneNumber:
+          type: number
+          example: 0123456789
+        companyDescription:
+          type: string
+          example: Thông tin công ty
+        companyAddress:
+          type: string
+          example: Khu II, Đ. 3 Tháng 2, Xuân Khánh, Ninh Kiều, Cần Thơ
+        businessLicense:
+          type: string
+          example: "http://image.html"

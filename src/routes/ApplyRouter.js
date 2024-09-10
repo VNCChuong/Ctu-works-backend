@@ -8,6 +8,6 @@ router.put('/update/:id',  ApplyController.updateApply)
 
 router.delete('/delete/:id',  ApplyController.deleteApply)
 
-router.get('/get-my-profile-views/:id', ApplyController.getMyApply)
+router.get('/get-my-apply/:id', ApplyController.getMyApply)
 
 module.exports = router

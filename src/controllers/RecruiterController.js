@@ -2,13 +2,13 @@ const RecruiterService = require('../services/RecruiterService')
 
 const createRecruiter = async (req, res) => {
     try {
-        const { role, firstName, lastName, phoneNumber,
+        const { fullName, phoneNumber,
             companyName, email, companyAddress,
             companyWebsite, companyFacebook, companyDescription,
             businessLicense, password, confirmPassword } = req.body
         const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
         const isCheckEmail = reg.test(email)
-        if (!role || !firstName || !lastName || !companyName || !phoneNumber
+        if (!fullName || !companyName || !phoneNumber
             || !companyAddress || !email || !password || !confirmPassword
             || !companyDescription || !businessLicense) {
             return res.status(200).json({

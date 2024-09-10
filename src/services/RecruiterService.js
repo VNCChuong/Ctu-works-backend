@@ -6,8 +6,8 @@ const crypto = require('crypto');
 const createRecruiter = (newRecruiter) => {
     return new Promise(async (resolve, reject) => {
         const {
-            role, firstName, lastName, companyName, phoneNumber
-            , companyAddress, email, password, confirmPassword
+            fullName, companyName, phoneNumber
+            , companyAddress, companyWebsite, companyFacebook, email, password, confirmPassword
             , companyDescription, businessLicense } = newRecruiter
         try {
             const checkUser = await User.findOne({
@@ -39,13 +39,13 @@ const createRecruiter = (newRecruiter) => {
             const hash = bcrypt.hashSync(password, 10)
             const verificationToken = crypto.randomBytes(32).toString('hex');
             const createdRecruiter = await Recruiter.create({
-                role,
-                firstName,
-                lastName,
+                fullName,
                 companyName,
                 companyAddress,
                 email,
                 confirmPassword,
+                companyWebsite,
+                companyFacebook,
                 companyDescription,
                 businessLicense,
                 password: hash,
