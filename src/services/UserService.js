@@ -42,7 +42,7 @@ const createUser = (newUser) => {
                 phoneNumber,
                 seekJobMode: false
             })
-            const verificationLink = `${process.env.APP_URL}/auth/verify/${verificationToken}`;
+            const verificationLink = `https://ctu-works-backend.onrender.com//auth/verify/${verificationToken}`;
             await sendVerificationEmail(email, verificationLink);
 
             if (createdUser) {
