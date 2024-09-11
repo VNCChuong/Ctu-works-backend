@@ -47,7 +47,7 @@ const createUser = (newUser) => {
                 currentLevel, EnglishComputerSkills, educationHighest, workExperience,
                 industry, MSSV, gender
             })
-            const verificationLink = `https://ctu-works-backend.onrender.com//auth/verify/${verificationToken}`;
+            const verificationLink = `https://ctu-works-backend.onrender.com/auth/verify/${verificationToken}`;
             await sendVerificationEmail(email, verificationLink);
 
             if (createdUser) {
