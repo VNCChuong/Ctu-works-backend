@@ -8,7 +8,8 @@ const excelToJson = require('convert-excel-to-json')
 
 const createUser = (newUser) => {
     return new Promise(async (resolve, reject) => {
-        const { role, fullName, dateOfBirth, phoneNumber, desiredFields, email, password } = newUser
+        const { fullName, dateOfBirth, address, currentLevel, EnglishComputerSkills, educationHighest, workExperience,
+            phoneNumber, desiredFields, email, password, confirmPassword, industry, MSSV, gender } = newUser
         try {
             const checkUser = await User.findOne({
                 email: email
@@ -35,12 +36,16 @@ const createUser = (newUser) => {
                 dateOfBirth,
                 phoneNumber,
                 desiredFields,
+                address,
                 email,
                 password: hash,
                 verificationToken,
                 // confirmPassword: hash,
                 phoneNumber,
-                seekJobMode: false
+                seekJobMode: false,
+                address,
+                currentLevel, EnglishComputerSkills, educationHighest, workExperience,
+                industry, MSSV, gender
             })
             const verificationLink = `https://ctu-works-backend.onrender.com//auth/verify/${verificationToken}`;
             await sendVerificationEmail(email, verificationLink);

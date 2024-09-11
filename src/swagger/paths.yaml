@@ -1235,6 +1235,21 @@ components:
         gender:
           type: string
           example: "Nam"
+        adress:
+          type: string
+          example: "Khu II D3 thang 2, Xuan Khanh, Ninh Kieu, Can Tho"
+        educationHighest:
+          type: string
+          example: "Đại học"
+        workExperience:
+          type: string
+          example: 0
+        EnglishComputerSkills:
+          type: string
+          example: 'https://image.html'
+        currentLevel:
+          type: string
+          example: "Fresher"
     SignUpBodyRecruiter:
       type: object
       properties:

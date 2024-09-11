@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        address: {
+            type: String,
+            required: true
+        },
         dateOfBirth: {
             // type: Date,
             type: String,
@@ -29,6 +33,7 @@ const userSchema = new mongoose.Schema(
             required: true,
             unique: true
         },
+        //vị trí mong muốn
         desiredFields: {
             type: [String],
             required: true,
@@ -65,6 +70,21 @@ const userSchema = new mongoose.Schema(
         },
         industry: {
             type: String
+        },
+        workExperience: {
+            type: Number,
+            required: true
+        },
+        educationHighest: {
+            type: String,
+            requied: true
+        },
+        currentLevel: {
+            type: String,
+            required: true
+        },
+        EnglishComputerSkills: {
+            type: String,
         }
     },
     {
