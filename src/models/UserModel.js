@@ -4,7 +4,10 @@ const userSchema = new mongoose.Schema(
         role: {
             type: String,
             default: "jobSeeker",
-            required: true
+            // required: true
+        },
+        MSSV: {
+            type: String
         },
         email: {
             type: String,
@@ -19,31 +22,77 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        address: {
+        //chuc danh
+        jobTitle: {
             type: String,
             required: true
         },
-        dateOfBirth: {
-            // type: Date,
+        //bang cap hien tai
+        currentDegree: {
             type: String,
-            required: true,
+            required: true
+        },
+        //linh vuc hien tai
+        currentIndustries: {
+            type: String,
+            required: true
+        },
+        //nganh nghe hien tại
+        currentJobFunction: {
+            type: String,
+            required: true
+        },
+        yearsExperience: {
+            type: Number,
+            default: 0,
+            required: true
+        },
+        currentSalary: {
+            type: Number,
+            required: true
+        },
+        highestDegree: {
+            type: String,
+            requied: true
+        },
+        country: {
+            type: String,
+            required: true
         },
         phoneNumber: {
             type: String,
             required: true,
             unique: true
         },
-        //vị trí mong muốn
-        desiredFields: {
-            type: [String],
+        dateOfBirth: {
+            // type: Date,
+            type: String,
             required: true,
+        },
+        city: {
+            type: String,
+            required: true
+        },
+        district: {
+            type: String,
+            required: true
+        },
+        address: {
+            type: String,
+        },
+        gender: {
+            type: Number,
+            enum: [0, 1],
+            required: true
+        },
+        maritalStatusId: {
+            type: Number,
+            enum: [0, 1],
+            required: true
         },
         avatar: {
             type: String,
             default: ''
-        },
-        introduce: {
-            type: String,
         },
         seekJobMode: {
             type: Boolean,
@@ -52,6 +101,11 @@ const userSchema = new mongoose.Schema(
         seekJobModeExpiration: {
             type: Date,
         },
+        //muc tieu nghe nghiep
+        introduce: {
+            type: String,
+        },
+
         verificationToken: {
             type: String
         },
@@ -62,30 +116,207 @@ const userSchema = new mongoose.Schema(
         lastOnline: {
             type: Date
         },
-        gender: {
-            type: String
+        //cong viec mong muon
+        workingPreferences: {
+            locations: [
+                {
+                    type: String,
+                    required: true
+                }
+            ],
+            jobFunction: {
+                type: String,
+                required: true
+            },
+            companyIndustries: {
+                type: String,
+                required: true
+            },
+            desiredJobLevel: {
+                type: String,
+                required: true
+            },
+            salary: {
+                type: Number,
+                required: true
+            },
+            isRelocate: {
+                type: Number,
+                enum: [0, 1]
+            },
+            benefits: [
+                {
+                    type: Number
+                }
+            ],
         },
-        MSSV: {
-            type: String
-        },
-        industry: {
-            type: String
-        },
-        workExperience: {
-            type: Number,
-            required: true
-        },
-        educationHighest: {
-            type: String,
-            requied: true
-        },
-        currentLevel: {
-            type: String,
-            required: true
-        },
-        EnglishComputerSkills: {
-            type: String,
-        }
+        //kinh nghiem lam viec
+        workingHistories:
+            [{
+                jobTitle: {
+                    type: String,
+                    // required: true
+                },
+                recruiterId: { type: mongoose.Schema.Types.ObjectId, ref: 'Recruiter' },
+                companyName: {
+                    type: String,
+                    // required: true,
+                },
+                companyLogo: {
+                    type: String,
+                    default: "https://images.vietnamworks.com/img/company-default-logo.svg"
+                },
+                fromDate: {
+                    type: String
+                },
+                toDate: {
+                    type: String
+                },
+                description: {
+                    type: String,
+                    // required: true
+                },
+                isCurrent: {
+                    type: Number,
+                    enum: [0, 1]
+                }
+            }],
+        project:
+            [{
+                schoolName: {
+                    type: String,
+                    // required: true
+                },
+                //ten khach hang/cong ty
+                recruiterId: { type: mongoose.Schema.Types.ObjectId, ref: 'Recruiter' },
+                companyName: {
+                    type: String,
+                    // required: true,
+                },
+                logo: {
+                    type: String,
+                    default: "https://images.vietnamworks.com/img/company-default-logo.svg"
+                },
+                //vai tro cua ban
+                yourRole: {
+                    type: String,
+                    // required: true
+                },
+                fromDate: {
+                    type: String
+                },
+                toDate: {
+                    type: String
+                },
+                //mo ta du an
+                description: {
+                    type: String,
+                },
+                projectLink: {
+                    type: String
+                }
+            }],
+        educations: [{
+            major: {
+                type: String,
+                // required: true
+            },
+            schoolName: {
+                type: String,
+                // required: true
+            },
+            //bang cap
+            highestDegree: {
+                type: String,
+                // required: true
+            },
+            fromDate: {
+                type: String
+            },
+            toDate: {
+                type: String
+            },
+            //thanh tuu
+            achievement: {
+                type: String,
+            }
+        }],
+        skills: [{
+            skillName: {
+                type: String,
+                required: true,
+            },
+            skillLevel: {
+                type: Number,
+                enum: [1, 2, 3, 4, 5],
+            }
+        }],
+        languageSkills: [{
+            nameLanguage: {
+                type: String,
+                // required: true
+            },
+            languageLevel: {
+                type: Number,
+                enum: [1, 2, 3, 4, 5],
+                // required: true,
+            }
+        }],
+        certifications: [{
+            //ten chung chi
+            certification: {
+                type: String,
+                // required: true
+            },
+            //to chuc
+            organization: {
+                type: String,
+                // required: true
+            },
+            logo: {
+                type: String,
+                default: "https://images.vietnamworks.com/img/company-default-logo.svg"
+
+            },
+            fromDate: {
+                type: String
+            },
+            linkCertification: {
+                type: String
+            }
+        }],
+        activities: [{
+            //ten
+            activity: {
+                type: String,
+                // required: true
+            },
+            //vai tro
+            title: {
+                type: String,
+                // required: true
+            },
+            // ten to chuc
+            organization: {
+                type: String,
+                // required: true
+            },
+            fromDate: {
+                type: String,
+
+            },
+            toDate: {
+                type: String,
+
+            },
+            isCurrent: {
+                type: Number,
+                enum: [0, 1]
+            },
+            description: {
+                type: String,
+            }
+        }]
     },
     {
         timestamps: true

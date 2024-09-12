@@ -3,13 +3,21 @@ const JwtService = require('../services/JwtService')
 
 const createUser = async (req, res) => {
     try {
-        const { fullName, dateOfBirth, address, currentLevel, EnglishComputerSkills, educationHighest, workExperience,
-            phoneNumber, desiredFields, email, password, confirmPassword, industry, MSSV, gender } = req.body
+        const { fullName, phoneNumber, email, password,
+            dateOfBirth, gender, country, city, district, address, maritalStatusId,
+            jobTitle, yearsExperience, currentDegree, highestDegree, currentSalary, currentJobFunction, currentIndustries,
+            skillName,
+            // locations, jobFunction, companyIndustries, salary, desiredJobLevel, 
+            workingPreferences,
+            confirmPassword, MSSV, } = req.body
         const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
         const isCheckEmail = reg.test(email)
-        if (!fullName || !dateOfBirth || !phoneNumber || !address || !educationHighest || !workExperience || !industry ||
-            !currentLevel || !EnglishComputerSkills || !MSSV || !gender ||
-            !desiredFields || !email || !password || !confirmPassword) {
+        if (!fullName || !phoneNumber || !email || !password || !confirmPassword ||
+            !dateOfBirth || !gender || !country || !city || !district || !maritalStatusId ||
+            !jobTitle || !yearsExperience || !currentDegree || !highestDegree || !currentSalary || !currentJobFunction || !currentIndustries ||
+            !skillName ||
+            !workingPreferences.locations || !workingPreferences.jobFunction || !workingPreferences.companyIndustries || !workingPreferences.salary || !workingPreferences.desiredJobLevel
+        ) {
             return res.status(200).json({
                 status: 'ERR',
                 message: 'The input is required'

@@ -8,8 +8,13 @@ const excelToJson = require('convert-excel-to-json')
 
 const createUser = (newUser) => {
     return new Promise(async (resolve, reject) => {
-        const { fullName, dateOfBirth, address, currentLevel, EnglishComputerSkills, educationHighest, workExperience,
-            phoneNumber, desiredFields, email, password, confirmPassword, industry, MSSV, gender } = newUser
+        const { fullName, phoneNumber, email, password,
+            dateOfBirth, gender, country, city, district, address, maritalStatusId,
+            jobTitle, yearsExperience, currentDegree, highestDegree, currentSalary, currentJobFunction, currentIndustries,
+            skillName, workingPreferences,
+            // locations, jobFunction, companyIndustries, salary, desiredJobLevel,
+            confirmPassword, MSSV, } = newUser
+            // console.log(newUser)
         try {
             const checkUser = await User.findOne({
                 email: email
@@ -32,22 +37,19 @@ const createUser = (newUser) => {
             const hash = bcrypt.hashSync(password, 10)
             const verificationToken = crypto.randomBytes(32).toString('hex');
             const createdUser = await User.create({
-                fullName,
-                dateOfBirth,
-                phoneNumber,
-                desiredFields,
-                address,
-                email,
-                password: hash,
+                fullName, phoneNumber, email, password: hash,
+                dateOfBirth, gender, country, city, district, address, maritalStatusId,
+                jobTitle, yearsExperience, currentDegree, highestDegree, currentSalary, currentJobFunction, currentIndustries,
+                skillName,
+                workingPreferences,
+                //     locations, jobFunction, companyIndustries, salary, desiredJobLevel,
+                // },
+                MSSV,
                 verificationToken,
-                // confirmPassword: hash,
-                phoneNumber,
                 seekJobMode: false,
-                address,
-                currentLevel, EnglishComputerSkills, educationHighest, workExperience,
-                industry, MSSV, gender
-            })
-            const verificationLink = `https://ctu-works-backend.onrender.com/auth/verify/${verificationToken}`;
+            }
+            )
+            const verificationLink = `${process.env.APP_URL}/auth/verify/${verificationToken}`;
             await sendVerificationEmail(email, verificationLink);
 
             if (createdUser) {
@@ -60,6 +62,7 @@ const createUser = (newUser) => {
             }
         } catch (e) {
             reject(e)
+            // console.log(e)
         }
     })
 }

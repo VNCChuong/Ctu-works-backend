@@ -40,4 +40,6 @@ router.get('/get-details/:id', UserController.getDetailsUser)
 router.post('/delete-many', UserController.deleteMany)
 router.post('/refresh-token', UserController.refreshToken)
 router.post('/uploadfile',upload.single('file'), UserController.uploadfile)
+
+// router.post()
 module.exports = router
