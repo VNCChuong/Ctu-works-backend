@@ -937,7 +937,6 @@ paths:
           description: Thêm chứng chỉ cho người dùng thành công
         "422":
           description: Invalid input
-
   /api/user/update-certifications/{id}:
     put:
       tags:
@@ -1916,33 +1915,59 @@ components:
         phoneNumber:
           type: number
           example: 0123456789
-        desiredFields:
-          type: array
-          example: ["nguyenvana123", "IT", "Test"]
-        MSSV:
+        jobTitle:
           type: string
-          example: B1234567
-        industry:
+          example: Sinh viên
+        currentDegree:
+          type: string
+          example: Nhân viên
+        currentIndustries:
           type: string
           example: Công nghệ thông tin
-        gender:
+        currentJobFunction:
           type: string
-          example: "Nam"
+          example: Kỹ thuật phần mềm
+        yearsExperience:
+          type: number
+          example: 1
+        currentSalary:
+          type: number
+          example: 1
+        highestDegree:
+          type: string
+          example: Cử nhân
+        country:
+          type: string
+          example: Viet Nam
+        city:
+          type: string
+          example: Can tho
+        district:
+          type: string
+          example: "Xuân Khánh"
         address:
           type: string
           example: "Khu II D3 thang 2, Xuan Khanh, Ninh Kieu, Can Tho"
-        educationHighest:
+        gender:
+          type: number
+          enum: [1, 2]
+          example: 1
+        maritalStatusId:
+          type: number
+          enum: [1, 2]
+          example: 1
+        MSSV:
           type: string
-          example: "Đại học"
-        workExperience:
-          type: string
-          example: 0
-        EnglishComputerSkills:
-          type: string
-          example: "https://image.html"
-        currentLevel:
-          type: string
-          example: "Fresher"
+          example: "B2012181"
+        skillName:
+          type: array
+          example: ["Kỹ năng 1", "Kỹ năng 2"]
+        workingPreferences:
+          type: object
+          properties:
+            companyIndustries:
+              type: array
+              example: ["Sản Xuất Chương Trình", "CNTT"]
     SignUpBodyRecruiter:
       type: object
       properties:
