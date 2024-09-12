@@ -236,6 +236,56 @@ paths:
                     example: "Cong nghe thong tin"
         "422":
           description: Invalid input
+  /api/user/update-work-preferences/{id}:
+    put:
+      tags:
+        - user
+      summary: Cập nhập công việc mong muốn
+      operationId: updateUserWorkPreferences
+      parameters:
+        - name: id
+          in: path
+          description: Cập nhập công việc mong muốn
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                workingPreferences:
+                  type: object
+                  properties:
+                    locations:
+                      type: array
+                      example: ["Cần Thơ"]
+                    jobFunction:
+                      type: string
+                      example: "Sản Xuất Chương Trình"
+                    companyIndustries:
+                      type: array
+                      example: ["Sản Xuất Chương Trình", "CNTT"]
+                    salary:
+                      type: number
+                      example: 700
+                    desiredJobLevel:
+                      type: string
+                      example: Thực tập sinh
+                    isRelocate:
+                      type: number
+                      enum: [1, 2]
+                      example: 1
+                    benefits:
+                      type: array
+                      example: [1, 3, 6, 7]
+      responses:
+        "200":
+          description: Cập nhập công việc mong muốn thành công
+        "422":
+          description: Invalid input
   /api/user/update-seek-job-mode/{id}:
     put:
       tags:
