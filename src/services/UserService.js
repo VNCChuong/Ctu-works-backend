@@ -14,7 +14,7 @@ const createUser = (newUser) => {
             skillName, workingPreferences,
             // locations, jobFunction, companyIndustries, salary, desiredJobLevel,
             confirmPassword, MSSV, } = newUser
-            // console.log(newUser)
+        // console.log(newUser)
         try {
             const checkUser = await User.findOne({
                 email: email
@@ -364,6 +364,30 @@ const uploadfile = (path) => {
     })
 }
 
+const updateUserWorkPreferences = (userId, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findOne({
+                _id: userId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const updateUser = await User.findByIdAndUpdate(userId, data, { new: true })
+            resolve({
+                status: 'OK',
+                message: "Success",
+                data: updateUser
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 
 module.exports = {
     createUser,
@@ -375,5 +399,6 @@ module.exports = {
     deleteManyUser,
     changePassword,
     updateSeekJob,
-    uploadfile
+    uploadfile,
+    updateUserWorkPreferences
 }

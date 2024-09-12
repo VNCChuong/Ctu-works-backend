@@ -41,5 +41,6 @@ router.post('/delete-many', UserController.deleteMany)
 router.post('/refresh-token', UserController.refreshToken)
 router.post('/uploadfile',upload.single('file'), UserController.uploadfile)
 
-// router.post()
+router.put('/update-work-preferences/:id',UserController.updateUserWorkPreferences)
+// router.post('/create-project',UserController.createProject)
 module.exports = router

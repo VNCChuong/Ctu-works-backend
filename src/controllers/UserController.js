@@ -274,7 +274,24 @@ const uploadfile = async (req, res) => {
 // }
 
 
-
+const updateUserWorkPreferences = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { workingPreferences } = req.body
+        if (!workingPreferences.locations || !workingPreferences.jobFunction || !workingPreferences.companyIndustries || !workingPreferences.desiredJobLevel || !workingPreferences.salary) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await UserService.updateUserWorkPreferences(userId, req.body)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
 
 
 
@@ -290,5 +307,6 @@ module.exports = {
     deleteMany,
     changePassword,
     updateSeekJob,
-    uploadfile
+    uploadfile,
+    updateUserWorkPreferences
 }
