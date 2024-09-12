@@ -255,25 +255,6 @@ const uploadfile = async (req, res) => {
     }
 }
 
-// const createProject = async (req, res) => {
-//     try {
-//         const { schoolName, companyName, yourRole } = req.body
-//         if (!schoolName || !companyName || !yourRole) {
-//             return res.status(200).json({
-//                 status: "ERR",
-//                 message: "Input required"
-//             })
-//         }
-//         const response = await UserService.updateSeekJob(id)
-//         return res.status(200).json(response)
-//     } catch (e) {
-//         return res.status(404).json({
-//             message: e
-//         })
-//     }
-// }
-
-
 const updateUserWorkPreferences = async (req, res) => {
     try {
         const userId = req.params.id
@@ -293,7 +274,312 @@ const updateUserWorkPreferences = async (req, res) => {
     }
 }
 
+const createProject = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { projectName, companyName, yourRole, description } = req.body
+        if (!projectName || !companyName || !yourRole || !description) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await UserService.createProject(userId, req.body)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
 
+
+const updateProject = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { projectId, projectName, companyName, fromDate, toDate, projectLink, logo, yourRole, description } = req.body
+        const data = { projectName, companyName, fromDate, toDate, projectLink, logo, yourRole, description }
+        if (!projectId || !projectName || !companyName || !yourRole || !description) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await UserService.updateProject(userId, projectId, data)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+
+const deleteProject = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { projectId } = req.body
+
+        if (!projectId) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await UserService.deleteProject(userId, projectId)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+const createWorkingHistories = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { jobTitle, companyName, description } = req.body
+        if (!jobTitle || !companyName || !description) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await UserService.createWorkingHistories(userId, req.body)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+
+const updateWorkingHistories = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { workingHistoriesId, jobTitle, companyName, fromDate, toDate, isCurrent, companyLogo, description } = req.body
+        const data = { jobTitle, companyName, fromDate, toDate, isCurrent, companyLogo, description }
+        if (!workingHistoriesId || !companyName || !description) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await UserService.updateWorkingHistories(userId, workingHistoriesId, data)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+
+const deleteWorkingHistories = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { workingHistoriesId } = req.body
+
+        if (!workingHistoriesId) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await UserService.deleteWorkingHistories(userId, workingHistoriesId)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+const createEducations = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { major, schoolName, highestDegree } = req.body
+        if (!major || !schoolName || !highestDegree) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await UserService.createEducations(userId, req.body)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+
+const updateEducations = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { educationsId, major, schoolName, highestDegree, fromDate, toDate, achievement } = req.body
+        const data = { major, schoolName, highestDegree, fromDate, toDate, achievement }
+        if (!educationsId || !major || !schoolName || !highestDegree) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await UserService.updateEducations(userId, educationsId, data)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+
+const deleteEducations = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { educationsId } = req.body
+
+        if (!educationsId) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await UserService.deleteEducations(userId, educationsId)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+
+const createCertifications = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { certification, organization } = req.body
+        if (!certification || !organization) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await UserService.createCertifications(userId, req.body)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+
+const updateCertifications = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { certificationsId, certification, organization, logo, fromDate, linkCertification } = req.body
+        const data = { certification, organization, logo, fromDate, linkCertification }
+        if (!certificationsId || !certification || !organization) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await UserService.updateCertifications(userId, certificationsId, data)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+
+const deleteCertifications = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { certificationsId } = req.body
+
+        if (!certificationsId) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await UserService.deleteCertifications(userId, certificationsId)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+
+const createActivities = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { activity, title, organization } = req.body
+        if (!activity || !title || !organization) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await UserService.createActivities(userId, req.body)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+
+const updateActivities = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { activitiesId, activity, title, organization, fromDate, toDate, isCurrent, description } = req.body
+        const data = { activity, title, organization, fromDate, toDate, isCurrent, description }
+        if (!activitiesId || !activity || !title || !organization) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await UserService.updateActivities(userId, activitiesId, data)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+
+const deleteActivities = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { activitiesId } = req.body
+
+        if (!activitiesId) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await UserService.deleteActivities(userId, activitiesId)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
 
 module.exports = {
     createUser,
@@ -308,5 +594,20 @@ module.exports = {
     changePassword,
     updateSeekJob,
     uploadfile,
-    updateUserWorkPreferences
+    updateUserWorkPreferences,
+    createProject,
+    updateProject,
+    deleteProject,
+    createWorkingHistories,
+    updateWorkingHistories,
+    deleteWorkingHistories,
+    createEducations,
+    updateEducations,
+    deleteEducations,
+    createCertifications,
+    updateCertifications,
+    deleteCertifications,
+    createActivities,
+    updateActivities,
+    deleteActivities,
 }

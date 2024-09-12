@@ -384,6 +384,634 @@ paths:
           description: Thêm người dùng từ file thành công
         "422":
           description: Invalid input
+
+  /api/user/create-project/{id}:
+    post:
+      tags:
+        - user
+      summary: Thêm dự án cho người dùng
+      operationId: createProject
+      parameters:
+        - name: id
+          in: path
+          description: Thêm dự án cho người dùng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                projectName:
+                  type: string
+                  example: Project 2
+                companyName:
+                  type: string
+                  example: "Ctu"
+                logo:
+                  type: string
+                  example: "http://link.com"
+                yourRole:
+                  type: string
+                  example: Nhan vien
+                fromDate:
+                  type: string
+                  example: "12122000"
+                toDate:
+                  type: string
+                  example: "12122000"
+                description:
+                  type: string
+                  example: "Mô tả dự án"
+                projectLink:
+                  type: string
+                  example: "http://link.com"
+      responses:
+        "200":
+          description: Thêm dự án cho người dùng thành công
+        "422":
+          description: Invalid input
+
+  /api/user/update-project/{id}:
+    put:
+      tags:
+        - user
+      summary: Cập nhật dự án cho người dùng
+      operationId: updateProject
+      parameters:
+        - name: id
+          in: path
+          description: Cập nhật dự án cho người dùng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                projectId:
+                  type: string
+                  format: MongoId
+                  example: "66dcb19ef533c72b0b0b94d4"
+                projectName:
+                  type: string
+                  example: Project 2
+                companyName:
+                  type: string
+                  example: "Ctu"
+                logo:
+                  type: string
+                  example: "http://link.com"
+                yourRole:
+                  type: string
+                  example: Nhan vien
+                fromDate:
+                  type: string
+                  example: "12122000"
+                toDate:
+                  type: string
+                  example: "12122000"
+                description:
+                  type: string
+                  example: "Mô tả dự án"
+                projectLink:
+                  type: string
+                  example: "http://link.com"
+      responses:
+        "200":
+          description: Cập nhật dự án cho người dùng thành công
+        "422":
+          description: Invalid input
+  /api/user/delete-project/{id}:
+    delete:
+      tags:
+        - user
+      summary: Xóa dự án cho người dùng
+      operationId: deleteProject
+      parameters:
+        - name: id
+          in: path
+          description: Xóa dự án cho người dùng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                projectId:
+                  type: string
+                  format: MongoId
+                  example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Xóa dự án cho người dùng thành công
+        "422":
+          description: Invalid input
+
+  /api/user/create-working-histories/{id}:
+    post:
+      tags:
+        - user
+      summary: Thêm kinh nghiệm làm việc cho người dùng
+      operationId: createWorkingHistories
+      parameters:
+        - name: id
+          in: path
+          description: Thêm kinh nghiệm làm việc cho người dùng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                jobTitle:
+                  type: string
+                  example: Working Histories 2
+                companyName:
+                  type: string
+                  example: "Ctu"
+                companyLogo:
+                  type: string
+                  example: "http://link.com"
+                fromDate:
+                  type: string
+                  example: "12122000"
+                toDate:
+                  type: string
+                  example: "12122000"
+                description:
+                  type: string
+                  example: "Mô tả kinh nghiệm làm việc"
+                isCurrent:
+                  type: string
+                  enum: [1, 2]
+                  example: 1
+      responses:
+        "200":
+          description: Thêm kinh nghiệm làm việc cho người dùng thành công
+        "422":
+          description: Invalid input
+
+  /api/user/update-working-histories/{id}:
+    put:
+      tags:
+        - user
+      summary: Cập nhật kinh nghiệm làm việc cho người dùng
+      operationId: updateWorkingHistories
+      parameters:
+        - name: id
+          in: path
+          description: Cập nhật kinh nghiệm làm việc cho người dùng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                workingHistoriesId:
+                  type: string
+                  format: MongoId
+                  example: "66dcb19ef533c72b0b0b94d4"
+                jobTitle:
+                  type: string
+                  example: Working Histories 2
+                companyName:
+                  type: string
+                  example: "Ctu"
+                companyLogo:
+                  type: string
+                  example: "http://link.com"
+                fromDate:
+                  type: string
+                  example: "12122000"
+                toDate:
+                  type: string
+                  example: "12122000"
+                description:
+                  type: string
+                  example: "Mô tả kinh nghiệm làm việc"
+                isCurrent:
+                  type: string
+                  enum: [1, 2]
+                  example: 1
+      responses:
+        "200":
+          description: Cập nhật kinh nghiệm làm việc cho người dùng thành công
+        "422":
+          description: Invalid input
+  /api/user/delete-working-histories/{id}:
+    delete:
+      tags:
+        - user
+      summary: Xóa kinh nghiệm làm việc cho người dùng
+      operationId: deleteWorkingHistories
+      parameters:
+        - name: id
+          in: path
+          description: Xóa kinh nghiệm làm việc cho người dùng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                workingHistoriesId:
+                  type: string
+                  format: MongoId
+                  example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Xóa kinh nghiệm làm việc cho người dùng thành công
+        "422":
+          description: Invalid input
+
+  /api/user/create-educations/{id}:
+    post:
+      tags:
+        - user
+      summary: Thêm học vấn cho người dùng
+      operationId: createEducations
+      parameters:
+        - name: id
+          in: path
+          description: Thêm học vấn cho người dùng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                major:
+                  type: string
+                  example: educations 2
+                schoolName:
+                  type: string
+                  example: "Ctu"
+                highestDegree:
+                  type: string
+                  example: "http://link.com"
+                fromDate:
+                  type: string
+                  example: "12122000"
+                toDate:
+                  type: string
+                  example: "12122000"
+                achievement:
+                  type: string
+                  example: "Mô tả học vấn"
+      responses:
+        "200":
+          description: Thêm học vấn cho người dùng thành công
+        "422":
+          description: Invalid input
+
+  /api/user/update-educations/{id}:
+    put:
+      tags:
+        - user
+      summary: Cập nhật học vấn cho người dùng
+      operationId: updateEducations
+      parameters:
+        - name: id
+          in: path
+          description: Cập nhật học vấn cho người dùng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                educationsId:
+                  type: string
+                  format: MongoId
+                  example: "66dcb19ef533c72b0b0b94d4"
+                major:
+                  type: string
+                  example: educations 2
+                schoolName:
+                  type: string
+                  example: "Ctu"
+                highestDegree:
+                  type: string
+                  example: "http://link.com"
+                fromDate:
+                  type: string
+                  example: "12122000"
+                toDate:
+                  type: string
+                  example: "12122000"
+                achievement:
+                  type: string
+                  example: "Mô tả học vấn"
+      responses:
+        "200":
+          description: Cập nhật học vấn cho người dùng thành công
+        "422":
+          description: Invalid input
+  /api/user/delete-educations/{id}:
+    delete:
+      tags:
+        - user
+      summary: Xóa học vấn cho người dùng
+      operationId: deleteWorkingHistories
+      parameters:
+        - name: id
+          in: path
+          description: Xóa học vấn cho người dùng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                educationsId:
+                  type: string
+                  format: MongoId
+                  example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Xóa học vấn cho người dùng thành công
+        "422":
+          description: Invalid input
+
+  /api/user/create-activities/{id}:
+    post:
+      tags:
+        - user
+      summary: Thêm hoạt động cho người dùng
+      operationId: createActivities
+      parameters:
+        - name: id
+          in: path
+          description: Thêm hoạt động cho người dùng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                activity:
+                  type: string
+                  example: Hoat dong 1
+                title:
+                  type: string
+                  example: "Nguoi tham gia"
+                organization:
+                  type: string
+                  example: "Ctu"
+                fromDate:
+                  type: string
+                  example: "12122000"
+                toDate:
+                  type: string
+                  example: "12122000"
+                isCurrent:
+                  type: string
+                  enum: [1, 2]
+                  example: 1
+                description:
+                  type: string
+                  example: "Mô tả hoạt động"
+      responses:
+        "200":
+          description: Thêm hoạt động cho người dùng thành công
+        "422":
+          description: Invalid input
+
+  /api/user/update-activities/{id}:
+    put:
+      tags:
+        - user
+      summary: Cập nhật hoạt động cho người dùng
+      operationId: updateActivities
+      parameters:
+        - name: id
+          in: path
+          description: Cập nhật hoạt động cho người dùng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                activitiesId:
+                  type: string
+                  format: MongoId
+                  example: "66dcb19ef533c72b0b0b94d4"
+                activity:
+                  type: string
+                  example: Hoat dong 1
+                title:
+                  type: string
+                  example: "Nguoi tham gia"
+                organization:
+                  type: string
+                  example: "Ctu"
+                fromDate:
+                  type: string
+                  example: "12122000"
+                toDate:
+                  type: string
+                  example: "12122000"
+                isCurrent:
+                  type: string
+                  enum: [1, 2]
+                  example: 1
+                description:
+                  type: string
+                  example: "Mô tả hoạt động"
+      responses:
+        "200":
+          description: Cập nhật hoạt động cho người dùng thành công
+        "422":
+          description: Invalid input
+  /api/user/delete-activities/{id}:
+    delete:
+      tags:
+        - user
+      summary: Xóa hoạt động cho người dùng
+      operationId: deleteActivities
+      parameters:
+        - name: id
+          in: path
+          description: Xóa hoạt động cho người dùng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                activitiesId:
+                  type: string
+                  format: MongoId
+                  example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Xóa hoạt động cho người dùng thành công
+        "422":
+          description: Invalid input
+
+  /api/user/create-certifications/{id}:
+    post:
+      tags:
+        - user
+      summary: Thêm chứng chỉ cho người dùng
+      operationId: createCertifications
+      parameters:
+        - name: id
+          in: path
+          description: Thêm chứng chỉ cho người dùng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                certification:
+                  type: string
+                  example: Tin hoc
+                organization:
+                  type: string
+                  example: "Ctu"
+                logo:
+                  type: string
+                  example: "https://link.com"
+                fromDate:
+                  type: string
+                  example: "12122000"
+                linkCertification:
+                  type: string
+                  example: "https://link.com"
+      responses:
+        "200":
+          description: Thêm chứng chỉ cho người dùng thành công
+        "422":
+          description: Invalid input
+
+  /api/user/update-certifications/{id}:
+    put:
+      tags:
+        - user
+      summary: Cập nhật chứng chỉ cho người dùng
+      operationId: updateActivities
+      parameters:
+        - name: id
+          in: path
+          description: Cập nhật chứng chỉ cho người dùng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                certificationsId:
+                  type: string
+                  format: MongoId
+                  example: "66dcb19ef533c72b0b0b94d4"
+                certification:
+                  type: string
+                  example: Tin hoc
+                organization:
+                  type: string
+                  example: "Ctu"
+                logo:
+                  type: string
+                  example: "https://link.com"
+                fromDate:
+                  type: string
+                  example: "12122000"
+                linkCertification:
+                  type: string
+                  example: "https://link.com"
+      responses:
+        "200":
+          description: Cập nhật chứng chỉ cho người dùng thành công
+        "422":
+          description: Invalid input
+  /api/user/delete-certifications/{id}:
+    delete:
+      tags:
+        - user
+      summary: Xóa chứng chỉ cho người dùng
+      operationId: deleteActivities
+      parameters:
+        - name: id
+          in: path
+          description: Xóa chứng chỉ cho người dùng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                certificationsId:
+                  type: string
+                  format: MongoId
+                  example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Xóa chứng chỉ cho người dùng thành công
+        "422":
+          description: Invalid input
+
   /api/recruiter/sign-in-recruiter:
     post:
       tags:

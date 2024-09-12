@@ -159,7 +159,7 @@ const userSchema = new mongoose.Schema(
                     type: String,
                     // required: true
                 },
-                recruiterId: { type: mongoose.Schema.Types.ObjectId, ref: 'Recruiter' },
+                // recruiterId: { type: mongoose.Schema.Types.ObjectId, ref: 'Recruiter' },
                 companyName: {
                     type: String,
                     // required: true,
@@ -185,12 +185,12 @@ const userSchema = new mongoose.Schema(
             }],
         project:
             [{
-                schoolName: {
+                projectName: {
                     type: String,
                     // required: true
                 },
                 //ten khach hang/cong ty
-                recruiterId: { type: mongoose.Schema.Types.ObjectId, ref: 'Recruiter' },
+                // recruiterId: { type: mongoose.Schema.Types.ObjectId, ref: 'Recruiter' },
                 companyName: {
                     type: String,
                     // required: true,

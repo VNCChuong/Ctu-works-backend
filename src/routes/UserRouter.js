@@ -42,5 +42,24 @@ router.post('/refresh-token', UserController.refreshToken)
 router.post('/uploadfile',upload.single('file'), UserController.uploadfile)
 
 router.put('/update-work-preferences/:id',UserController.updateUserWorkPreferences)
-// router.post('/create-project',UserController.createProject)
+router.post('/create-project/:id',UserController.createProject)
+router.put('/update-project/:id',UserController.updateProject)
+router.delete('/delete-project/:id',UserController.deleteProject)
+
+router.post('/create-working-histories/:id',UserController.createWorkingHistories)
+router.put('/update-working-histories/:id',UserController.updateWorkingHistories)
+router.delete('/delete-working-histories/:id',UserController.deleteWorkingHistories)
+
+router.post('/create-educations/:id',UserController.createEducations)
+router.put('/update-educations/:id',UserController.updateEducations)
+router.delete('/delete-educations/:id',UserController.deleteEducations)
+
+router.post('/create-certifications/:id',UserController.createCertifications)
+router.put('/update-certifications/:id',UserController.updateCertifications)
+router.delete('/delete-certifications/:id',UserController.deleteCertifications)
+
+router.post('/create-activities/:id',UserController.createActivities)
+router.put('/update-activities/:id',UserController.updateActivities)
+router.delete('/delete-activities/:id',UserController.deleteActivities)
+
 module.exports = router

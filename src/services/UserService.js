@@ -4,7 +4,7 @@ const { genneralAccessToken, genneralRefreshToken } = require("./JwtService")
 const { sendVerificationEmail } = require('./EmailService')
 const crypto = require('crypto');
 const fs = require('fs')
-const excelToJson = require('convert-excel-to-json')
+const excelToJson = require('convert-excel-to-json');
 
 const createUser = (newUser) => {
     return new Promise(async (resolve, reject) => {
@@ -389,6 +389,626 @@ const updateUserWorkPreferences = (userId, data) => {
 }
 
 
+const createProject = (userId, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findOne({
+                _id: userId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const createProject = await User.updateOne(
+                { _id: userId },
+                { $push: { project: data } }
+            ).then(result => {
+                // console.log("Project added successfully:", result);
+            }).catch(error => {
+                // console.error("Error adding project:", error);
+                resolve({
+                    status: 'ERR',
+                    message: "Project added error",
+                    data: createProject
+                })
+            });
+            resolve({
+                status: 'OK',
+                message: "Project added successfully",
+                data: createProject
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+
+const updateProject = (userId, projectId, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findById({
+                _id: userId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const project = await User.findOne({ 'project._id': projectId });
+            if (!project) {
+                resolve({
+                    status: 'ERR',
+                    message: "Project not found",
+                })
+            } else {
+                await User.findByIdAndUpdate(
+                    userId,
+                    { $pull: { project: { _id: projectId } } },
+                    { new: true }
+                );
+                await User.updateOne(
+                    { _id: userId },
+                    { $push: { project: data } }
+                ).then(result => {
+                    // console.log("Project update successfully:", result);
+                }).catch(error => {
+                    // console.error("Error update project:", error);
+                    resolve({
+                        status: 'ERR',
+                        message: "Project update error",
+                    })
+                });
+                resolve({
+                    status: 'OK',
+                    message: "Project update successfully",
+                })
+            }
+        } catch (e) {
+            reject(e)
+
+        }
+    })
+}
+
+
+const deleteProject = (userId, projectId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findById({
+                _id: userId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const project = await User.findOne({ 'project._id': projectId });
+            if (!project) {
+                resolve({
+                    status: 'ERR',
+                    message: "Project not found",
+                })
+            } else {
+                await User.findByIdAndUpdate(
+                    userId,
+                    { $pull: { project: { _id: projectId } } },
+                    { new: true }
+                );
+
+                resolve({
+                    status: 'OK',
+                    message: "Project deleted successfully",
+                })
+
+            }
+        } catch (e) {
+            reject(e)
+
+        }
+    })
+}
+
+
+const createWorkingHistories = (userId, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findOne({
+                _id: userId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const createWorkingHistories = await User.updateOne(
+                { _id: userId },
+                { $push: { workingHistories: data } }
+            ).then(result => {
+                // console.log("workingHistories added successfully:", result);
+            }).catch(error => {
+                // console.error("Error adding workingHistories:", error);
+                resolve({
+                    status: 'ERR',
+                    message: "working histories added error",
+                    data: createWorkingHistories
+                })
+            });
+            resolve({
+                status: 'OK',
+                message: "working histories added successfully",
+                data: createWorkingHistories
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+
+const updateWorkingHistories = (userId, workingHistoriesId, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findById({
+                _id: userId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const workingHistories = await User.findOne({ 'workingHistories._id': workingHistoriesId });
+            if (!workingHistories) {
+                resolve({
+                    status: 'ERR',
+                    message: "working histories not found",
+                })
+            } else {
+                await User.findByIdAndUpdate(
+                    userId,
+                    { $pull: { workingHistories: { _id: workingHistoriesId } } },
+                    { new: true }
+                );
+                await User.updateOne(
+                    { _id: userId },
+                    { $push: { workingHistories: data } }
+                ).then(result => {
+                    // console.log("Project update successfully:", result);
+                }).catch(error => {
+                    // console.error("Error update project:", error);
+                    resolve({
+                        status: 'ERR',
+                        message: "working histories update error",
+                    })
+                });
+                resolve({
+                    status: 'OK',
+                    message: "working histories update successfully",
+                })
+            }
+        } catch (e) {
+            reject(e)
+
+        }
+    })
+}
+
+const deleteWorkingHistories = (userId, workingHistoriesId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findById({
+                _id: userId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const workingHistories = await User.findOne({ 'workingHistories._id': workingHistoriesId });
+            if (!workingHistories) {
+                resolve({
+                    status: 'ERR',
+                    message: "working histories not found",
+                })
+            } else {
+                await User.findByIdAndUpdate(
+                    userId,
+                    { $pull: { workingHistories: { _id: workingHistoriesId } } },
+                    { new: true }
+                );
+
+                resolve({
+                    status: 'OK',
+                    message: "working histories deleted successfully",
+                })
+
+            }
+        } catch (e) {
+            reject(e)
+
+        }
+    })
+}
+
+
+const createEducations = (userId, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findOne({
+                _id: userId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const createEducations = await User.updateOne(
+                { _id: userId },
+                { $push: { educations: data } }
+            ).then(result => {
+                // console.log("Educations added successfully:", result);
+            }).catch(error => {
+                // console.error("Error adding educations:", error);
+                resolve({
+                    status: 'ERR',
+                    message: "educations added error",
+                    data: createEducations
+                })
+            });
+            resolve({
+                status: 'OK',
+                message: "educations added successfully",
+                data: createEducations
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+
+const updateEducations = (userId, educationsId, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findById({
+                _id: userId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const educations = await User.findOne({ 'educations._id': educationsId });
+            if (!educations) {
+                resolve({
+                    status: 'ERR',
+                    message: "educations not found",
+                })
+            } else {
+                await User.findByIdAndUpdate(
+                    userId,
+                    { $pull: { educations: { _id: educationsId } } },
+                    { new: true }
+                );
+                await User.updateOne(
+                    { _id: userId },
+                    { $push: { educations: data } }
+                ).then(result => {
+                    // console.log("Project update successfully:", result);
+                }).catch(error => {
+                    // console.error("Error update project:", error);
+                    resolve({
+                        status: 'ERR',
+                        message: "educations update error",
+                    })
+                });
+                resolve({
+                    status: 'OK',
+                    message: "educations update successfully",
+                })
+            }
+        } catch (e) {
+            reject(e)
+
+        }
+    })
+}
+
+const deleteEducations = (userId, educationsId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findById({
+                _id: userId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const educations = await User.findOne({ 'educations._id': educationsId });
+            if (!educations) {
+                resolve({
+                    status: 'ERR',
+                    message: "educations not found",
+                })
+            } else {
+                await User.findByIdAndUpdate(
+                    userId,
+                    { $pull: { educations: { _id: educationsId } } },
+                    { new: true }
+                );
+
+                resolve({
+                    status: 'OK',
+                    message: "educations deleted successfully",
+                })
+
+            }
+        } catch (e) {
+            reject(e)
+
+        }
+    })
+}
+
+
+const createCertifications = (userId, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findOne({
+                _id: userId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const createCertifications = await User.updateOne(
+                { _id: userId },
+                { $push: { certifications: data } }
+            ).then(result => {
+                // console.log("certifications added successfully:", result);
+            }).catch(error => {
+                // console.error("Error adding certifications:", error);
+                resolve({
+                    status: 'ERR',
+                    message: "certifications added error",
+                    data: createCertifications
+                })
+            });
+            resolve({
+                status: 'OK',
+                message: "certifications added successfully",
+                data: createCertifications
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+
+const updateCertifications = (userId, certificationsId, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findById({
+                _id: userId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const certifications = await User.findOne({ 'certifications._id': certificationsId });
+            if (!certifications) {
+                resolve({
+                    status: 'ERR',
+                    message: "certifications not found",
+                })
+            } else {
+                await User.findByIdAndUpdate(
+                    userId,
+                    { $pull: { certifications: { _id: certificationsId } } },
+                    { new: true }
+                );
+                await User.updateOne(
+                    { _id: userId },
+                    { $push: { certifications: data } }
+                ).then(result => {
+                    // console.log("Project update successfully:", result);
+                }).catch(error => {
+                    // console.error("Error update project:", error);
+                    resolve({
+                        status: 'ERR',
+                        message: "certifications update error",
+                    })
+                });
+                resolve({
+                    status: 'OK',
+                    message: "certifications update successfully",
+                })
+            }
+        } catch (e) {
+            reject(e)
+
+        }
+    })
+}
+
+const deleteCertifications = (userId, certificationsId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findById({
+                _id: userId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const certifications = await User.findOne({ 'certifications._id': certificationsId });
+            if (!certifications) {
+                resolve({
+                    status: 'ERR',
+                    message: "certifications not found",
+                })
+            } else {
+                await User.findByIdAndUpdate(
+                    userId,
+                    { $pull: { certifications: { _id: certificationsId } } },
+                    { new: true }
+                );
+
+                resolve({
+                    status: 'OK',
+                    message: "certifications deleted successfully",
+                })
+
+            }
+        } catch (e) {
+            reject(e)
+
+        }
+    })
+}
+
+
+const createActivities = (userId, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findOne({
+                _id: userId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const createActivities = await User.updateOne(
+                { _id: userId },
+                { $push: { activities: data } }
+            ).then(result => {
+                // console.log("activities added successfully:", result);
+            }).catch(error => {
+                // console.error("Error adding activities:", error);
+                resolve({
+                    status: 'ERR',
+                    message: "activities added error",
+                    data: createActivities
+                })
+            });
+            resolve({
+                status: 'OK',
+                message: "activities added successfully",
+                data: createActivities
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+
+const updateActivities = (userId, activitiesId, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findById({
+                _id: userId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const activities = await User.findOne({ 'activities._id': activitiesId });
+            if (!activities) {
+                resolve({
+                    status: 'ERR',
+                    message: "activities not found",
+                })
+            } else {
+                await User.findByIdAndUpdate(
+                    userId,
+                    { $pull: { activities: { _id: activitiesId } } },
+                    { new: true }
+                );
+                await User.updateOne(
+                    { _id: userId },
+                    { $push: { activities: data } }
+                ).then(result => {
+                    // console.log("Project update successfully:", result);
+                }).catch(error => {
+                    // console.error("Error update project:", error);
+                    resolve({
+                        status: 'ERR',
+                        message: "activities update error",
+                    })
+                });
+                resolve({
+                    status: 'OK',
+                    message: "activities update successfully",
+                })
+            }
+        } catch (e) {
+            reject(e)
+
+        }
+    })
+}
+
+const deleteActivities = (userId, activitiesId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findById({
+                _id: userId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const activities = await User.findOne({ 'activities._id': activitiesId });
+            if (!activities) {
+                resolve({
+                    status: 'ERR',
+                    message: "activities not found",
+                })
+            } else {
+                await User.findByIdAndUpdate(
+                    userId,
+                    { $pull: { activities: { _id: activitiesId } } },
+                    { new: true }
+                );
+
+                resolve({
+                    status: 'OK',
+                    message: "activities deleted successfully",
+                })
+
+            }
+        } catch (e) {
+            reject(e)
+
+        }
+    })
+}
+
 module.exports = {
     createUser,
     loginUser,
@@ -400,5 +1020,20 @@ module.exports = {
     changePassword,
     updateSeekJob,
     uploadfile,
-    updateUserWorkPreferences
+    updateUserWorkPreferences,
+    createProject,
+    updateProject,
+    deleteProject,
+    createWorkingHistories,
+    updateWorkingHistories,
+    deleteWorkingHistories,
+    createEducations,
+    updateEducations,
+    deleteEducations,
+    createCertifications,
+    updateCertifications,
+    deleteCertifications,
+    createActivities,
+    updateActivities,
+    deleteActivities,
 }
