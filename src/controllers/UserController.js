@@ -16,7 +16,7 @@ const createUser = async (req, res) => {
             !dateOfBirth || !gender || !country || !city || !district || !maritalStatusId ||
             !jobTitle || !yearsExperience || !currentDegree || !highestDegree || !currentSalary || !currentJobFunction || !currentIndustries ||
             !skillName ||
-            !workingPreferences.locations || !workingPreferences.jobFunction || !workingPreferences.companyIndustries || !workingPreferences.salary || !workingPreferences.desiredJobLevel
+            !workingPreferences.companyIndustries
         ) {
             return res.status(200).json({
                 status: 'ERR',
@@ -254,6 +254,30 @@ const uploadfile = async (req, res) => {
         })
     }
 }
+
+// const createProject = async (req, res) => {
+//     try {
+//         const { schoolName, companyName, yourRole } = req.body
+//         if (!schoolName || !companyName || !yourRole) {
+//             return res.status(200).json({
+//                 status: "ERR",
+//                 message: "Input required"
+//             })
+//         }
+//         const response = await UserService.updateSeekJob(id)
+//         return res.status(200).json(response)
+//     } catch (e) {
+//         return res.status(404).json({
+//             message: e
+//         })
+//     }
+// }
+
+
+
+
+
+
 module.exports = {
     createUser,
     loginUser,

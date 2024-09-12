@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema(
         },
         yearsExperience: {
             type: Number,
-            default: 0,
+            default: 1,
             required: true
         },
         currentSalary: {
@@ -82,12 +82,12 @@ const userSchema = new mongoose.Schema(
         },
         gender: {
             type: Number,
-            enum: [0, 1],
+            enum: [1, 2],
             required: true
         },
         maritalStatusId: {
             type: Number,
-            enum: [0, 1],
+            enum: [1, 2],
             required: true
         },
         avatar: {
@@ -121,28 +121,30 @@ const userSchema = new mongoose.Schema(
             locations: [
                 {
                     type: String,
-                    required: true
+                    // required: true
                 }
             ],
             jobFunction: {
                 type: String,
-                required: true
+                // required: true
             },
-            companyIndustries: {
-                type: String,
-                required: true
-            },
+            companyIndustries: [
+                {
+                    type: String,
+                    required: true
+                }
+            ],
             desiredJobLevel: {
                 type: String,
-                required: true
+                // required: true
             },
             salary: {
                 type: Number,
-                required: true
+                // required: true
             },
             isRelocate: {
                 type: Number,
-                enum: [0, 1]
+                enum: [1, 2]
             },
             benefits: [
                 {
@@ -178,7 +180,7 @@ const userSchema = new mongoose.Schema(
                 },
                 isCurrent: {
                     type: Number,
-                    enum: [0, 1]
+                    enum: [1, 2]
                 }
             }],
         project:
@@ -311,7 +313,7 @@ const userSchema = new mongoose.Schema(
             },
             isCurrent: {
                 type: Number,
-                enum: [0, 1]
+                enum: [1, 2]
             },
             description: {
                 type: String,
