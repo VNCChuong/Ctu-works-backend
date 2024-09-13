@@ -1011,6 +1011,231 @@ paths:
         "422":
           description: Invalid input
 
+  /api/user/create-language/{id}:
+    post:
+      tags:
+        - user
+      summary: Thêm ngôn ngữ cho người dùng
+      operationId: createLanguage
+      parameters:
+        - name: id
+          in: path
+          description: Thêm ngôn ngữ cho người dùng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                nameLanguage:
+                  type: string
+                  example: Tiếng Anh
+                languageLevel:
+                  type: number
+                  enum: [1, 2, 3, 4]
+                  example: 2
+      responses:
+        "200":
+          description: Thêm ngôn ngữ cho người dùng thành công
+        "422":
+          description: Invalid input
+  /api/user/update-language/{id}:
+    put:
+      tags:
+        - user
+      summary: Cập nhật ngôn ngữ cho người dùng
+      operationId: updateLanguage
+      parameters:
+        - name: id
+          in: path
+          description: Cập nhật ngôn ngữ cho người dùng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                languageId:
+                  type: string
+                  format: MongoId
+                  example: "66dcb19ef533c72b0b0b94d4"
+                nameLanguage:
+                  type: string
+                  example: Tiếng Anh
+                languageLevel:
+                  type: number
+                  enum: [1, 2, 3, 4]
+                  example: 2
+      responses:
+        "200":
+          description: Cập nhật ngôn ngữ cho người dùng thành công
+        "422":
+          description: Invalid input
+  /api/user/delete-language/{id}:
+    delete:
+      tags:
+        - user
+      summary: Xóa ngôn ngữ cho người dùng
+      operationId: deleteLanguage
+      parameters:
+        - name: id
+          in: path
+          description: Xóa ngôn ngữ cho người dùng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                languageId:
+                  type: string
+                  format: MongoId
+                  example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Xóa ngôn ngữ cho người dùng thành công
+        "422":
+          description: Invalid input
+
+  /api/user/create-skills/{id}:
+    post:
+      tags:
+        - user
+      summary: Thêm kỹ năng cho người dùng
+      operationId: createSkills
+      parameters:
+        - name: id
+          in: path
+          description: Thêm kỹ năng cho người dùng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                skillName:
+                  type: string
+                  example: Tiếng Anh
+                skillLevel:
+                  type: number
+                  enum: [1, 2, 3, 4, 5]
+                  example: 2
+      responses:
+        "200":
+          description: Thêm kỹ năng cho người dùng thành công
+        "422":
+          description: Invalid input
+  /api/user/update-skills/{id}:
+    put:
+      tags:
+        - user
+      summary: Cập nhật kỹ năng cho người dùng
+      operationId: updateSkills
+      parameters:
+        - name: id
+          in: path
+          description: Cập nhật kỹ năng cho người dùng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                skillsId:
+                  type: string
+                  format: MongoId
+                  example: "66dcb19ef533c72b0b0b94d4"
+                skillName:
+                  type: string
+                  example: Tiếng Anh
+                skillLevel:
+                  type: number
+                  enum: [1, 2, 3, 4, 5]
+                  example: 2
+      responses:
+        "200":
+          description: Cập nhật kỹ năng cho người dùng thành công
+        "422":
+          description: Invalid input
+  /api/user/delete-skills/{id}:
+    delete:
+      tags:
+        - user
+      summary: Xóa kỹ năng cho người dùng
+      operationId: deleteSkills
+      parameters:
+        - name: id
+          in: path
+          description: Xóa kỹ năng cho người dùng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                skillsId:
+                  type: string
+                  format: MongoId
+                  example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Xóa kỹ năng cho người dùng thành công
+        "422":
+          description: Invalid input
+
+  /api/user/update-introduce/{id}:
+    put:
+      tags:
+        - user
+      summary: Cập nhật mục tiêu nghề nghiệp cho người dùng
+      operationId: updateSkills
+      parameters:
+        - name: id
+          in: path
+          description: Cập nhật mục tiêu nghề nghiệp cho người dùng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                data:
+                  type: string
+                  example: Mục tiêu nghề nghiệp
+      responses:
+        "200":
+          description: Cập nhật mục tiêu nghề nghiệp cho người dùng thành công
+        "422":
+          description: Invalid input
+
   /api/recruiter/sign-in-recruiter:
     post:
       tags:

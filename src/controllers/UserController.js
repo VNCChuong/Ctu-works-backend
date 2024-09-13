@@ -581,6 +581,146 @@ const deleteActivities = async (req, res) => {
     }
 }
 
+const createLanguage = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { nameLanguage, languageLevel, } = req.body
+        if (!nameLanguage || !languageLevel) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await UserService.createLanguage(userId, req.body)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+
+const updateLanguage = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { languageId, nameLanguage, languageLevel } = req.body
+        const data = { nameLanguage, languageLevel }
+        data.languageLevel = Math.max(1, Math.min(data.languageLevel, 4));
+        if (!languageId || !nameLanguage || !languageLevel) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await UserService.updateLanguage(userId, languageId, data)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+
+const deleteLanguage = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { languageId } = req.body
+
+        if (!languageId) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await UserService.deleteLanguage(userId, languageId)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+
+const createSkills = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { skillName, skillLevel, } = req.body
+        if (!skillName || !skillLevel) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await UserService.createSkills(userId, req.body)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+
+const updateSkills = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { skillsId, skillName, skillLevel } = req.body
+        const data = { skillName, skillLevel }
+        data.skillLevel = Math.max(1, Math.min(data.skillLevel, 5));
+        if (!skillsId || !skillName || !skillLevel) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await UserService.updateSkills(userId, skillsId, data)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+
+const deleteSkills = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { skillsId } = req.body
+
+        if (!skillsId) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await UserService.deleteSkills(userId, skillsId)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+
+const updateIntroduce = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { data } = req.body
+        const response = await UserService.updateIntroduce(userId, data)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+
 module.exports = {
     createUser,
     loginUser,
@@ -610,4 +750,11 @@ module.exports = {
     createActivities,
     updateActivities,
     deleteActivities,
+    createLanguage,
+    updateLanguage,
+    deleteLanguage,
+    createSkills,
+    updateSkills,
+    deleteSkills,
+    updateIntroduce
 }

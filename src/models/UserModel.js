@@ -260,7 +260,7 @@ const userSchema = new mongoose.Schema(
             },
             languageLevel: {
                 type: Number,
-                enum: [1, 2, 3, 4, 5],
+                enum: [1, 2, 3, 4],
                 // required: true,
             }
         }],

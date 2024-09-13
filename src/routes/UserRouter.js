@@ -62,4 +62,14 @@ router.post('/create-activities/:id',UserController.createActivities)
 router.put('/update-activities/:id',UserController.updateActivities)
 router.delete('/delete-activities/:id',UserController.deleteActivities)
 
+router.post('/create-language/:id',UserController.createLanguage)
+router.put('/update-language/:id',UserController.updateLanguage)
+router.delete('/delete-language/:id',UserController.deleteLanguage)
+
+router.post('/create-skills/:id',UserController.createSkills)
+router.put('/update-skills/:id',UserController.updateSkills)
+router.delete('/delete-skills/:id',UserController.deleteSkills)
+
+router.put('/update-introduce/:id',UserController.updateIntroduce)
+
 module.exports = router

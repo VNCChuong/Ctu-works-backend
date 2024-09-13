@@ -1009,6 +1009,304 @@ const deleteActivities = (userId, activitiesId) => {
     })
 }
 
+
+const createLanguage = (userId, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findOne({
+                _id: userId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const language = await User.findOne({ 'languageSkills.nameLanguage': data.nameLanguage });
+            if (language) {
+                resolve({
+                    status: 'ERR',
+                    message: "language is exist",
+                })
+            } else {
+                const createLanguage = await User.updateOne(
+                    { _id: userId },
+                    { $push: { languageSkills: data } }
+                ).then(result => {
+                    // console.log("language added successfully:", result);
+                }).catch(error => {
+                    // console.error("Error adding language:", error);
+                    resolve({
+                        status: 'ERR',
+                        message: "language added error",
+                        data: createLanguage
+                    })
+                });
+                resolve({
+                    status: 'OK',
+                    message: "language added successfully",
+                    data: createLanguage
+                })
+            }
+
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+
+const updateLanguage = (userId, languageId, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findById({
+                _id: userId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const language = await User.findOne({ 'languageSkills._id': languageId });
+            const languageByName = await User.findOne({ 'languageSkills.nameLanguage': data.nameLanguage });
+            let checkLanguage = 0;
+            languageByName?.languageSkills.map(item => {
+                if (item._id.toHexString() !== languageId && item.nameLanguage === data.nameLanguage) {
+                    checkLanguage = 1
+                }
+            })
+            if (!language) {
+                resolve({
+                    status: 'ERR',
+                    message: "language not found",
+                })
+            } else if (checkLanguage === 1) {
+                resolve({
+                    status: 'ERR',
+                    message: "language is exist",
+                })
+            } else {
+                await User.findByIdAndUpdate(
+                    userId,
+                    { $pull: { languageSkills: { _id: languageId } } },
+                    { new: true }
+                );
+                await User.updateOne(
+                    { _id: userId },
+                    { $push: { languageSkills: data } }
+                ).then(result => {
+                    // console.log("Project update successfully:", result);
+                }).catch(error => {
+                    // console.error("Error update project:", error);
+                    resolve({
+                        status: 'ERR',
+                        message: "language update error",
+                    })
+                });
+                resolve({
+                    status: 'OK',
+                    message: "language update successfully",
+                })
+            }
+        } catch (e) {
+            reject(e)
+
+        }
+    })
+}
+
+const deleteLanguage = (userId, languageId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findById({
+                _id: userId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const language = await User.findOne({ 'languageSkills._id': languageId });
+            if (!language) {
+                resolve({
+                    status: 'ERR',
+                    message: "language not found",
+                })
+            } else {
+                await User.findByIdAndUpdate(
+                    userId,
+                    { $pull: { languageSkills: { _id: languageId } } },
+                    { new: true }
+                );
+
+                resolve({
+                    status: 'OK',
+                    message: "language deleted successfully",
+                })
+
+            }
+        } catch (e) {
+            reject(e)
+
+        }
+    })
+}
+
+
+const createSkills = (userId, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findOne({
+                _id: userId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const createSkills = await User.updateOne(
+                { _id: userId },
+                { $push: { skills: data } }
+            ).then(result => {
+                // console.log("language added successfully:", result);
+            }).catch(error => {
+                // console.error("Error adding language:", error);
+                resolve({
+                    status: 'ERR',
+                    message: "skills added error",
+                    data: createSkills
+                })
+            });
+            resolve({
+                status: 'OK',
+                message: "skills added successfully",
+                data: createSkills
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+
+const updateSkills = (userId, skillsId, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findById({
+                _id: userId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const skills = await User.findOne({ 'skills._id': skillsId });
+            if (!skills) {
+                resolve({
+                    status: 'ERR',
+                    message: "skills not found",
+                })
+            } else {
+                await User.findByIdAndUpdate(
+                    userId,
+                    { $pull: { skills: { _id: skillsId } } },
+                    { new: true }
+                );
+                await User.updateOne(
+                    { _id: userId },
+                    { $push: { skills: data } }
+                ).then(result => {
+                    // console.log("Project update successfully:", result);
+                }).catch(error => {
+                    // console.error("Error update project:", error);
+                    resolve({
+                        status: 'ERR',
+                        message: "skills update error",
+                    })
+                });
+                resolve({
+                    status: 'OK',
+                    message: "skills update successfully",
+                })
+            }
+        } catch (e) {
+            reject(e)
+
+        }
+    })
+}
+
+const deleteSkills = (userId, skillsId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findById({
+                _id: userId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const language = await User.findOne({ 'skills._id': skillsId });
+            if (!language) {
+                resolve({
+                    status: 'ERR',
+                    message: "skills not found",
+                })
+            } else {
+                await User.findByIdAndUpdate(
+                    userId,
+                    { $pull: { skills: { _id: skillsId } } },
+                    { new: true }
+                );
+
+                resolve({
+                    status: 'OK',
+                    message: "skills deleted successfully",
+                })
+
+            }
+        } catch (e) {
+            reject(e)
+
+        }
+    })
+}
+
+const updateIntroduce = (userId, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findById({
+                _id: userId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const user = await User.findByIdAndUpdate(
+                userId,
+                { $set: { introduce: data } },
+                { new: true }
+            );
+            resolve({
+                status: 'OK',
+                message: "update introduce successfully",
+                data: user
+            })
+        } catch (e) {
+            reject(e)
+
+        }
+    })
+}
+
 module.exports = {
     createUser,
     loginUser,
@@ -1036,4 +1334,11 @@ module.exports = {
     createActivities,
     updateActivities,
     deleteActivities,
+    createLanguage,
+    updateLanguage,
+    deleteLanguage,
+    createSkills,
+    updateSkills,
+    deleteSkills,
+    updateIntroduce
 }
