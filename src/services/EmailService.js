@@ -53,12 +53,26 @@ const sendVerificationEmail = async (email, verificationLink) => {
       address: process.env.MAIL_ACCOUNT,
     },
     to: "chuongvo900@gmail.com",
-    subject: 'Xác nhận đăng ký tài khoản',
+    subject: 'Xác thực email trên CtuWorks',
     html: `
-      <h1>Xác nhận đăng ký tài khoản</h1>
-      <p>Vui lòng nhấn vào nút bên dưới để xác nhận tài khoản của bạn:</p>
-      <a href="${verificationLink}" style="padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">Xác nhận</a>
-      <p>Nếu bạn không đăng ký tài khoản này, vui lòng bỏ qua email này.</p>
+      <div style="background-color: #E6EFFF">
+        <img style="margin: 0 0 10px 33%;" src="https://upload.wikimedia.org/wikipedia/en/6/6e/Can_Tho_University_Logo.png" />
+        <div style="background-color: white; width: 600px; margin: 0 230px 30px 230px; padding: 20px 30px">
+          <h1 style="text-align: center">Xác thực email trên CtuWorks</h1>
+          <p>Xin chào,</p>
+          <p>Cám ơn bạn đã đăng ký thành viên trên VietnamWorks.
+            Hãy bấm vào nút bên dưới để xác thực email ${email}.
+            Email này sẽ không thể sử dụng cho trang Nhà tuyển dụng.</p>
+          <a href="${verificationLink}" style="padding: 10px 20px; margin-left: 35%;
+          background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">Xác thực tài khoản</a>
+          <p>Tại sao chúng tôi lại làm việc này: Bằng việc xác thực email,
+            bạn xác nhận rằng bạn muốn đăng ký trở thành người dùng của trang CtuWorks Tìm việc.</p>
+          <p>Nếu cần hỗ trợ, hãy liên hệ: contact@ctuworks.com</p>
+          <p>Cám ơn và chúc bạn một ngày tốt lành.</p>
+          <h4>CtuWorks<h4>
+        </div>
+        <div>.</div>
+      </div>
     `,
   };
 

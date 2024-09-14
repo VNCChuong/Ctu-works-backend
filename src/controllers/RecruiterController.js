@@ -1,15 +1,16 @@
+const { create } = require('../models/RecruiterModel')
 const RecruiterService = require('../services/RecruiterService')
 
 const createRecruiter = async (req, res) => {
     try {
         const { fullName, phoneNumber,
-            companyName, email, companyAddress,
+            companyName, email, companyAddress, conpanyScale, companyIndustries,
             companyWebsite, companyFacebook, companyDescription,
             businessLicense, password, confirmPassword } = req.body
         const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
         const isCheckEmail = reg.test(email)
         if (!fullName || !companyName || !phoneNumber
-            || !companyAddress || !email || !password || !confirmPassword
+            || !companyAddress || !email || !password || !confirmPassword || !conpanyScale || !companyIndustries
             || !companyDescription || !businessLicense) {
             return res.status(200).json({
                 status: 'ERR',
@@ -214,6 +215,68 @@ const changePasswordRecruiter = async (req, res) => {
         })
     }
 }
+
+
+const createLocation = async (req, res) => {
+    try {
+        const recruiterId = req.params.id
+        const { locationName, address, } = req.body
+        if (!locationName || !address) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await RecruiterService.createLocation(recruiterId, req.body)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+
+const updateLocation = async (req, res) => {
+    try {
+        const recruiterId = req.params.id
+        const { locationId, locationName, address } = req.body
+        const data = { locationName, address }
+        if (!locationId || !locationName || !address) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await RecruiterService.updateLocation(recruiterId, locationId, data)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+
+const deleteLocation = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const { locationId } = req.body
+
+        if (!locationId) {
+            return res.status(200).json({
+                status: "ERR",
+                message: "Input required"
+            })
+        }
+        const response = await RecruiterService.deleteLocation(userId, locationId)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
 module.exports = {
     loginRecruiter,
     getAllRecruiter,
@@ -224,5 +287,8 @@ module.exports = {
     createRecruiter,
     updateRecruiter,
     deleteRecruiter,
-    changePasswordRecruiter
+    changePasswordRecruiter,
+    createLocation,
+    updateLocation,
+    deleteLocation
 }

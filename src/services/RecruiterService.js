@@ -270,6 +270,130 @@ const changePasswordRecruiter = (userInfo) => {
     })
 }
 
+
+const createLocation = (recruiterId, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await Recruiter.findOne({
+                _id: recruiterId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const createLocation = await Recruiter.updateOne(
+                { _id: recruiterId },
+                { $push: { location: data } }
+            ).then(result => {
+                // console.log("language added successfully:", result);
+            }).catch(error => {
+                // console.error("Error adding language:", error);
+                resolve({
+                    status: 'ERR',
+                    message: "location added error",
+                    data: createSkills
+                })
+            });
+            resolve({
+                status: 'OK',
+                message: "location added successfully",
+                data: createSkills
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+
+const updateLocation = (recruiterId, locationId, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await Recruiter.findById({
+                _id: recruiterId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const skills = await Recruiter.findOne({ 'location._id': skillsId });
+            if (!skills) {
+                resolve({
+                    status: 'ERR',
+                    message: "Location not found",
+                })
+            } else {
+                await User.findByIdAndUpdate(
+                    recruiterId,
+                    { $pull: { location: { _id: locationId } } },
+                    { new: true }
+                );
+                await User.updateOne(
+                    { _id: recruiterId },
+                    { $push: { location: data } }
+                ).then(result => {
+                    // console.log("Project update successfully:", result);
+                }).catch(error => {
+                    // console.error("Error update project:", error);
+                    resolve({
+                        status: 'ERR',
+                        message: "Location update error",
+                    })
+                });
+                resolve({
+                    status: 'OK',
+                    message: "Location update successfully",
+                })
+            }
+        } catch (e) {
+            reject(e)
+
+        }
+    })
+}
+
+const deleteLocation = (recruiterId, locationId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkUser = await User.findById({
+                _id: recruiterId
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+            const language = await User.findOne({ 'location._id': locationId });
+            if (!language) {
+                resolve({
+                    status: 'ERR',
+                    message: "Location not found",
+                })
+            } else {
+                await User.findByIdAndUpdate(
+                    recruiterId,
+                    { $pull: { location: { _id: locationId } } },
+                    { new: true }
+                );
+
+                resolve({
+                    status: 'OK',
+                    message: "Location deleted successfully",
+                })
+
+            }
+        } catch (e) {
+            reject(e)
+
+        }
+    })
+}
+
 module.exports = {
     loginRecruiter,
     getAllRecruiter,
@@ -278,5 +402,8 @@ module.exports = {
     createRecruiter,
     updateRecruiter,
     deleteRecruiter,
-    changePasswordRecruiter
+    changePasswordRecruiter,
+    createLocation,
+    updateLocation,
+    deleteLocation
 }

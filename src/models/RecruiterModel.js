@@ -33,6 +33,13 @@ const recruiterSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        conpanyScale: {
+            type: String,
+        },
+        companyIndustries: {
+            type: String,
+            required: true
+        },
         companyWebsite: {
             type: String,
         },
@@ -47,6 +54,22 @@ const recruiterSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        benefits: [
+            {
+                title: Number,
+                content: String,
+            }
+        ],
+        location: [
+            {
+                locationName: {
+                    type: String,
+                },
+                address: {
+                    type: String
+                }
+            }
+        ],
         verificationToken: {
             type: String
         },

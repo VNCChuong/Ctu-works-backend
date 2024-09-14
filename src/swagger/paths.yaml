@@ -1212,7 +1212,7 @@ paths:
       tags:
         - user
       summary: Cập nhật mục tiêu nghề nghiệp cho người dùng
-      operationId: updateSkills
+      operationId: updateIntro
       parameters:
         - name: id
           in: path
@@ -1439,6 +1439,103 @@ paths:
           description: Xóa người dùng thành công
         "422":
           description: Invalid input
+
+  /api/recruiter/create-location/{id}:
+    post:
+      tags:
+        - recruiter
+      summary: Thêm địa điểm làm việc cho nhà tuyển dụng
+      operationId: createlocation
+      parameters:
+        - name: id
+          in: path
+          description: Thêm địa điểm làm việc cho nhà tuyển dụng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                locationName:
+                  type: string
+                  example: Chi nhánh 1
+                address:
+                  type: string
+                  example: Khu II, Đ3 tháng 2, Xuân khánh, Ninh kiều, Cần Thơ
+      responses:
+        "200":
+          description: Thêm kỹ năng cho người dùng thành công
+        "422":
+          description: Invalid input
+  /api/recruiter/update-location/{id}:
+    put:
+      tags:
+        - recruiter
+      summary: Cập nhật địa điểm làm việc cho nhà tuyển dụng
+      operationId: updatelocation
+      parameters:
+        - name: id
+          in: path
+          description: Cập nhật điểm làm việc cho nhà tuyển dụng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                locationId:
+                  type: string
+                  format: MongoId
+                  example: "66dcb19ef533c72b0b0b94d4"
+                locationName:
+                  type: string
+                  example: Chi nhánh 1
+                address:
+                  type: string
+                  example: Khu II, Đ3 tháng 2, Xuân khánh, Ninh kiều, Cần Thơ
+      responses:
+        "200":
+          description: Cập nhật điểm làm việc cho nhà tuyển dụng thành công
+        "422":
+          description: Invalid input
+  /api/recruiter/delete-location/{id}:
+    delete:
+      tags:
+        - recruiter
+      summary: Xóa điểm làm việc cho nhà tuyển dụng
+      operationId: deletelocation
+      parameters:
+        - name: id
+          in: path
+          description: Xóa điểm làm việc cho nhà tuyển dụng
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: "66dcb19ef533c72b0b0b94d4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                locationId:
+                  type: string
+                  format: MongoId
+                  example: "66dcb19ef533c72b0b0b94d4"
+      responses:
+        "200":
+          description: Xóa kỹ điểm làm việc cho nhà tuyển dụng thành công
+        "422":
+          description: Invalid input
+
   /api/apply/create:
     post:
       tags:

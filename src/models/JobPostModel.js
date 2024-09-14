@@ -3,6 +3,9 @@ const mongoose = require('mongoose');
 const jobPostSchema = new mongoose.Schema({
     // info company
     recruiter: { type: mongoose.Schema.Types.ObjectId, ref: 'Recruiter', required: true },
+    conpanyLogo: {
+        type: String,
+    },
     companyName: {
         type: String,
         required: true
@@ -15,12 +18,19 @@ const jobPostSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    benefits: [
+        {
+            title: Number,
+            content: String,
+        }
+    ],
     staffName: {
         type: String,
         required: true
     },
-    conpanyLogo:{
+    email: {
         type: String,
+        required: true
     },
     // job post
     // chuc danh
@@ -40,28 +50,21 @@ const jobPostSchema = new mongoose.Schema({
     },
     // mo ta cong viec
     jobDescription: {
-        type: [String],
+        type: String,
         required: true
     },
-    postViews: {
-        type: Number,
-    },
+    //yeu cau cong viec
     jobRequirements: {
-        type: [String],
+        type: String,
         required: true
     },
-    benefits: [
-        {
-            title: String,
-            content: String,
-        }
-    ],
+
     jobInformation: {
         datePosted: {
             type: Date,
             default: Date.now
         },
-        jobLevel: String,
+        jobLevel: String, 
         industry: String, // nganh nghe
         skills: [String],
         field: String, // linh vuc
@@ -77,11 +80,7 @@ const jobPostSchema = new mongoose.Schema({
         maritalStatus: String,
         numberOfPositions: Number,
         workDays: {
-            type: [String], // Ví dụ: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
-            enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-        },
-        workHours: {
-            type: String, // Ví dụ: '8:00 AM - 5:00 PM'
+            type: String
         },
     },
     keywords: [String],
@@ -89,13 +88,18 @@ const jobPostSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    //trang thai dang tuyen
     statusSeeking: {
         type: Boolean,
     },
-    statusApproval:{
+    //trang thai kiem duyet
+    statusApproval: {
         type: Boolean,
         default: false
-    }
+    },
+    postViews: {
+        type: Number,
+    },
 });
 
 const jobPost = mongoose.model('jobPost', jobPostSchema);

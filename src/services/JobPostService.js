@@ -2,10 +2,11 @@ const JobPost = require("../models/JobPostModel")
 
 const createJobPost = (newJobPost) => {
     return new Promise(async (resolve, reject) => {
-        const { companyName, companyScale, companyAddress, staffName, companyLogo, jobTitle, expirationDate,
+        const { companyName, companyScale, email, companyAddress, staffName, companyLogo, jobTitle, expirationDate,
             location, jobDescription, jobRequirements, benefits, jobInformation, salary, keywords, recruiter } = newJobPost
         try {
             const createdJobPost = await JobPost.create({
+                email,
                 companyName,
                 companyScale,
                 companyAddress,

@@ -14,7 +14,12 @@ router.delete('/delete-recruiter/:id', RecruiterController.deleteRecruiter)
 
 router.get('/getAll-recruiter', RecruiterController.getAllRecruiter)
 router.get('/get-details-recruiter/:id', RecruiterController.getDetailsRecruiter)
+
 router.post('/refresh-token', RecruiterController.refreshToken)
 router.post('/delete-many-recruiter', RecruiterController.deleteManyRecruiter)
+
+router.post('/create-location/:id',RecruiterController.createLocation)
+router.put('/update-location/:id',RecruiterController.updateLocation)
+router.delete('/delete-location/:id',RecruiterController.deleteLocation)
 
 module.exports = router

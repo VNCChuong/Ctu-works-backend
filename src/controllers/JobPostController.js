@@ -2,10 +2,12 @@ const JobPostService = require('../services/JobPostService')
 
 const createJobPost = async (req, res) => {
     try {
-        const { companyName, companyScale, companyAddress, staffName, jobTitle, expirationDate,
+        const { companyName, companyScale, email, companyAddress, staffName, jobTitle, expirationDate,
             location, jobDescription, jobRequirements, benefits, jobInformation, salary
         } = req.body
-        if (!companyName) {
+        if (!companyName || !jobTitle || !expirationDate || !location || !jobDescription || !jobRequirements || !jobInformation
+            || !salary || !staffName || email || !companyAddress || !benefits
+        ) {
             return res.status(200).json({
                 status: 'ERR',
                 message: 'The input is required'
