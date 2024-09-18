@@ -1,4 +1,5 @@
 const Recruiter = require("../models/RecruiterModel")
+const User = require("../models/UserModel")
 const bcrypt = require("bcrypt")
 const { genneralAccessToken, genneralRefreshToken } = require("./JwtService")
 const { sendVerificationEmail } = require('./EmailService')
@@ -6,9 +7,9 @@ const crypto = require('crypto');
 const createRecruiter = (newRecruiter) => {
     return new Promise(async (resolve, reject) => {
         const {
-            fullName, companyName, phoneNumber
+            fullName, companyName, phoneNumber, companyScale
             , companyAddress, companyWebsite, companyFacebook, email, password, confirmPassword
-            , companyDescription, businessLicense } = newRecruiter
+            , companyDescription, businessLicense, companyIndustries } = newRecruiter
         try {
             const checkUser = await User.findOne({
                 email: email
@@ -16,6 +17,7 @@ const createRecruiter = (newRecruiter) => {
             const checkRecruiter = await Recruiter.findOne({
                 email: email
             })
+            // console.log(checkUser, checkRecruiter)
             if (checkUser !== null || checkRecruiter !== null) {
                 resolve({
                     status: 'ERR',
@@ -40,16 +42,19 @@ const createRecruiter = (newRecruiter) => {
             const verificationToken = crypto.randomBytes(32).toString('hex');
             const createdRecruiter = await Recruiter.create({
                 fullName,
+                email,
                 companyName,
                 companyAddress,
-                email,
+                companyScale,
                 confirmPassword,
+                companyIndustries,
                 companyWebsite,
                 companyFacebook,
                 companyDescription,
                 businessLicense,
                 password: hash,
                 // confirmPassword: hash,
+                verificationToken,
                 phoneNumber
             })
             const verificationLink = `${process.env.APP_URL}/auth/verify/${verificationToken}`;
@@ -64,6 +69,7 @@ const createRecruiter = (newRecruiter) => {
             }
         } catch (e) {
             reject(e)
+            console.log(e)
         }
     })
 }

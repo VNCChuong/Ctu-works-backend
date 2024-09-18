@@ -720,7 +720,6 @@ const updateIntroduce = async (req, res) => {
     }
 }
 
-
 module.exports = {
     createUser,
     loginUser,
@@ -756,5 +755,5 @@ module.exports = {
     createSkills,
     updateSkills,
     deleteSkills,
-    updateIntroduce
+    updateIntroduce,
 }

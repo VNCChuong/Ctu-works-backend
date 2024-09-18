@@ -3,8 +3,9 @@ const mongoose = require('mongoose');
 const jobPostSchema = new mongoose.Schema({
     // info company
     recruiter: { type: mongoose.Schema.Types.ObjectId, ref: 'Recruiter', required: true },
-    conpanyLogo: {
+    companyLogo: {
         type: String,
+        default: "https://images.vietnamworks.com/img/company-default-logo.svg"
     },
     companyName: {
         type: String,

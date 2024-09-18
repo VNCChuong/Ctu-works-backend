@@ -22,8 +22,6 @@ var storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 
-
-
 router.post('/sign-up', UserController.createUser)
 router.post('/sign-in', UserController.loginUser)
 
@@ -71,5 +69,6 @@ router.put('/update-skills/:id',UserController.updateSkills)
 router.delete('/delete-skills/:id',UserController.deleteSkills)
 
 router.put('/update-introduce/:id',UserController.updateIntroduce)
+
 
 module.exports = router

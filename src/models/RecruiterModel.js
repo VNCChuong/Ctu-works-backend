@@ -29,11 +29,15 @@ const recruiterSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        companyLogo: {
+            type: String,
+            default: "https://images.vietnamworks.com/img/company-default-logo.svg"
+        },
         companyAddress: {
             type: String,
             required: true,
         },
-        conpanyScale: {
+        companyScale: {
             type: String,
         },
         companyIndustries: {
@@ -70,6 +74,7 @@ const recruiterSchema = new mongoose.Schema(
                 }
             }
         ],
+
         verificationToken: {
             type: String
         },
@@ -79,7 +84,15 @@ const recruiterSchema = new mongoose.Schema(
         },
         lastOnline: {
             type: Date
-        }
+        },
+        follower: {
+            type: [String]
+        },
+        following: {
+            type: Number,
+            default: 0
+        },
+
     },
     {
         timestamps: true

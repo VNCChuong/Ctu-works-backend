@@ -344,11 +344,25 @@ const uploadfile = (path) => {
                         A: 'email',
                         B: 'phoneNumber',
                         C: 'MSSV',
-                        D: 'lastName',
+                        D: 'fullName',
                         E: 'dateOfBirth',
                         F: 'gender',
-                        G: 'industry'
-
+                        G: 'industry',
+                        H: 'currentSalary',
+                        I: 'country',
+                        J: 'jobTitle',
+                        K: 'city',
+                        L: 'district',
+                        M: 'maritalStatusId',
+                        N: 'yearsExperience',
+                        O: 'currentDegree',
+                        P: 'highestDegree',
+                        Q: 'currentJobFunction',
+                        R: 'currentIndustries',
+                        S: 'skillName',
+                        T: 'workingPreferences.companyIndustries',
+                        U: 'password',
+                        A: 'password'
                     }
                 }]
             });
@@ -1306,6 +1320,8 @@ const updateIntroduce = (userId, data) => {
         }
     })
 }
+
+
 
 module.exports = {
     createUser,

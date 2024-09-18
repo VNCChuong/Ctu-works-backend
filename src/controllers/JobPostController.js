@@ -6,7 +6,7 @@ const createJobPost = async (req, res) => {
             location, jobDescription, jobRequirements, benefits, jobInformation, salary
         } = req.body
         if (!companyName || !jobTitle || !expirationDate || !location || !jobDescription || !jobRequirements || !jobInformation
-            || !salary || !staffName || email || !companyAddress || !benefits
+            || !salary || !staffName || !email || !companyAddress || !benefits
         ) {
             return res.status(200).json({
                 status: 'ERR',
@@ -16,6 +16,7 @@ const createJobPost = async (req, res) => {
         const response = await JobPostService.createJobPost(req.body)
         return res.status(200).json(response)
     } catch (e) {
+        console.log(e)
         return res.status(404).json({
             message: e
         })
