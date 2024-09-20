@@ -176,7 +176,7 @@ const deleteRecruiter = (id) => {
     }
   });
 };
-const getAllRecruiter = (page = 1, pagesize = 1) => {
+const getAllRecruiter = (page = 1, pagesize = 10) => {
   return new Promise(async (resolve, reject) => {
     try {
       const skip = (page - 1) * pagesize;

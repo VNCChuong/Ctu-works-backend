@@ -196,7 +196,7 @@ const deleteUser = (id) => {
   });
 };
 
-const getAllUser = (page = 1, pagesize = 5) => {
+const getAllUser = (page = 1, pagesize = 9) => {
   return new Promise(async (resolve, reject) => {
     try {
       const skip = (page - 1) * pagesize;
