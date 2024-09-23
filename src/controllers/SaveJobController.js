@@ -56,9 +56,27 @@ const getMySaveJob = async (req, res) => {
     }
 }
 
+const checkSaveJob = async (req, res) => {
+    try {
+        const { userId, jobPostId } = req.body
+        if (!userId || !jobPostId) {
+            return res.status(200).json({
+                status: 'ERR',
+                message: 'The input is required'
+            })
+        }
+        const response = await SaveJobService.checkSaveJob(req.body)
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
 
 module.exports = {
     createSaveJob,
     deleteSaveJob,
     getMySaveJob,
+    checkSaveJob
 }

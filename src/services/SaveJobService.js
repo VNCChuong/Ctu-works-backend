@@ -1,13 +1,19 @@
 const SaveJob = require("../models/SaveJobModel")
-
+const JobPost = require("../models/JobPostModel")
 const createSaveJob = (newSaveJob) => {
     return new Promise(async (resolve, reject) => {
 
         const { userId, jobPostId } = newSaveJob
         try {
+            const jobpost = await JobPost.findById(jobPostId)
             const createdSaveJob = await SaveJob.create({
                 userId: userId,
-                jobPostId: jobPostId
+                jobPostId: jobPostId,
+                jobTitle: jobpost.jobTitle,
+                companyLogo: jobpost.companyLogo,
+                companyName: jobpost.companyName,
+                jobLocation: jobpost.location,
+                jobSalary: jobpost.salary,
             })
             if (createdSaveJob) {
                 resolve({
@@ -71,9 +77,34 @@ const getMySaveJob = (id) => {
 }
 
 
+const checkSaveJob = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const { userId, jobPostId } = data
+            const saveJob = await SaveJob.findOne({
+                userId: userId,
+                jobPostId: jobPostId
+            })
+            if (saveJob === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The job is not save'
+                })
+            }
+            resolve({
+                status: 'OK',
+                message: 'The job have been save by this user',
+                data: saveJob
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 
 module.exports = {
     createSaveJob,
     deleteSaveJob,
     getMySaveJob,
+    checkSaveJob
 }

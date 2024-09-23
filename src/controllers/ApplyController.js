@@ -2,8 +2,8 @@ const ApplyService = require('../services/ApplyService')
 
 const createApply = async (req, res) => {
     try {
-        const { userId, jobPostId, recruiterId } = req.body
-        if (!userId || !jobPostId || !recruiterId) {
+        const { jobPostId, recruiterId } = req.body
+        if (!jobPostId || !recruiterId) {
             return res.status(200).json({
                 status: 'ERR',
                 message: 'The input is required'

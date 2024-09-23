@@ -1,19 +1,60 @@
 const Apply = require("../models/ApplyModel")
+const JobPost = require("../models/JobPostModel")
 
 const createApply = (newApply) => {
     return new Promise(async (resolve, reject) => {
 
-        const { userId, jobPostId, recruiterId } = newApply
+        const { _id, jobPostId, recruiterId, workingPreferences, MSSV, email, fullName, jobTitle,
+            currentDegree, currentIndustries, currentJobFunction, yearsExperience, currentSalary,
+            highestDegree, country, phoneNumber, dateOfBirth, city, district, address, gender, maritalStatusId,
+        } = newApply
         try {
-            const createdApply = await Apply.create({
-                userId: userId,
+            const checkApply = await Apply.findOne({
                 jobPostId: jobPostId,
-                recruiterId: recruiterId
+                userId: _id
             })
-            if (createdApply) {
+            console.log(checkApply)
+            if (checkApply !== null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user has already applied for this job'
+                })
+                return
+            }
+            const jobpost = await JobPost.findById(jobPostId)
+            const createdApply = await Apply.create({
+                userId: _id,
+                jobPostId: jobPostId,
+                recruiterId: recruiterId,
+                jobPostTitle: jobpost.jobTitle,
+                companyLogo: jobpost.companyLogo,
+                companyName: jobpost.companyName,
+                jobLocation: jobpost.location,
+                jobSalary: jobpost.salary,
+                workingPreferences,
+                MSSV,
+                email,
+                fullName,
+                jobTitle,
+                currentDegree,
+                currentIndustries,
+                currentJobFunction,
+                yearsExperience,
+                currentSalary,
+                highestDegree,
+                country,
+                phoneNumber,
+                dateOfBirth,
+                city,
+                district,
+                address,
+                gender,
+                maritalStatusId,
+            })
+            if (true) {
                 resolve({
                     status: 'OK',
-                    message: 'success',
+                    message: 'create apply success',
                     data: createdApply,
                 })
             }
@@ -86,19 +127,21 @@ const deleteApply = (id) => {
 const getMyApply = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
+            console.log(id)
             const apply = await Apply.find({
                 userId: id
-            }).sort({ createdAt: -1, updatedAt: -1 })
+            })
             const applyRecruiter = await Apply.find({
                 recruiterId: id
             }).sort({ createdAt: -1, updatedAt: -1 })
+            console.log(applyRecruiter,apply)
             if (apply === null && applyRecruiter === null) {
                 resolve({
                     status: 'ERR',
                     message: 'The Apply is not defined'
                 })
             }
-            if (apply === null) {
+            if (apply) {
                 resolve({
                     status: 'OK',
                     message: 'SUCESSS',

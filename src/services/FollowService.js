@@ -1,12 +1,17 @@
 const Recruiter = require("../models/RecruiterModel");
 const Follow = require("../models/FollowModel");
+const JobPost = require("../models/JobPostModel");
 const createFollow = (recruiterId, data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const checkReccruiter = await Recruiter.findOne({
+            const checkRecruiter = await Recruiter.findOne({
                 _id: recruiterId
             })
-            if (checkReccruiter === null) {
+            const companyJob = await JobPost.find({
+                recruiter: recruiterId
+            })
+            const jobCount = companyJob.length;
+            if (checkRecruiter === null) {
                 resolve({
                     status: 'ERR',
                     message: 'The recruiter is not defined'
@@ -14,7 +19,7 @@ const createFollow = (recruiterId, data) => {
             }
             const checkFollow = await Follow.findOne({
                 recruiterId: recruiterId,
-                userId: data.userId
+                userId: data.userId,
             })
             if (checkFollow) {
                 resolve({
@@ -24,6 +29,11 @@ const createFollow = (recruiterId, data) => {
             }
             const createdFollow = await Follow.create({
                 recruiterId: recruiterId,
+                companyName: checkRecruiter.companyName,
+                companyIndustries: checkRecruiter.companyIndustries,
+                companyFollowing: checkRecruiter.following,
+                companyLogo: checkRecruiter.companyLogo,
+                companyJob: jobCount,
                 ...data
             })
             await Recruiter.findByIdAndUpdate(
@@ -54,7 +64,7 @@ const createFollow = (recruiterId, data) => {
 const deleteFollow = (followId, userId, recruiterId) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!followId) {
+            if (followId) {
                 const checkFollow = await Follow.findOne({
                     _id: followId
                 })
@@ -65,7 +75,7 @@ const deleteFollow = (followId, userId, recruiterId) => {
                     })
                 }
                 await Recruiter.findByIdAndUpdate(
-                    recruiterId
+                    { _id: checkFollow.recruiterId.toHexString() }
                     ,
                     {
                         $pull: {

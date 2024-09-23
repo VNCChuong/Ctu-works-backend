@@ -8,4 +8,5 @@ router.delete('/delete/:id',  SaveJobController.deleteSaveJob)
 
 router.get('/get-my-savejob/:id', SaveJobController.getMySaveJob)
 
+router.post('/check-save', SaveJobController.checkSaveJob)
 module.exports = router
