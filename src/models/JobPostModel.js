@@ -65,7 +65,7 @@ const jobPostSchema = new mongoose.Schema({
             type: Date,
             default: Date.now
         },
-        jobLevel: String, 
+        jobLevel: String,
         industry: String, // nganh nghe
         skills: [String],
         field: String, // linh vuc

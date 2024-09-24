@@ -127,21 +127,20 @@ const deleteApply = (id) => {
 const getMyApply = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
-            console.log(id)
             const apply = await Apply.find({
                 userId: id
             })
             const applyRecruiter = await Apply.find({
                 recruiterId: id
             }).sort({ createdAt: -1, updatedAt: -1 })
-            console.log(applyRecruiter,apply)
+            // console.log(applyRecruiter,apply)
             if (apply === null && applyRecruiter === null) {
                 resolve({
                     status: 'ERR',
                     message: 'The Apply is not defined'
                 })
             }
-            if (apply) {
+            if (apply.length > 0) {
                 resolve({
                     status: 'OK',
                     message: 'SUCESSS',
