@@ -124,16 +124,18 @@ const deleteApply = (id) => {
 
 
 
-const getMyApply = (id) => {
+const getMyApply = (id, jobpostId) => {
     return new Promise(async (resolve, reject) => {
         try {
+            console.log(id, jobpostId)
             const apply = await Apply.find({
                 userId: id
             })
             const applyRecruiter = await Apply.find({
-                recruiterId: id
+                recruiterId: id,
+                jobPostId: jobpostId
             }).sort({ createdAt: -1, updatedAt: -1 })
-            // console.log(applyRecruiter,apply)
+            // console.log(applyRecruiter)
             if (apply === null && applyRecruiter === null) {
                 resolve({
                     status: 'ERR',

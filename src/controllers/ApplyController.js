@@ -57,13 +57,14 @@ const deleteApply = async (req, res) => {
 const getMyApply = async (req, res) => {
     try {
         const id = req.params.id
+        const { jobpostId } = req.body
         if (!id) {
             return res.status(200).json({
                 status: 'ERR',
                 message: 'The id is required'
             })
         }
-        const response = await ApplyService.getMyApply(id)
+        const response = await ApplyService.getMyApply(id, jobpostId)
         return res.status(200).json(response)
     } catch (e) {
         return res.status(404).json({
