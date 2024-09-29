@@ -2,37 +2,40 @@ const mongoose = require('mongoose');
 
 const jobPostSchema = new mongoose.Schema({
     // info company
-    recruiter: { type: mongoose.Schema.Types.ObjectId, ref: 'Recruiter', required: true },
-    companyLogo: {
-        type: String,
-        default: "https://images.vietnamworks.com/img/company-default-logo.svg"
+    recruiterId: { type: mongoose.Schema.Types.ObjectId, ref: 'Recruiter', required: true },
+    companyInfo: {
+        companyName: {
+            type: String,
+            required: true
+        },
+        companyAddress: {
+            type: String,
+            required: true
+        },
+        companySize: {
+            type: String,
+            required: true
+        },
+        companyLogo: {
+            type: String,
+            default: "https://images.vietnamworks.com/img/company-default-logo.svg"
+        },
+        companyStaffName: {
+            type: String,
+            required: true
+        },
+        companyBenefits: [
+            {
+                title: Number,
+                content: String,
+            }
+        ],
+        companyEmail: {
+            type: String,
+            // required: true
+        },
     },
-    companyName: {
-        type: String,
-        required: true
-    },
-    companyScale: {
-        type: String,
-        required: true
-    },
-    companyAddress: {
-        type: String,
-        required: true
-    },
-    benefits: [
-        {
-            title: Number,
-            content: String,
-        }
-    ],
-    staffName: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true
-    },
+
     // job post
     // chuc danh
     jobTitle: {
@@ -42,7 +45,7 @@ const jobPostSchema = new mongoose.Schema({
     // ngay het han
     expirationDate: {
         type: Date,
-        required: true
+        // required: true
     },
     // dia diem lam viec
     location: {
@@ -59,36 +62,44 @@ const jobPostSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-
+    jobType: {
+        type: String,
+        required: true
+    },
+    minSalary: {
+        type: String,
+        required: true
+    },
+    maxSalary: {
+        type: String,
+        required: true
+    },
     jobInformation: {
         datePosted: {
             type: Date,
             default: Date.now
         },
         jobLevel: String,
-        industry: String, // nganh nghe
-        skills: [String],
-        field: String, // linh vuc
-        languageForApplications: String,
-        minimumExperience: Number,
+        jobIndustry: String, // nganh nghe
+        keywords: [String],
+        jobField: String, // linh vuc
+        language: String,
+        minExperience: Number,
         nationality: String,
-        minimumEducation: String,
+        educationLevel: String,
         gender: String,
-        preferredAge: {
+        minAge: {
             type: Number,
             min: 18
         },
-        maritalStatus: String,
-        numberOfPositions: Number,
-        workDays: {
-            type: String
+        maxAge: {
+            type: Number,
+            max: 100
         },
+        maritalStatus: String,
     },
-    keywords: [String],
-    salary: {
-        type: String,
-        required: true
-    },
+    numberOfPositions: Number,
+
     //trang thai dang tuyen
     statusSeeking: {
         type: Boolean,

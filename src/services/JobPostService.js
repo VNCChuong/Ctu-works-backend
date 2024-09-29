@@ -1,27 +1,30 @@
 const JobPost = require("../models/JobPostModel")
 
-const createJobPost = (newJobPost) => {
+const createJobPost = (recruiterId, newJobPost) => {
     return new Promise(async (resolve, reject) => {
-        const { companyName, companyScale, email, companyAddress, staffName, companyLogo, jobTitle, expirationDate,
-            location, jobDescription, jobRequirements, benefits, jobInformation, salary, keywords, recruiter } = newJobPost
+        const { formData } = newJobPost
+        const { jobTitle, jobLocation, jobDescription, jobRequirements, jobType, minSalary, maxSalary, expirationDate,
+            jobInformation,
+            companyInfo
+        } = formData
+        const {
+            jobLevel, jobIndustry, keywords, jobField, language, minExperience,
+            nationality, educationLevel, gender, maritalStatus, minAge, maxAge,
+        } = jobInformation
+        const { companyName, companyAddress, companySize, companyBenefits, companyLogo, companyStaffName } = companyInfo
         try {
             const createdJobPost = await JobPost.create({
-                email,
-                companyName,
-                companyScale,
-                companyAddress,
-                companyLogo,
-                staffName,
                 jobTitle,
                 expirationDate,
-                location,
+                jobLocation,
                 jobDescription,
                 jobRequirements,
-                benefits,
+                jobType,
+                minSalary,
+                maxSalary,
                 jobInformation,
-                salary,
-                recruiter: recruiter,
-                keywords,
+                companyInfo,
+                recruiterId: recruiterId,
                 postViews: 0,
                 statusSeeking: true,
             })
@@ -128,7 +131,7 @@ const getMyJobPost = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
             const jobPost = await JobPost.find({
-                recruiter: id
+                recruiterId: id
             }).sort({ createdAt: -1, updatedAt: -1 })
             if (jobPost === null) {
                 resolve({

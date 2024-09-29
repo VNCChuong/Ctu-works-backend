@@ -14,7 +14,6 @@ const createUser = (newUser) => {
             skillName, workingPreferences,
             // locations, jobFunction, companyIndustries, salary, desiredJobLevel,
             confirmPassword, MSSV, } = newUser
-        // console.log(newUser)
         try {
             const checkUser = await User.findOne({
                 email: email

@@ -13,7 +13,6 @@ const createApply = (newApply) => {
                 jobPostId: jobPostId,
                 userId: _id
             })
-            console.log(checkApply)
             if (checkApply !== null) {
                 resolve({
                     status: 'ERR',
@@ -27,10 +26,11 @@ const createApply = (newApply) => {
                 jobPostId: jobPostId,
                 recruiterId: recruiterId,
                 jobPostTitle: jobpost.jobTitle,
-                companyLogo: jobpost.companyLogo,
-                companyName: jobpost.companyName,
+                companyLogo: jobpost.companyInfo.companyLogo,
+                companyName: jobpost.companyInfo.companyName,
                 jobLocation: jobpost.location,
-                jobSalary: jobpost.salary,
+                jobMinSalary: jobpost.minSalary,
+                jobMaxSalary: jobpost.maxSalary,
                 workingPreferences,
                 MSSV,
                 email,
@@ -127,7 +127,6 @@ const deleteApply = (id) => {
 const getMyApply = (id, jobpostId) => {
     return new Promise(async (resolve, reject) => {
         try {
-            console.log(id, jobpostId)
             const apply = await Apply.find({
                 userId: id
             })
@@ -135,7 +134,6 @@ const getMyApply = (id, jobpostId) => {
                 recruiterId: id,
                 jobPostId: jobpostId
             }).sort({ createdAt: -1, updatedAt: -1 })
-            // console.log(applyRecruiter)
             if (apply === null && applyRecruiter === null) {
                 resolve({
                     status: 'ERR',

@@ -69,7 +69,6 @@ const createRecruiter = (newRecruiter) => {
             }
         } catch (e) {
             reject(e)
-            console.log(e)
         }
     })
 }
@@ -342,7 +341,7 @@ const updateLocation = (recruiterId, locationId, data) => {
                     { _id: recruiterId },
                     { $push: { location: data } }
                 ).then(result => {
-                    // console.log("Project update successfully:", result);
+                    // console.log("Project update successfully:", result); 
                 }).catch(error => {
                     // console.error("Error update project:", error);
                     resolve({

@@ -2,18 +2,25 @@ const JobPostService = require('../services/JobPostService')
 
 const createJobPost = async (req, res) => {
     try {
-        const { companyName, companyScale, email, companyAddress, staffName, jobTitle, expirationDate,
-            location, jobDescription, jobRequirements, benefits, jobInformation, salary
-        } = req.body
-        if (!companyName || !jobTitle || !expirationDate || !location || !jobDescription || !jobRequirements || !jobInformation
-            || !salary || !staffName || !email || !companyAddress || !benefits
+        const { recruiterId, formData } = req.body
+        const { jobTitle, jobLocation, jobDescription, jobRequirements, jobType, minSalary, maxSalary, expirationDate,
+            jobInformation,
+            companyInfo
+        } = formData
+        const {
+            jobLevel, jobIndustry, keywords, jobField, language, minExperience, nationality, educationLevel, gender, maritalStatus, minAge, maxAge,
+        } = jobInformation
+        const { companyName, companyAddress, companySize, companyBenefits, companyLogo, companyStaffName } = companyInfo
+        if (!jobTitle || !expirationDate || !jobLocation || !jobDescription || !jobRequirements || !jobType || !jobLevel || !jobIndustry || !minSalary || !maxSalary
+            || !keywords || !minExperience || !educationLevel || !nationality || !gender || !maritalStatus || !minAge || !maxAge || !language
+            || !companyName || !companyAddress || !companySize || !companyBenefits || !companyStaffName
         ) {
             return res.status(200).json({
                 status: 'ERR',
                 message: 'The input is required'
             })
         }
-        const response = await JobPostService.createJobPost(req.body)
+        const response = await JobPostService.createJobPost(recruiterId, req.body)
         return res.status(200).json(response)
     } catch (e) {
         console.log(e)
