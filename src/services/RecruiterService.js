@@ -77,9 +77,9 @@ const createRecruiter = (newRecruiter) => {
 
 const loginRecruiter = (recruiterLogin) => {
     return new Promise(async (resolve, reject) => {
-        const { email, password } = userLogin
+        const { email, password } = recruiterLogin
         try {
-            const checkRecruiter = await User.findOne({
+            const checkRecruiter = await Recruiter.findOne({
                 email: email
             })
             if (checkRecruiter === null) {
@@ -96,12 +96,16 @@ const loginRecruiter = (recruiterLogin) => {
                 })
             }
             const access_token = await genneralAccessToken({
-                id: checkRecruiter.id,
-                isAdmin: checkRecruiter.isAdmin
+                userid: checkRecruiter.id,
+                email: checkRecruiter.email,
+                fullName: checkRecruiter.fullName,
+                role: checkRecruiter.role
             })
             const refresh_token = await genneralRefreshToken({
-                id: checkRecruiter.id,
-                isAdmin: checkRecruiter.isAdmin
+                userid: checkRecruiter.id,
+                email: checkRecruiter.email,
+                fullName: checkRecruiter.fullName,
+                role: checkRecruiter.role
             })
             // console.log('access_token',access_token)
             resolve({

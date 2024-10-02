@@ -9,6 +9,8 @@ const NewsRouter = require('./NewsRouter')
 const swaggerUi = require('swagger-ui-express')
 const swaggerJsdoc = require ('swagger-jsdoc')
 const FollowRounter = require('./FollowRounter')
+const AiRouter = require('./AiRouter')
+
 const options = swaggerJsdoc.Options = {
     definition: {
         openapi: '3.0.0',
@@ -34,6 +36,7 @@ const routes = (app) => {
     app.use('/auth', VerifyRouter)
     app.use('/api/news', NewsRouter)
     app.use('/api/follow', FollowRounter)
+    app.use('/api/ai', AiRouter)
 }
 
 module.exports = routes
