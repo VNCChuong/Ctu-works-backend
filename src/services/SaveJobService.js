@@ -1,19 +1,40 @@
 const SaveJob = require("../models/SaveJobModel")
 const JobPost = require("../models/JobPostModel")
+const JobCompanyInfo = require('../models/JobCompanyInfoModel')
+const JobInfo = require('../models/JobInfoModel')
+const CandidateExpectations = require('../models/CandidateExpectationsModel')
 const createSaveJob = (newSaveJob) => {
     return new Promise(async (resolve, reject) => {
-
         const { userId, jobPostId } = newSaveJob
         try {
             const jobpost = await JobPost.findById(jobPostId)
+            const { _id, recruiterId, jobCompanyInfoId, candidateExpectationsId,
+                jobInfoId, expirationDate, statusSeeking, statusApproval, postViews, createdAt } = jobpost
+            const jobCompanyInfo = await JobCompanyInfo.findById(jobCompanyInfoId)
+            const candidateExpectations = await CandidateExpectations.findById(candidateExpectationsId)
+            const jobInfo = await JobInfo.findById(jobInfoId)
+            const {
+                companyName, companyAddress, companySize, companyBenefits, companyLogo, companyStaffName, companyEmail
+            } = jobCompanyInfo
+            const {
+                jobTitle, jobLocation, jobDescription,
+                jobRequirements,
+                jobType, minSalary,
+                maxSalary, jobLevel, jobIndustry,
+            } = jobInfo
+            const {
+                keywords, jobField, language, minExperience, nationality, educationLevel, gender,
+                maritalStatus, minAge, maxAge,
+            } = candidateExpectations
+            console.log(jobPostId, jobTitle, companyLogo)
             const createdSaveJob = await SaveJob.create({
                 userId: userId,
                 jobPostId: jobPostId,
-                jobTitle: jobpost.jobTitle,
-                companyLogo: jobpost.companyLogo,
-                companyName: jobpost.companyName,
-                jobLocation: jobpost.location,
-                jobSalary: jobpost.salary,
+                jobTitle: jobTitle,
+                companyLogo: companyLogo || "https://images.vietnamworks.com/img/company-default-logo.svg",
+                companyName: companyName,
+                jobLocation: jobLocation,
+                jobSalary: maxSalary,
             })
             if (createdSaveJob) {
                 resolve({

@@ -1,5 +1,6 @@
 const Recruiter = require("../models/RecruiterModel")
 const User = require("../models/UserModel")
+const Company = require("../models/CompanyModel")
 const bcrypt = require("bcrypt")
 const { genneralAccessToken, genneralRefreshToken } = require("./JwtService")
 const { sendVerificationEmail } = require('./EmailService')
@@ -17,7 +18,7 @@ const createRecruiter = (newRecruiter) => {
             const checkRecruiter = await Recruiter.findOne({
                 email: email
             })
-            // console.log(checkUser, checkRecruiter)
+
             if (checkUser !== null || checkRecruiter !== null) {
                 resolve({
                     status: 'ERR',
@@ -40,22 +41,23 @@ const createRecruiter = (newRecruiter) => {
             }
             const hash = bcrypt.hashSync(password, 10)
             const verificationToken = crypto.randomBytes(32).toString('hex');
-            const createdRecruiter = await Recruiter.create({
-                fullName,
-                email,
+            const company = await Company.create({
                 companyName,
                 companyAddress,
                 companyScale,
-                confirmPassword,
+                phoneNumber,
                 companyIndustries,
                 companyWebsite,
                 companyFacebook,
                 companyDescription,
-                businessLicense,
+            })
+            const createdRecruiter = await Recruiter.create({
+                fullName,
+                email,
                 password: hash,
-                // confirmPassword: hash,
+                companyId: company._id,
+                businessLicense,
                 verificationToken,
-                phoneNumber
             })
             const verificationLink = `${process.env.APP_URL}/auth/verify/${verificationToken}`;
             await sendVerificationEmail(email, verificationLink);
@@ -125,6 +127,7 @@ const loginRecruiter = (recruiterLogin) => {
 const updateRecruiter = (id, data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            const { formData } = data
             const checkRecruiter = await Recruiter.findOne({
                 _id: id
             })
@@ -134,7 +137,15 @@ const updateRecruiter = (id, data) => {
                     message: 'The recruiter is not defined'
                 })
             }
-            const updateRecruiter = await Recruiter.findByIdAndUpdate(id, data, { new: true })
+            const { companyName, phoneNumber, companyLogo, companyAddress, companyWebsite
+                , companyFacebook, companyBenefits, companyScale, companyDescription, staffName } = formData
+            const dataCompany = {
+                companyName, companyAddress, companyScale, phoneNumber, companyWebsite,
+                companyFacebook, companyBenefits, companyLogo, companyDescription, staffName
+            }
+            console.log(companyBenefits)
+            const updadteCompany = await Company.findByIdAndUpdate(formData.companyId, dataCompany, { new: true })
+            const updateRecruiter = await Recruiter.findByIdAndUpdate(id, formData, { new: true })
             resolve({
                 status: 'OK',
                 message: "Success",
@@ -188,16 +199,30 @@ const getDetailsRecruiter = (id) => {
             const recruiter = await Recruiter.findOne({
                 _id: id
             })
+
             if (recruiter === null) {
                 resolve({
                     status: 'OK',
                     message: 'The user is not defined'
                 })
             }
+            const { _id, role, companyId, email, locationCompanyId,
+                fullName, isVerified, follower, following, createdAt, updatedAt } = recruiter
+            const company = await Company.findById(recruiter.companyId)
+            const {
+                companyName, companyAddress, phoneNumber, companyWebsite, companyFacebook,
+                companyBenefits, companyLogo, staffName, companyScale, companyDescription
+            } = company
+            const results = {
+                _id, role, companyId, email, locationCompanyId,
+                fullName, isVerified, follower, following, createdAt, updatedAt,
+                companyName, companyAddress, phoneNumber, companyWebsite, companyFacebook,
+                companyBenefits, companyLogo, staffName, companyScale, companyDescription,
+            };
             resolve({
                 status: 'OK',
                 message: "Success",
-                data: recruiter
+                data: results
             })
 
 

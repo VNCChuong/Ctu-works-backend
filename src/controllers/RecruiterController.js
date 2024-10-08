@@ -11,7 +11,7 @@ const createRecruiter = async (req, res) => {
         const isCheckEmail = reg.test(email)
         
         if (!fullName || !companyName || !phoneNumber
-            || !companyAddress || !email || !password || !confirmPassword || !companyScale || !companyIndustries
+            || !companyAddress || !email || !password || !confirmPassword 
             || !companyDescription || !businessLicense) {
             return res.status(200).json({
                 status: 'ERR',

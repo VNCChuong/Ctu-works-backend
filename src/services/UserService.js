@@ -97,14 +97,15 @@ const loginUser = (userLogin) => {
                 userid: checkUser.id,
                 email: checkUser.email,
                 fullName: checkUser.fullName,
-                role: checkUser.role
+                role: checkUser.role,
             })
 
             const refresh_token = await genneralRefreshToken({
                 userid: checkUser.id,
                 email: checkUser.email,
                 fullName: checkUser.fullName,
-                role: checkUser.role
+                role: checkUser.role,
+
             })
             resolve({
                 status: 'OK',

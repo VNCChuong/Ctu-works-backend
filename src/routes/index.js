@@ -7,10 +7,14 @@ const RecruiterRouter = require('./RecruiterRouter')
 const VerifyRouter = require('./VerifyRouter')
 const NewsRouter = require('./NewsRouter')
 const swaggerUi = require('swagger-ui-express')
-const swaggerJsdoc = require ('swagger-jsdoc')
+const swaggerJsdoc = require('swagger-jsdoc')
 const FollowRounter = require('./FollowRounter')
 const AiRouter = require('./AiRouter')
-
+const SearchHistory = require('./SearchHistory')
+const JobInfo = require('./JobInfoRouter')
+const CandidateExpectations = require('./CandidateExpectationsRouter')
+const JobCompanyInfo = require('./JobCompanyInfoRouter')
+const LocationCompany = require('./LocationCompanyRounter')
 const options = swaggerJsdoc.Options = {
     definition: {
         openapi: '3.0.0',
@@ -24,7 +28,6 @@ const options = swaggerJsdoc.Options = {
 
 const openapiSpecification = swaggerJsdoc(options)
 const routes = (app) => {
-
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiSpecification))
     app.use('/auth', VerifyRouter)
     app.use('/api/user', UserRouter)
@@ -37,6 +40,12 @@ const routes = (app) => {
     app.use('/api/news', NewsRouter)
     app.use('/api/follow', FollowRounter)
     app.use('/api/ai', AiRouter)
+    app.use('/api/search-history', SearchHistory)
+    app.use('/api/job-info', JobInfo)
+    app.use('/api/candidate-expectations', CandidateExpectations)
+    app.use('/api/job-company-info', JobCompanyInfo)
+    app.use('/api/location-company', LocationCompany)
+
 }
 
 module.exports = routes
