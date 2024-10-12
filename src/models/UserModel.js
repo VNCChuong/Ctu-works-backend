@@ -6,93 +6,19 @@ const userSchema = new mongoose.Schema(
             default: "jobSeeker",
             // required: true
         },
-        MSSV: {
-            type: String
-        },
         email: {
             type: String,
             required: true,
-            unique: true
+            // unique: true
         },
         password: {
             type: String,
             required: true,
         },
-        fullName: {
-            type: String,
-            required: true,
-        },
-        //chuc danh
-        jobTitle: {
-            type: String,
+        userInfoId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'UserInfo',
             required: true
-        },
-        //bang cap hien tai
-        currentDegree: {
-            type: String,
-            required: true
-        },
-        //linh vuc hien tai
-        currentIndustries: {
-            type: String,
-            required: true
-        },
-        //nganh nghe hien tại
-        currentJobFunction: {
-            type: String,
-            required: true
-        },
-        yearsExperience: {
-            type: Number,
-            default: 1,
-            required: true
-        },
-        currentSalary: {
-            type: Number,
-            required: true
-        },
-        highestDegree: {
-            type: String,
-            requied: true
-        },
-        country: {
-            type: String,
-            required: true
-        },
-        phoneNumber: {
-            type: String,
-            required: true,
-            unique: true
-        },
-        dateOfBirth: {
-            // type: Date,
-            type: String,
-            required: true,
-        },
-        city: {
-            type: String,
-            required: true
-        },
-        district: {
-            type: String,
-            required: true
-        },
-        address: {
-            type: String,
-        },
-        gender: {
-            type: Number,
-            enum: [1, 2],
-            required: true
-        },
-        maritalStatusId: {
-            type: Number,
-            enum: [1, 2],
-            required: true
-        },
-        avatar: {
-            type: String,
-            default: ''
         },
         seekJobMode: {
             type: Boolean,
@@ -117,41 +43,7 @@ const userSchema = new mongoose.Schema(
             type: Date
         },
         //cong viec mong muon
-        workingPreferences: {
-            locations: [
-                {
-                    type: String,
-                    // required: true
-                }
-            ],
-            jobFunction: {
-                type: String,
-                // required: true
-            },
-            companyIndustries: [
-                {
-                    type: String,
-                    required: true
-                }
-            ],
-            desiredJobLevel: {
-                type: String,
-                // required: true
-            },
-            salary: {
-                type: Number,
-                // required: true
-            },
-            isRelocate: {
-                type: Number,
-                enum: [1, 2]
-            },
-            benefits: [
-                {
-                    type: Number
-                }
-            ],
-        },
+
         //kinh nghiem lam viec
         workingHistories:
             [{

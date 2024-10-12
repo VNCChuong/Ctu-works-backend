@@ -15,16 +15,21 @@ const createJobPost = (recruiterId, newJobPost) => {
             nationality, educationLevel, gender, maritalStatus, minAge, maxAge,
         } = jobInformation
         const { companyName, companyAddress, companySize, companyBenefits, companyLogo, companyStaffName, companyEmail } = companyInfo
-
+        const arrBenefits = Object.values(companyBenefits);
+        const arrLocations = Object.values(jobLocation);
+        const newArray = arrLocations.map(item => item.title);
         try {
             const jobCompanyInfo = await JobCompanyInfo.create({
-                companyName, companyAddress, companySize, companyBenefits, companyLogo, companyStaffName, companyEmail
+                companyName, companyAddress, companySize,
+                companyBenefits: arrBenefits,
+                companyLogo, companyStaffName, companyEmail
             })
             const jobInfo = await JobInfo.create({
-                jobTitle, jobLocation, jobDescription,
+                jobTitle, jobDescription,
                 jobRequirements,
                 jobType, minSalary,
                 maxSalary, jobLevel, jobIndustry,
+                location: newArray,
             })
             const candidateExpectations = await CandidateExpectations.create({
                 keywords, jobField, language, minExperience, nationality, educationLevel, gender, maritalStatus, minAge, maxAge,
@@ -47,6 +52,7 @@ const createJobPost = (recruiterId, newJobPost) => {
                 })
             }
         } catch (e) {
+            // console.log(e)
             reject(e)
         }
     })
@@ -55,20 +61,73 @@ const createJobPost = (recruiterId, newJobPost) => {
 const updateJobPost = (id, data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            const { formData } = data
             const jobPost = await JobPost.findById({
                 _id: id
             })
-
             if (jobPost === null) {
                 resolve({
                     status: 'ERR',
                     message: 'The JobPost is not defined'
                 })
             }
+            const { companyInfo } = formData
+            const { companyName, companyAddress, companySize, companyBenefits,
+                companyLogo, companyStaffName, companyEmail } = companyInfo
+            const arrBenefits = Object.values(companyBenefits);
+            let arrayBenefit = []
+            const newArrayBenefit = arrBenefits.map((item, index) => {
+                if (item !== null) {
+                    arrayBenefit.push(item)
+                }
+            });
+            const jobCompanyInfo = await JobCompanyInfo.findByIdAndUpdate(
+                jobPost.jobCompanyInfoId,
+                {
+                    companyName,
+                    companyAddress,
+                    companySize,
+                    companyBenefits: arrayBenefit,
+                    companyLogo,
+                    companyStaffName,
+                    companyEmail
+                },
+                { new: true }
+            )
+            const { jobInformation } = formData
+            const { jobLevel, jobIndustry } = jobInformation
+            const { jobTitle, location, jobDescription, jobRequirements,
+                jobType, minSalary, maxSalary } = formData
+            const arrLocations = Object.values(location);
+            let arrLocation = []
+            const newArrayLocation = arrLocations.map((item) => {
+                if (item !== null) {
+                    if (item.title) {
+                        arrLocation.push(item.title)
+                    } else {
+                        arrLocation.push(item)
+                    }
+                }
+            });
+            const jobInfo = await JobInfo.findByIdAndUpdate(jobPost.jobInfoId,
+                {
+                    jobTitle,
+                    jobDescription,
+                    jobRequirements,
+                    jobType,
+                    minSalary,
+                    maxSalary,
+                    jobLevel,
+                    jobIndustry,
+                    location: arrLocation
+                },
+                { new: true })
+            const candidateExpectations = await CandidateExpectations.findByIdAndUpdate(
+                jobPost.candidateExpectationsId, formData.jobInformation, { new: true })
             const jobPostUpdate = await JobPost.findByIdAndUpdate(
                 {
                     _id: id,
-                }, data,
+                }, formData,
                 { $set: { status: true } },
                 { new: true }
             )
@@ -178,8 +237,8 @@ const getAllJobPost = (filter) => {
 
 const getMyJobPost = async (id) => {
     try {
-        // Fetch jobPost and handle potential errors
         const jobPost = await JobPost.find({ recruiterId: id }).sort({ createdAt: -1, updatedAt: -1 });
+
 
         if (!jobPost || !jobPost.length) {
             return {
@@ -188,9 +247,7 @@ const getMyJobPost = async (id) => {
             };
         }
 
-        // Efficiently populate related data (consider using Promise.all)
         const results = await Promise.all(jobPost.map(async (job) => {
-
             const jobCompanyInfo = await JobCompanyInfo.findById(job.jobCompanyInfoId)
             const candidateExpectations = await CandidateExpectations.findById(job.candidateExpectationsId)
             const jobInfo = await JobInfo.findById(job.jobInfoId)
@@ -198,21 +255,25 @@ const getMyJobPost = async (id) => {
                 companyName, companyAddress, companySize, companyBenefits, companyLogo, companyStaffName, companyEmail
             } = jobCompanyInfo
             const {
-                jobTitle, jobLocation, jobDescription,
+                jobTitle, location, jobDescription,
                 jobRequirements,
                 jobType, minSalary,
-                maxSalary, jobLevel, jobIndustry,
+                maxSalary, jobLevel, jobIndustry
             } = jobInfo
             const {
                 keywords, jobField, language, minExperience, nationality, educationLevel, gender,
                 maritalStatus, minAge, maxAge,
             } = candidateExpectations
+            const { _id, recruiterId, jobCompanyInfoId, candidateExpectationsId,
+                jobInfoId, expirationDate, statusSeeking, statusApproval, postViews, datePosted } = job
+
             return {
-                ...job,
+                _id, recruiterId, jobCompanyInfoId, candidateExpectationsId,
+                jobInfoId, expirationDate, statusSeeking, statusApproval, postViews, datePosted,
                 companyName, companyAddress, companySize, companyBenefits, companyLogo, companyStaffName, companyEmail,
                 keywords, jobField, language, minExperience, nationality, educationLevel, gender,
                 maritalStatus, minAge, maxAge,
-                jobTitle, jobLocation, jobDescription,
+                jobTitle, location, jobDescription,
                 jobRequirements,
                 jobType, minSalary,
                 maxSalary, jobLevel, jobIndustry,
@@ -255,7 +316,7 @@ const getDetailsJobPost = (id) => {
                 companyName, companyAddress, companySize, companyBenefits, companyLogo, companyStaffName, companyEmail
             } = jobCompanyInfo
             const {
-                jobTitle, jobLocation, jobDescription,
+                jobTitle, location, jobDescription,
                 jobRequirements,
                 jobType, minSalary,
                 maxSalary, jobLevel, jobIndustry,
@@ -272,7 +333,7 @@ const getDetailsJobPost = (id) => {
                 companyName, companyAddress, companySize, companyBenefits, companyLogo, companyStaffName, companyEmail,
                 keywords, jobField, language, minExperience, nationality, educationLevel, gender,
                 maritalStatus, minAge, maxAge,
-                jobTitle, jobLocation, jobDescription,
+                jobTitle, location, jobDescription,
                 jobRequirements,
                 jobType, minSalary,
                 maxSalary, jobLevel, jobIndustry,
@@ -296,7 +357,7 @@ const cancelJobPost = (id) => {
                 {
                     _id: id,
                 },
-                { $set: { status: false } },
+                { $set: { statusSeeking: false } },
                 { new: true }
             )
 

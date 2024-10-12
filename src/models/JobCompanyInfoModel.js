@@ -27,8 +27,8 @@ const jobCompanyInfoSchema = new mongoose.Schema({
     },
     companyBenefits: [
         {
-            title: Number,
-            content: String,
+            title: { type: String },
+            content: { type: String },
         }
     ],
 });

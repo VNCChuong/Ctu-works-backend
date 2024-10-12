@@ -11,7 +11,7 @@ const createJobPost = async (req, res) => {
             jobLevel, jobIndustry, keywords, jobField, language, minExperience, nationality, educationLevel, gender, maritalStatus, minAge, maxAge,
         } = jobInformation
         const { companyName, companyAddress, companySize, companyBenefits, companyLogo, companyStaffName } = companyInfo
-        if (!jobTitle || !expirationDate || !jobLocation || !jobDescription || !jobRequirements || !jobType || !jobLevel || !jobIndustry || !minSalary || !maxSalary
+        if (!jobTitle || !expirationDate ||  !jobDescription || !jobRequirements || !jobType || !jobLevel || !jobIndustry || !minSalary || !maxSalary
             || !keywords || !minExperience || !educationLevel || !nationality || !gender || !maritalStatus || !minAge || !maxAge || !language
             || !companyName || !companyAddress || !companySize || !companyBenefits || !companyStaffName
         ) {
@@ -23,7 +23,7 @@ const createJobPost = async (req, res) => {
         const response = await JobPostService.createJobPost(recruiterId, req.body)
         return res.status(200).json(response)
     } catch (e) {
-        console.log(e)
+        // console.log(e)
         return res.status(404).json({
             message: e
         })
