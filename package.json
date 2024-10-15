@@ -30,6 +30,7 @@
     "nodemailer-plugin-inline-base64": "^2.1.1",
     "nodemon": "^3.1.4",
     "scikit-learn": "^0.1.0",
+    "socket.io": "^4.8.0",
     "spacy": "^0.0.4",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
