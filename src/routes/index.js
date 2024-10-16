@@ -16,6 +16,7 @@ const CandidateExpectations = require("./CandidateExpectationsRouter");
 const JobCompanyInfo = require("./JobCompanyInfoRouter");
 const LocationCompany = require("./LocationCompanyRounter");
 const Notification = require("./NotificationRouter");
+const uploadImage = require("./UploadImageRouter");
 const options = (swaggerJsdoc.Options = {
   definition: {
     openapi: "3.0.0",
@@ -47,6 +48,7 @@ const routes = (app) => {
   app.use("/api/job-company-info", JobCompanyInfo);
   app.use("/api/location-company", LocationCompany);
   app.use("/api/notification", Notification);
+  app.use("/api/upload", uploadImage);
 };
 
 module.exports = routes;

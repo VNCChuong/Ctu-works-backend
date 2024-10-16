@@ -1,5 +1,5 @@
-const Apply = require("../models/apply");
-const Notification = require("../models/notification");
+const Apply = require("../models/ApplyModel");
+const Notification = require("../models/NotificationModel");
 
 const createNotification = async (applyId) => {
   try {
