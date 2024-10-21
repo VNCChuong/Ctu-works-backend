@@ -10,6 +10,7 @@ const createUser = async (req, res) => {
             // locations, jobFunction, companyIndustries, salary, desiredJobLevel, 
             workingPreferences,
             confirmPassword, MSSV, } = req.body
+            // console.log(req.body)
         const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
         const isCheckEmail = reg.test(email)
         if (!fullName || !phoneNumber || !email || !password || !confirmPassword ||
@@ -259,7 +260,10 @@ const updateUserWorkPreferences = async (req, res) => {
     try {
         const userId = req.params.id
         const { workingPreferences } = req.body
-        if (!workingPreferences.locations || !workingPreferences.jobFunction || !workingPreferences.companyIndustries || !workingPreferences.desiredJobLevel || !workingPreferences.salary) {
+        console.log(req.body)
+        if (!workingPreferences.locations || !workingPreferences.jobFunction || 
+            !workingPreferences.companyIndustries || !workingPreferences.desiredJobLevel ||
+             !workingPreferences.salary) {
             return res.status(200).json({
                 status: "ERR",
                 message: "Input required"

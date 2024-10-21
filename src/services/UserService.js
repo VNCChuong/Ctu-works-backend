@@ -5,6 +5,20 @@ const { sendVerificationEmail } = require('./EmailService')
 const crypto = require('crypto');
 const fs = require('fs')
 const excelToJson = require('convert-excel-to-json');
+const UserInfo = require("../models/UserInfoModel")
+const WorkingPreferences = require("../models/WorkingPreferencesModel")
+// const Projects = require("../models/ProjectsModel")
+const mongoose = require('mongoose');
+const { workingHistorySchema, projectSchema, educationSchema } = require('../models//WorkEducationModel');
+const { skillSchema, languageSkillSchema } = require('../models/SkillModel');
+const { certificationSchema, activitySchema } = require('../models/CertificationModel');
+const Skill = mongoose.model("Skill", skillSchema)
+const Language = mongoose.model("Language", languageSkillSchema)
+const Certification = mongoose.model("Certification", certificationSchema)
+const Activity = mongoose.model("Activity", activitySchema)
+const Project = mongoose.model("Project", projectSchema);
+const WorkingHistory = mongoose.model("WorkingHistory", workingHistorySchema);
+const Education = mongoose.model("Education", educationSchema);
 
 const createUser = (newUser) => {
     return new Promise(async (resolve, reject) => {
@@ -12,8 +26,8 @@ const createUser = (newUser) => {
             dateOfBirth, gender, country, city, district, address, maritalStatusId,
             jobTitle, yearsExperience, currentDegree, highestDegree, currentSalary, currentJobFunction, currentIndustries,
             skillName, workingPreferences,
-            // locations, jobFunction, companyIndustries, salary, desiredJobLevel,
             confirmPassword, MSSV, } = newUser
+        const { companyIndustries } = workingPreferences
         try {
             const checkUser = await User.findOne({
                 email: email
@@ -35,19 +49,23 @@ const createUser = (newUser) => {
             }
             const hash = bcrypt.hashSync(password, 10)
             const verificationToken = crypto.randomBytes(32).toString('hex');
+            const createUserInfo = await UserInfo.create({
+                MSSV, fullName, jobTitle, currentDegree, currentIndustries, currentJobFunction, yearsExperience,
+                address, gender, currentSalary, maritalStatusId, dateOfBirth, phoneNumber, highestDegree,
+                country, city, district,
+            })
+            const workingPreferences = await WorkingPreferences.create({
+                companyIndustries
+            })
+
             const createdUser = await User.create({
-                fullName, phoneNumber, email, password: hash,
-                dateOfBirth, gender, country, city, district, address, maritalStatusId,
-                jobTitle, yearsExperience, currentDegree, highestDegree, currentSalary, currentJobFunction, currentIndustries,
+                email, password: hash,
                 skillName,
                 workingPreferences,
-                //     locations, jobFunction, companyIndustries, salary, desiredJobLevel,
-                // },
-                MSSV,
+                userInfoId: createUserInfo._id,
                 verificationToken,
                 seekJobMode: false,
-            }
-            )
+            })
             const verificationLink = `${process.env.APP_URL}/auth/verify/${verificationToken}`;
             await sendVerificationEmail(email, verificationLink);
 
@@ -61,7 +79,6 @@ const createUser = (newUser) => {
             }
         } catch (e) {
             reject(e)
-            // console.log(e)
         }
     })
 }
@@ -130,7 +147,16 @@ const updateUser = (id, data) => {
                     message: 'The user is not defined'
                 })
             }
-            const updateUser = await User.findByIdAndUpdate(id, data, { new: true })
+            const UserInfoId = checkUser.userInfoId.toString()
+            const { MSSV, fullName, jobTitle, currentDegree, currentIndustries, currentJobFunction, yearsExperience,
+                address, gender, currentSalary, maritalStatusId, dateOfBirth, phoneNumber, highestDegree,
+                country, city, district, } = data
+            const dataUserInfo = {
+                MSSV, fullName, jobTitle, currentDegree, currentIndustries, currentJobFunction, yearsExperience,
+                address, gender, currentSalary, maritalStatusId, dateOfBirth, phoneNumber, highestDegree,
+                country, city, district,
+            }
+            const updateUser = await UserInfo.findByIdAndUpdate(UserInfoId, dataUserInfo, { new: true })
             resolve({
                 status: 'OK',
                 message: "Success",
@@ -188,6 +214,35 @@ const getDetailsUser = (id) => {
             const user = await User.findOne({
                 _id: id
             })
+            const userInfo = await UserInfo.findById({
+                _id: user.userInfoId
+            })
+            const workingPreferences = await WorkingPreferences.findById({
+                _id: user.workingPreferences
+            })
+            const { MSSV, fullName, jobTitle, currentDegree, currentIndustries, currentJobFunction, yearsExperience,
+                currentSalary, highestDegree, country, phoneNumber, dateOfBirth, city, district, address, gender,
+                maritalStatusId, avatar
+            } = userInfo
+            const { locations, companyIndustries, benefits } = workingPreferences
+            const { _id, role, email, userInfoId, seekJobMode, lastOnline, workingHistories, projects,
+                educations,
+                skills,
+                languageSkills,
+                certifications,
+                activities, introduce
+            } = user
+            const data = {
+                _id, role, email, userInfoId, seekJobMode, lastOnline, workingHistories, projects,
+                skills, educations, introduce,
+                languageSkills,
+                certifications,
+                activities, locations, companyIndustries, benefits,
+                MSSV, fullName, jobTitle, currentDegree, currentIndustries, currentJobFunction, yearsExperience,
+                currentSalary, highestDegree, country, phoneNumber, dateOfBirth, city, district, address, gender,
+                maritalStatusId, avatar,
+                workingPreferences
+            }
             if (user === null) {
                 resolve({
                     status: 'OK',
@@ -208,7 +263,7 @@ const getDetailsUser = (id) => {
             resolve({
                 status: 'OK',
                 message: "Success",
-                data: user
+                data: data
             })
         } catch (e) {
             reject(e)
@@ -390,12 +445,8 @@ const updateUserWorkPreferences = (userId, data) => {
                     message: 'The user is not defined'
                 })
             }
-            const updateUser = await User.findByIdAndUpdate(userId, data, { new: true })
-            resolve({
-                status: 'OK',
-                message: "Success",
-                data: updateUser
-            })
+            const { workingPreferences } = data
+            const updateUser = await WorkingPreferences.findByIdAndUpdate(checkUser.workingPreferences.toString(), workingPreferences, { new: true })
         } catch (e) {
             reject(e)
         }
@@ -409,25 +460,16 @@ const createProject = (userId, data) => {
             const checkUser = await User.findOne({
                 _id: userId
             })
+
             if (checkUser === null) {
                 resolve({
                     status: 'ERR',
                     message: 'The user is not defined'
                 })
             }
-            const createProject = await User.updateOne(
-                { _id: userId },
-                { $push: { project: data } }
-            ).then(result => {
-                // console.log("Project added successfully:", result);
-            }).catch(error => {
-                // console.error("Error adding project:", error);
-                resolve({
-                    status: 'ERR',
-                    message: "Project added error",
-                    data: createProject
-                })
-            });
+            const project = await Project.create(data)
+            const createProject = checkUser.projects.push(project)
+            checkUser.save()
             resolve({
                 status: 'OK',
                 message: "Project added successfully",
@@ -443,51 +485,41 @@ const createProject = (userId, data) => {
 const updateProject = (userId, projectId, data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const checkUser = await User.findById({
-                _id: userId
-            })
-            if (checkUser === null) {
-                resolve({
-                    status: 'ERR',
-                    message: 'The user is not defined'
-                })
+            const user = await User.findById(userId);
+            if (!user) {
+                return resolve({ status: 'ERR', message: 'User not found' });
             }
-            const project = await User.findOne({ 'project._id': projectId });
-            if (!project) {
-                resolve({
-                    status: 'ERR',
-                    message: "Project not found",
-                })
-            } else {
-                await User.findByIdAndUpdate(
-                    userId,
-                    { $pull: { project: { _id: projectId } } },
-                    { new: true }
-                );
-                await User.updateOne(
-                    { _id: userId },
-                    { $push: { project: data } }
-                ).then(result => {
-                    // console.log("Project update successfully:", result);
-                }).catch(error => {
-                    // console.error("Error update project:", error);
-                    resolve({
-                        status: 'ERR',
-                        message: "Project update error",
-                    })
-                });
-                resolve({
-                    status: 'OK',
-                    message: "Project update successfully",
-                })
+            const project = await Project.findByIdAndUpdate(projectId, data)
+            const projectIndex = user.projects.findIndex(
+                (p) => p._id.toString() === projectId.toString()
+            );
+
+            if (projectIndex === -1) {
+                return resolve({ status: 'ERR', message: 'Project not found' });
             }
+
+            user.projects[projectIndex] = updateProjectData(user.projects[projectIndex], data);
+
+            await user.save();
+            resolve({ status: 'OK', message: 'Project updated successfully' });
         } catch (e) {
-            reject(e)
-
+            reject(e);
         }
-    })
-}
+    });
+};
 
+function updateProjectData(target, source) {
+    for (const key in source) {
+        if (key === '_id') continue;
+
+        if (typeof source[key] === 'object' && source[key] !== null) {
+            target[key] = updateProjectData(target[key] || {}, source[key]);
+        } else {
+            target[key] = source[key];
+        }
+    }
+    return target;
+}
 
 const deleteProject = (userId, projectId) => {
     return new Promise(async (resolve, reject) => {
@@ -501,24 +533,28 @@ const deleteProject = (userId, projectId) => {
                     message: 'The user is not defined'
                 })
             }
-            const project = await User.findOne({ 'project._id': projectId });
+            const project = await Project.findByIdAndDelete(projectId);
             if (!project) {
                 resolve({
                     status: 'ERR',
                     message: "Project not found",
                 })
             } else {
-                await User.findByIdAndUpdate(
-                    userId,
-                    { $pull: { project: { _id: projectId } } },
-                    { new: true }
+                const result = await User.updateOne(
+                    { _id: userId },
+                    { $pull: { projects: { _id: projectId } } }
                 );
-
-                resolve({
-                    status: 'OK',
-                    message: "Project deleted successfully",
-                })
-
+                if (result) {
+                    resolve({
+                        status: 'OK',
+                        message: "Project deleted successfully",
+                    })
+                } else {
+                    resolve({
+                        status: 'ERR',
+                        message: "Project deleted failed",
+                    })
+                }
             }
         } catch (e) {
             reject(e)
@@ -526,7 +562,6 @@ const deleteProject = (userId, projectId) => {
         }
     })
 }
-
 
 const createWorkingHistories = (userId, data) => {
     return new Promise(async (resolve, reject) => {
@@ -540,19 +575,10 @@ const createWorkingHistories = (userId, data) => {
                     message: 'The user is not defined'
                 })
             }
-            const createWorkingHistories = await User.updateOne(
-                { _id: userId },
-                { $push: { workingHistories: data } }
-            ).then(result => {
-                // console.log("workingHistories added successfully:", result);
-            }).catch(error => {
-                // console.error("Error adding workingHistories:", error);
-                resolve({
-                    status: 'ERR',
-                    message: "working histories added error",
-                    data: createWorkingHistories
-                })
-            });
+            const workingHistories = await WorkingHistory.create(data)
+            const createWorkingHistories = checkUser.workingHistories.push(workingHistories)
+            checkUser.save()
+
             resolve({
                 status: 'OK',
                 message: "working histories added successfully",
@@ -564,55 +590,48 @@ const createWorkingHistories = (userId, data) => {
     })
 }
 
-
 const updateWorkingHistories = (userId, workingHistoriesId, data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const checkUser = await User.findById({
-                _id: userId
-            })
-            if (checkUser === null) {
-                resolve({
-                    status: 'ERR',
-                    message: 'The user is not defined'
-                })
+            const user = await User.findById(userId);
+            if (!user) {
+                return resolve({ status: 'ERR', message: 'User not found' });
             }
-            const workingHistories = await User.findOne({ 'workingHistories._id': workingHistoriesId });
-            if (!workingHistories) {
-                resolve({
-                    status: 'ERR',
-                    message: "working histories not found",
-                })
-            } else {
-                await User.findByIdAndUpdate(
-                    userId,
-                    { $pull: { workingHistories: { _id: workingHistoriesId } } },
-                    { new: true }
-                );
-                await User.updateOne(
-                    { _id: userId },
-                    { $push: { workingHistories: data } }
-                ).then(result => {
-                    // console.log("Project update successfully:", result);
-                }).catch(error => {
-                    // console.error("Error update project:", error);
-                    resolve({
-                        status: 'ERR',
-                        message: "working histories update error",
-                    })
-                });
-                resolve({
-                    status: 'OK',
-                    message: "working histories update successfully",
-                })
+            const workingHistory = await WorkingHistory.findByIdAndUpdate(workingHistoriesId, data)
+            const workingHistoryIndex = user.workingHistories.findIndex(
+                (wh) => wh._id.toString() === workingHistoriesId.toString()
+            );
+
+            if (workingHistoryIndex === -1) {
+                return resolve({ status: 'ERR', message: 'Working history not found' });
             }
+
+            user.workingHistories[workingHistoryIndex] = updateWorkingHistoryData(
+                user.workingHistories[workingHistoryIndex],
+                data
+            );
+
+            await user.save();
+            resolve({ status: 'OK', message: 'Working history updated successfully' });
         } catch (e) {
-            reject(e)
-
+            reject(e);
         }
-    })
-}
+    });
+};
 
+
+function updateWorkingHistoryData(target, source) {
+    for (const key in source) {
+        if (key === '_id') continue;
+
+        if (typeof source[key] === 'object' && source[key] !== null) {
+            target[key] = updateWorkingHistoryData(target[key] || {}, source[key]);
+        } else {
+            target[key] = source[key];
+        }
+    }
+    return target;
+}
 const deleteWorkingHistories = (userId, workingHistoriesId) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -625,24 +644,28 @@ const deleteWorkingHistories = (userId, workingHistoriesId) => {
                     message: 'The user is not defined'
                 })
             }
-            const workingHistories = await User.findOne({ 'workingHistories._id': workingHistoriesId });
+            const workingHistories = await WorkingHistory.findByIdAndDelete(workingHistoriesId);
             if (!workingHistories) {
                 resolve({
                     status: 'ERR',
-                    message: "working histories not found",
+                    message: "Working history not found",
                 })
             } else {
-                await User.findByIdAndUpdate(
-                    userId,
-                    { $pull: { workingHistories: { _id: workingHistoriesId } } },
-                    { new: true }
+                const result = await User.updateOne(
+                    { _id: userId },
+                    { $pull: { workingHistories: { _id: workingHistoriesId } } }
                 );
-
-                resolve({
-                    status: 'OK',
-                    message: "working histories deleted successfully",
-                })
-
+                if (result) {
+                    resolve({
+                        status: 'OK',
+                        message: "Working history deleted successfully",
+                    })
+                } else {
+                    resolve({
+                        status: 'ERR',
+                        message: "Working history deleted failed",
+                    })
+                }
             }
         } catch (e) {
             reject(e)
@@ -664,19 +687,10 @@ const createEducations = (userId, data) => {
                     message: 'The user is not defined'
                 })
             }
-            const createEducations = await User.updateOne(
-                { _id: userId },
-                { $push: { educations: data } }
-            ).then(result => {
-                // console.log("Educations added successfully:", result);
-            }).catch(error => {
-                // console.error("Error adding educations:", error);
-                resolve({
-                    status: 'ERR',
-                    message: "educations added error",
-                    data: createEducations
-                })
-            });
+            const education = await Education.create(data)
+            const createEducation = checkUser.educations.push(education)
+            checkUser.save()
+
             resolve({
                 status: 'OK',
                 message: "educations added successfully",
@@ -688,55 +702,47 @@ const createEducations = (userId, data) => {
     })
 }
 
-
 const updateEducations = (userId, educationsId, data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const checkUser = await User.findById({
-                _id: userId
-            })
-            if (checkUser === null) {
-                resolve({
-                    status: 'ERR',
-                    message: 'The user is not defined'
-                })
+            const user = await User.findById(userId);
+            if (!user) {
+                return resolve({ status: 'ERR', message: 'User not found' });
             }
-            const educations = await User.findOne({ 'educations._id': educationsId });
-            if (!educations) {
-                resolve({
-                    status: 'ERR',
-                    message: "educations not found",
-                })
-            } else {
-                await User.findByIdAndUpdate(
-                    userId,
-                    { $pull: { educations: { _id: educationsId } } },
-                    { new: true }
-                );
-                await User.updateOne(
-                    { _id: userId },
-                    { $push: { educations: data } }
-                ).then(result => {
-                    // console.log("Project update successfully:", result);
-                }).catch(error => {
-                    // console.error("Error update project:", error);
-                    resolve({
-                        status: 'ERR',
-                        message: "educations update error",
-                    })
-                });
-                resolve({
-                    status: 'OK',
-                    message: "educations update successfully",
-                })
+            const education = await Education.findByIdAndUpdate(educationsId, data)
+            const educationIndex = user.educations.findIndex(
+                (edu) => edu._id.toString() === educationsId.toString()
+            );
+
+            if (educationIndex === -1) {
+                return resolve({ status: 'ERR', message: 'Education not found' });
             }
+
+
+            user.educations[educationIndex] = updateEducationData(
+                user.educations[educationIndex],
+                data
+            );
+
+            await user.save();
+            resolve({ status: 'OK', message: 'Education updated successfully' });
         } catch (e) {
-            reject(e)
-
+            reject(e);
         }
-    })
-}
+    });
+};
 
+function updateEducationData(target, source) {
+    for (const key in source) {
+        if (key === '_id') continue;
+        if (typeof source[key] === 'object' && source[key] !== null) {
+            target[key] = updateEducationData(target[key] || {}, source[key]);
+        } else {
+            target[key] = source[key];
+        }
+    }
+    return target;
+}
 const deleteEducations = (userId, educationsId) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -749,24 +755,28 @@ const deleteEducations = (userId, educationsId) => {
                     message: 'The user is not defined'
                 })
             }
-            const educations = await User.findOne({ 'educations._id': educationsId });
-            if (!educations) {
+            const education = await Education.findByIdAndDelete(educationsId);
+            if (!education) {
                 resolve({
                     status: 'ERR',
-                    message: "educations not found",
+                    message: "Education not found",
                 })
             } else {
-                await User.findByIdAndUpdate(
-                    userId,
-                    { $pull: { educations: { _id: educationsId } } },
-                    { new: true }
+                const result = await User.updateOne(
+                    { _id: userId },
+                    { $pull: { educations: { _id: educationsId } } }
                 );
-
-                resolve({
-                    status: 'OK',
-                    message: "educations deleted successfully",
-                })
-
+                if (result) {
+                    resolve({
+                        status: 'OK',
+                        message: "Education deleted successfully",
+                    })
+                } else {
+                    resolve({
+                        status: 'ERR',
+                        message: "Education deleted failed",
+                    })
+                }
             }
         } catch (e) {
             reject(e)
@@ -774,7 +784,6 @@ const deleteEducations = (userId, educationsId) => {
         }
     })
 }
-
 
 const createCertifications = (userId, data) => {
     return new Promise(async (resolve, reject) => {
@@ -788,19 +797,10 @@ const createCertifications = (userId, data) => {
                     message: 'The user is not defined'
                 })
             }
-            const createCertifications = await User.updateOne(
-                { _id: userId },
-                { $push: { certifications: data } }
-            ).then(result => {
-                // console.log("certifications added successfully:", result);
-            }).catch(error => {
-                // console.error("Error adding certifications:", error);
-                resolve({
-                    status: 'ERR',
-                    message: "certifications added error",
-                    data: createCertifications
-                })
-            });
+            const certification = await Certification.create(data)
+            const createEducation = checkUser.certifications.push(certification)
+            checkUser.save()
+
             resolve({
                 status: 'OK',
                 message: "certifications added successfully",
@@ -812,55 +812,47 @@ const createCertifications = (userId, data) => {
     })
 }
 
-
 const updateCertifications = (userId, certificationsId, data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const checkUser = await User.findById({
-                _id: userId
-            })
-            if (checkUser === null) {
-                resolve({
-                    status: 'ERR',
-                    message: 'The user is not defined'
-                })
+            const user = await User.findById(userId);
+            if (!user) {
+                return resolve({ status: 'ERR', message: 'User not found' });
             }
-            const certifications = await User.findOne({ 'certifications._id': certificationsId });
-            if (!certifications) {
-                resolve({
-                    status: 'ERR',
-                    message: "certifications not found",
-                })
-            } else {
-                await User.findByIdAndUpdate(
-                    userId,
-                    { $pull: { certifications: { _id: certificationsId } } },
-                    { new: true }
-                );
-                await User.updateOne(
-                    { _id: userId },
-                    { $push: { certifications: data } }
-                ).then(result => {
-                    // console.log("Project update successfully:", result);
-                }).catch(error => {
-                    // console.error("Error update project:", error);
-                    resolve({
-                        status: 'ERR',
-                        message: "certifications update error",
-                    })
-                });
-                resolve({
-                    status: 'OK',
-                    message: "certifications update successfully",
-                })
+            const certification = Certification.findByIdAndUpdate(certificationsId, data)
+            const certificationIndex = user.certifications.findIndex(
+                (cert) => cert._id.toString() === certificationsId.toString()
+            );
+
+            if (certificationIndex === -1) {
+                return resolve({ status: 'ERR', message: 'Certification not found' });
             }
+            user.certifications[certificationIndex] = updateCertificationData(
+                user.certifications[certificationIndex],
+                data
+            );
+
+            await user.save();
+            resolve({ status: 'OK', message: 'Certification updated successfully' });
         } catch (e) {
-            reject(e)
-
+            reject(e);
         }
-    })
-}
+    });
+};
 
+// Reusable helper function
+function updateCertificationData(target, source) {
+    for (const key in source) {
+        if (key === '_id') continue; // Skip _id updates
+
+        if (typeof source[key] === 'object' && source[key] !== null) {
+            target[key] = updateCertificationData(target[key] || {}, source[key]);
+        } else {
+            target[key] = source[key];
+        }
+    }
+    return target;
+}
 const deleteCertifications = (userId, certificationsId) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -873,24 +865,28 @@ const deleteCertifications = (userId, certificationsId) => {
                     message: 'The user is not defined'
                 })
             }
-            const certifications = await User.findOne({ 'certifications._id': certificationsId });
-            if (!certifications) {
+            const certification = await Certification.findByIdAndDelete(certificationsId);
+            if (!certification) {
                 resolve({
                     status: 'ERR',
-                    message: "certifications not found",
+                    message: "certification not found",
                 })
             } else {
-                await User.findByIdAndUpdate(
-                    userId,
-                    { $pull: { certifications: { _id: certificationsId } } },
-                    { new: true }
+                const result = await User.updateOne(
+                    { _id: userId },
+                    { $pull: { certifications: { _id: certificationsId } } }
                 );
-
-                resolve({
-                    status: 'OK',
-                    message: "certifications deleted successfully",
-                })
-
+                if (result) {
+                    resolve({
+                        status: 'OK',
+                        message: "certification deleted successfully",
+                    })
+                } else {
+                    resolve({
+                        status: 'ERR',
+                        message: "certification deleted failed",
+                    })
+                }
             }
         } catch (e) {
             reject(e)
@@ -912,19 +908,10 @@ const createActivities = (userId, data) => {
                     message: 'The user is not defined'
                 })
             }
-            const createActivities = await User.updateOne(
-                { _id: userId },
-                { $push: { activities: data } }
-            ).then(result => {
-                // console.log("activities added successfully:", result);
-            }).catch(error => {
-                // console.error("Error adding activities:", error);
-                resolve({
-                    status: 'ERR',
-                    message: "activities added error",
-                    data: createActivities
-                })
-            });
+            const activities = await Activity.create(data)
+            const createActivities = checkUser.activities.push(activities)
+            checkUser.save()
+
             resolve({
                 status: 'OK',
                 message: "activities added successfully",
@@ -935,56 +922,47 @@ const createActivities = (userId, data) => {
         }
     })
 }
-
-
 const updateActivities = (userId, activitiesId, data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const checkUser = await User.findById({
-                _id: userId
-            })
-            if (checkUser === null) {
-                resolve({
-                    status: 'ERR',
-                    message: 'The user is not defined'
-                })
+            const user = await User.findById(userId);
+            if (!user) {
+                return resolve({ status: 'ERR', message: 'User not found' });
             }
-            const activities = await User.findOne({ 'activities._id': activitiesId });
-            if (!activities) {
-                resolve({
-                    status: 'ERR',
-                    message: "activities not found",
-                })
-            } else {
-                await User.findByIdAndUpdate(
-                    userId,
-                    { $pull: { activities: { _id: activitiesId } } },
-                    { new: true }
-                );
-                await User.updateOne(
-                    { _id: userId },
-                    { $push: { activities: data } }
-                ).then(result => {
-                    // console.log("Project update successfully:", result);
-                }).catch(error => {
-                    // console.error("Error update project:", error);
-                    resolve({
-                        status: 'ERR',
-                        message: "activities update error",
-                    })
-                });
-                resolve({
-                    status: 'OK',
-                    message: "activities update successfully",
-                })
+
+            const activityIndex = user.activities.findIndex(
+                (act) => act._id.toString() === activitiesId.toString()
+            );
+
+            if (activityIndex === -1) {
+                return resolve({ status: 'ERR', message: 'Activity not found' });
             }
+
+            // Deeply update activity while preserving the _id
+            user.activities[activityIndex] = updateActivityData(
+                user.activities[activityIndex],
+                data
+            );
+
+            await user.save();
+            resolve({ status: 'OK', message: 'Activity updated successfully' });
         } catch (e) {
-            reject(e)
-
+            reject(e);
         }
-    })
-}
+    });
+};
+function updateActivityData(target, source) {
+    for (const key in source) {
+        if (key === '_id') continue;
 
+        if (typeof source[key] === 'object' && source[key] !== null) {
+            target[key] = updateActivityData(target[key] || {}, source[key]);
+        } else {
+            target[key] = source[key];
+        }
+    }
+    return target;
+}
 const deleteActivities = (userId, activitiesId) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -997,24 +975,28 @@ const deleteActivities = (userId, activitiesId) => {
                     message: 'The user is not defined'
                 })
             }
-            const activities = await User.findOne({ 'activities._id': activitiesId });
+            const activities = await Education.findByIdAndDelete(activitiesId);
             if (!activities) {
                 resolve({
                     status: 'ERR',
-                    message: "activities not found",
+                    message: "Education not found",
                 })
             } else {
-                await User.findByIdAndUpdate(
-                    userId,
-                    { $pull: { activities: { _id: activitiesId } } },
-                    { new: true }
+                const result = await User.updateOne(
+                    { _id: userId },
+                    { $pull: { activities: { _id: activitiesId } } }
                 );
-
-                resolve({
-                    status: 'OK',
-                    message: "activities deleted successfully",
-                })
-
+                if (result) {
+                    resolve({
+                        status: 'OK',
+                        message: "Education deleted successfully",
+                    })
+                } else {
+                    resolve({
+                        status: 'ERR',
+                        message: "Education deleted failed",
+                    })
+                }
             }
         } catch (e) {
             reject(e)
@@ -1068,8 +1050,6 @@ const createLanguage = (userId, data) => {
         }
     })
 }
-
-
 const updateLanguage = (userId, languageId, data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -1129,7 +1109,6 @@ const updateLanguage = (userId, languageId, data) => {
         }
     })
 }
-
 const deleteLanguage = (userId, languageId) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -1204,8 +1183,6 @@ const createSkills = (userId, data) => {
         }
     })
 }
-
-
 const updateSkills = (userId, skillsId, data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -1253,7 +1230,6 @@ const updateSkills = (userId, skillsId, data) => {
         }
     })
 }
-
 const deleteSkills = (userId, skillsId) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -1298,6 +1274,7 @@ const updateIntroduce = (userId, data) => {
             const checkUser = await User.findById({
                 _id: userId
             })
+            console.log(data)
             if (checkUser === null) {
                 resolve({
                     status: 'ERR',

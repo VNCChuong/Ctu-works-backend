@@ -40,6 +40,7 @@ router.post('/refresh-token', UserController.refreshToken)
 router.post('/uploadfile', upload.single('file'), UserController.uploadfile)
 
 router.put('/update-work-preferences/:id', UserController.updateUserWorkPreferences)
+
 router.post('/create-project/:id', UserController.createProject)
 router.put('/update-project/:id', UserController.updateProject)
 router.delete('/delete-project/:id', UserController.deleteProject)
