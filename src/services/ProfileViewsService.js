@@ -22,8 +22,6 @@ const createProfileViews = (newProfileViews) => {
     })
 }
 
-
-
 const getMyProfileViews = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
