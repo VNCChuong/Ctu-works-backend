@@ -71,12 +71,21 @@ const getDetailNews = async (req, res) => {
         })
     }
 }
-
+const getAllNews = async (req, res) => {
+    try {
+      const response = await NewsService.getAllNews();
+      return res.status(200).json(response);
+    } catch (e) {
+      return res.status(404).json({
+        message: e,
+      });
+    }
+  };
 
 module.exports = {
     createNews,
     updateNews,
     deleteNews,
     getDetailNews,
-
+    getAllNews,
 }

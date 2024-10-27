@@ -10,4 +10,5 @@ router.delete('/delete/:id',  NewsController.deleteNews)
 
 router.get('/get-detail-news/:id', NewsController.getDetailNews)
 
+router.get("/get-all-news", NewsController.getAllNews);
 module.exports = router
