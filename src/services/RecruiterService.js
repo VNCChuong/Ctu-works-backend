@@ -97,6 +97,12 @@ const loginRecruiter = (recruiterLogin) => {
                     message: "The password is incorrect"
                 })
             }
+            if (!checkRecruiter.isVerified) {
+                resolve({
+                    status: 'ERR',
+                    message: "Account not verified"
+                })
+            }
             const access_token = await genneralAccessToken({
                 userid: checkRecruiter.id,
                 email: checkRecruiter.email,

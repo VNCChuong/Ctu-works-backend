@@ -238,7 +238,7 @@ const getAllJobPost = (filter) => {
 const getMyJobPost = async (id) => {
     try {
         const jobPost = await JobPost.find({ recruiterId: id }).sort({ createdAt: -1, updatedAt: -1 });
-
+        console.log(jobPost)
 
         if (!jobPost || !jobPost.length) {
             return {

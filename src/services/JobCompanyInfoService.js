@@ -86,6 +86,7 @@ const getJobCompanyInfo = (id) => {
             const jobCompanyInfo = await JobCompanyInfo.find({
                 _id: id
             })
+            console.log(jobCompanyInfo)
             if (jobCompanyInfo === null) {
                 resolve({
                     status: 'ERR',

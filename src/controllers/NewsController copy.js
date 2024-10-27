@@ -1,15 +1,15 @@
-const JobCompanyInfo = require('../services/JobCompanyInfoService')
+const NewsService = require('../services/NewsService')
 
-const createJobCompanyInfo = async (req, res) => {
+const createNews = async (req, res) => {
     try {
-        const { companyName, companyAddress, companySize, companyStaffName, companyBenefits } = req.body
-        if (!companyName || !companyAddress || !companySize || !companyStaffName || !companyBenefits) {
+        const { title, summary, content } = req.body
+        if (!title || !summary || !content) {
             return res.status(200).json({
                 status: 'ERR',
                 message: 'The input is required'
             })
         }
-        const response = await JobCompanyInfo.createJobCompanyInfo(req.body)
+        const response = await NewsService.createNews(req.body)
         return res.status(200).json(response)
     } catch (e) {
         return res.status(404).json({
@@ -17,7 +17,7 @@ const createJobCompanyInfo = async (req, res) => {
         })
     }
 }
-const updateJobCompanyInfo = async (req, res) => {
+const updateNews = async (req, res) => {
     try {
         const { id, data } = req.body
         if (!id || !data) {
@@ -26,7 +26,7 @@ const updateJobCompanyInfo = async (req, res) => {
                 message: 'The input is required'
             })
         }
-        const response = await JobCompanyInfo.updateJobCompanyInfo(req.body)
+        const response = await NewsService.updateNews(req.body)
         return res.status(200).json(response)
     } catch (e) {
         return res.status(404).json({
@@ -35,16 +35,16 @@ const updateJobCompanyInfo = async (req, res) => {
     }
 }
 
-const deleteJobCompanyInfo = async (req, res) => {
+const deleteNews = async (req, res) => {
     try {
-        const { id } = req.body
+        const id = req.params.id
         if (!id) {
             return res.status(200).json({
                 status: 'ERR',
                 message: 'The id is required'
             })
         }
-        const response = await JobCompanyInfo.deleteJobCompanyInfo(id)
+        const response = await NewsService.deleteNews(id)
         return res.status(200).json(response)
     } catch (e) {
         return res.status(404).json({
@@ -54,18 +54,16 @@ const deleteJobCompanyInfo = async (req, res) => {
 }
 
 
-const getJobCompanyInfo = async (req, res) => {
+const getDetailNews = async (req, res) => {
     try {
-        const { id } = req.body
-        const { jobpostId } = req.body
+        const id = req.params.id
         if (!id) {
             return res.status(200).json({
                 status: 'ERR',
                 message: 'The id is required'
             })
         }
-        console.log(id)
-        const response = await JobCompanyInfo.getJobCompanyInfo(id)
+        const response = await NewsService.getDetailNews(id)
         return res.status(200).json(response)
     } catch (e) {
         return res.status(404).json({
@@ -76,8 +74,9 @@ const getJobCompanyInfo = async (req, res) => {
 
 
 module.exports = {
-    createJobCompanyInfo,
-    updateJobCompanyInfo,
-    deleteJobCompanyInfo,
-    getJobCompanyInfo,
+    createNews,
+    updateNews,
+    deleteNews,
+    getDetailNews,
+
 }
