@@ -43,6 +43,62 @@ const createNotification = async (applyId, io) => {
   }
 };
 
+const notifyRecruiterOnApply = async (applyId, io) => {
+  try {
+    const apply = await Apply.findById(applyId).populate({
+      path: "jobPostId",
+      populate: {
+        path: "jobInfoId",
+        model: "JobInfo",
+      },
+    });
+
+    if (!apply) {
+      console.error(`Apply với ID ${applyId} không được tìm thấy`);
+      return null;
+    }
+
+    // const message = `Người dùng ${apply.userId} đã ứng tuyển vào công việc ${apply.jobPostId.title}.`;
+
+    const existingNotification = await Notification.findOne({
+      UserId: apply.userId,
+      message: `Người dùng ${apply.userId} đã ứng tuyển vào công việc ${apply.jobPostId.jobInfoId.jobTitle}.`,
+      isRead: false,
+    });
+
+    if (existingNotification) {
+      console.log("Thông báo tương tự đã tồn tại.");
+      return existingNotification;
+    }
+
+    // const notification = new Notification({
+    //   UserId: apply.recruiterId, // Gửi thông báo đến nhà tuyển dụng
+    //   message,
+    //   isRead: false,
+    // });
+
+    const notification = new Notification({
+      UserId: apply.recruiterId,
+      message: `Người dùng ${apply.userId} đã ứng tuyển vào công việc ${apply.jobPostId.jobInfoId.jobTitle}.`,
+      isRead: false,
+    });
+
+    // await notification.save();
+
+    // // Phát thông báo real-time cho nhà tuyển dụng
+    // io.emit(`notification-${apply.recruiterId}`, notification);
+
+    // return notification;
+
+    await notification.save();
+    io.emit(`notification-${apply.recruiterId}`, notification);
+    return notification;
+  } catch (error) {
+    console.error("Lỗi khi tạo thông báo cho nhà tuyển dụng:", error);
+    throw new Error("Không thể tạo thông báo.");
+  }
+};
+
 const getUserNotifications = async (userId) => {
   try {
     const notifications = await Notification.find({ UserId: userId }).sort({
@@ -93,4 +149,5 @@ module.exports = {
   getUserNotifications,
   markNotificationAsRead,
   countUnreadNotifications,
+  notifyRecruiterOnApply,
 };
