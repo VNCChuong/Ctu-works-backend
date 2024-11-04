@@ -1,5 +1,6 @@
 const Recruiter = require("../models/RecruiterModel");
 const Follow = require("../models/FollowModel");
+const Company = require("../models/CompanyModel");
 const JobPost = require("../models/JobPostModel");
 const createFollow = (recruiterId, data) => {
     return new Promise(async (resolve, reject) => {
@@ -7,8 +8,12 @@ const createFollow = (recruiterId, data) => {
             const checkRecruiter = await Recruiter.findOne({
                 _id: recruiterId
             })
+            const companyId = checkRecruiter.companyId.toHexString();
+            const checkCompany = await Company.findById({
+                _id: companyId
+            })
             const companyJob = await JobPost.find({
-                recruiter: recruiterId
+                recruiterId: recruiterId
             })
             const jobCount = companyJob.length;
             if (checkRecruiter === null) {
@@ -19,6 +24,7 @@ const createFollow = (recruiterId, data) => {
             }
             const checkFollow = await Follow.findOne({
                 recruiterId: recruiterId,
+                companyId: companyId,
                 userId: data.userId,
             })
             if (checkFollow) {
@@ -29,15 +35,16 @@ const createFollow = (recruiterId, data) => {
             }
             const createdFollow = await Follow.create({
                 recruiterId: recruiterId,
-                companyName: checkRecruiter.companyName,
-                companyIndustries: checkRecruiter.companyIndustries,
-                companyFollowing: checkRecruiter.following,
-                companyLogo: checkRecruiter.companyLogo,
-                companyJob: jobCount,
+                companyId: companyId,
+                // companyName: checkRecruiter.companyName,
+                // companyIndustries: checkRecruiter.companyIndustries,
+                // companyFollowing: checkRecruiter.following,
+                // companyLogo: checkRecruiter.companyLogo,
+                // companyJob: jobCount,
                 ...data
             })
-            await Recruiter.findByIdAndUpdate(
-                { _id: recruiterId }
+            await Company.findByIdAndUpdate(
+                { _id: companyId }
                 ,
                 {
                     $push: {
@@ -64,7 +71,9 @@ const createFollow = (recruiterId, data) => {
 const deleteFollow = (followId, userId, recruiterId) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (followId) {
+            console.log(followId, userId, recruiterId)
+            const follow = await Follow.find({ _id: followId })
+            if (follow.length === 1) {
                 const checkFollow = await Follow.findOne({
                     _id: followId
                 })
@@ -74,8 +83,8 @@ const deleteFollow = (followId, userId, recruiterId) => {
                         message: 'The Follow is not defined'
                     })
                 }
-                await Recruiter.findByIdAndUpdate(
-                    { _id: checkFollow.recruiterId.toHexString() }
+                await Company.findByIdAndUpdate(
+                    { _id: checkFollow.companyId.toHexString() }
                     ,
                     {
                         $pull: {
@@ -99,8 +108,8 @@ const deleteFollow = (followId, userId, recruiterId) => {
                     userId: userId,
                     recruiterId: recruiterId
                 })
-                await Recruiter.findByIdAndUpdate(
-                    { _id: recruiterId }
+                await Company.findByIdAndUpdate(
+                    { _id: checkFollow.companyId.toHexString() }
                     ,
                     {
                         $pull: {
@@ -142,6 +151,17 @@ const getMyFollow = (id) => {
             const follow = await Follow.find({
                 userId: id
             }).sort({ createdAt: -1, updatedAt: -1 })
+            const results = await Promise.all(follow.map(async (fol) => {
+                const company = await Company.findById({ _id: fol.companyId.toHexString() })
+                return {
+                    ...fol._doc,
+                    companyName: company.companyName,
+                    companyIndustries: company.companyIndustries,
+                    companyFollowing: company.following,
+                    companyLogo: company.companyLogo,
+                    companyJob: company.companyJob,
+                }
+            }))
             if (follow === null) {
                 resolve({
                     status: 'ERR',
@@ -151,7 +171,7 @@ const getMyFollow = (id) => {
             resolve({
                 status: 'OK',
                 message: 'SUCESSS',
-                data: follow
+                data: results
             })
         } catch (e) {
             reject(e)

@@ -176,7 +176,11 @@ const getAllJobPost = (filter) => {
     return new Promise(async (resolve, reject) => {
         try {
             // const { jobTitle, location, ...otherFilters } = filter;
-            const jobPost = await JobPost.find().sort({ createdAt: -1, updatedAt: -1 });
+            const today = new Date();
+            const jobPost = await JobPost.find({
+                expirationDate: { $gt: today },
+                statusSeeking: true
+            }).sort({ createdAt: -1, updatedAt: -1 });
             const results = await Promise.all(jobPost.map(async (job) => {
 
                 const jobCompanyInfo = await JobCompanyInfo.findById(job.jobCompanyInfoId)

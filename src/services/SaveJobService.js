@@ -26,7 +26,6 @@ const createSaveJob = (newSaveJob) => {
                 keywords, jobField, language, minExperience, nationality, educationLevel, gender,
                 maritalStatus, minAge, maxAge,
             } = candidateExpectations
-            console.log(jobPostId, jobTitle, companyLogo)
             const createdSaveJob = await SaveJob.create({
                 userId: userId,
                 jobPostId: jobPostId,

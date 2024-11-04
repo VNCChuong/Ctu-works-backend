@@ -39,13 +39,7 @@ const recruiterSchema = new mongoose.Schema(
         lastOnline: {
             type: Date
         },
-        follower: {
-            type: [String]
-        },
-        following: {
-            type: Number,
-            default: 0
-        },
+
 
     },
     {

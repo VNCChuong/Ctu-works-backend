@@ -9,9 +9,9 @@ const createRecruiter = async (req, res) => {
             businessLicense, password, confirmPassword } = req.body
         const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
         const isCheckEmail = reg.test(email)
-        
+
         if (!fullName || !companyName || !phoneNumber
-            || !companyAddress || !email || !password || !confirmPassword 
+            || !companyAddress || !email || !password || !confirmPassword
             || !companyDescription || !businessLicense) {
             return res.status(200).json({
                 status: 'ERR',
@@ -113,6 +113,17 @@ const deleteRecruiter = async (req, res) => {
 const getAllRecruiter = async (req, res) => {
     try {
         const response = await RecruiterService.getAllRecruiter()
+        return res.status(200).json(response)
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+const getAllRecruiterCompany = async (req, res) => {
+    try {
+        const response = await RecruiterService.getAllRecruiterCompany()
         return res.status(200).json(response)
     } catch (e) {
         return res.status(404).json({
@@ -291,5 +302,6 @@ module.exports = {
     changePasswordRecruiter,
     createLocation,
     updateLocation,
-    deleteLocation
+    deleteLocation,
+    getAllRecruiterCompany
 }

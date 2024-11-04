@@ -1285,7 +1285,7 @@ const updateIntroduce = (userId, data) => {
             const checkUser = await User.findById({
                 _id: userId
             })
-            console.log(data)
+        
             if (checkUser === null) {
                 resolve({
                     status: 'ERR',

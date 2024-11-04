@@ -24,6 +24,13 @@ const companySchema = new mongoose.Schema(
         //     type: String,
         //     required: true
         // },
+        follower: {
+            type: [String]
+        },
+        following: {
+            type: Number,
+            default: 0
+        },
         companyWebsite: {
             type: String,
         },
@@ -43,7 +50,10 @@ const companySchema = new mongoose.Schema(
         staffName: {
             type: String,
         },
-
+        companyJob: {
+            type: Number,
+            default: 0
+        },
     },
     {
         timestamps: true

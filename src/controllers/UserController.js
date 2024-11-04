@@ -260,7 +260,7 @@ const updateUserWorkPreferences = async (req, res) => {
     try {
         const userId = req.params.id
         const { workingPreferences } = req.body
-        console.log(req.body)
+
         if (!workingPreferences.locations || !workingPreferences.jobFunction || 
             !workingPreferences.companyIndustries || !workingPreferences.desiredJobLevel ||
              !workingPreferences.salary) {

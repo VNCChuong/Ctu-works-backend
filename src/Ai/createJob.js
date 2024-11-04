@@ -1,6 +1,6 @@
 const createJobAi = async (req, res) => {
     try {
-        console.log("cos lamf")
+   
         // 1. Access and process the XLSX file (req.file)
         const workbook = XLSX.readFile(req.file.buffer); // You'll likely need a library like 'xlsx'
         // ... (Extract and transform data as needed) ...

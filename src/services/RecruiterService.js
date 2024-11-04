@@ -149,7 +149,7 @@ const updateRecruiter = (id, data) => {
                 companyName, companyAddress, companyScale, phoneNumber, companyWebsite,
                 companyFacebook, companyBenefits, companyLogo, companyDescription, staffName
             }
-            console.log(companyBenefits)
+
             const updadteCompany = await Company.findByIdAndUpdate(formData.companyId, dataCompany, { new: true })
             const updateRecruiter = await Recruiter.findByIdAndUpdate(id, formData, { new: true })
             resolve({
@@ -213,11 +213,12 @@ const getDetailsRecruiter = (id) => {
                 })
             }
             const { _id, role, companyId, email, locationCompanyId,
-                fullName, isVerified, follower, following, createdAt, updatedAt } = recruiter
+                fullName, isVerified, createdAt, updatedAt } = recruiter
             const company = await Company.findById(recruiter.companyId)
             const {
                 companyName, companyAddress, phoneNumber, companyWebsite, companyFacebook,
-                companyBenefits, companyLogo, staffName, companyScale, companyDescription
+                companyBenefits, companyLogo, staffName, companyScale, companyDescription,
+                follower, following,
             } = company
             const results = {
                 _id, role, companyId, email, locationCompanyId,
@@ -238,6 +239,31 @@ const getDetailsRecruiter = (id) => {
     })
 }
 
+const getAllRecruiterCompany = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const allCompany = await Company.find().sort({ createdAt: -1, updatedAt: -1 })
+            const results = await Promise.all(allCompany.map(async (company) => {
+                const recruiter = await Recruiter.findOne({ companyId: company._id })
+                return {
+                    ...company._doc,
+                    recruiterName: recruiter.fullName,
+                    recruiterEmail: recruiter.email,
+                    recruiterPhone: recruiter.phoneNumber,
+                    recruiterId: recruiter._id,
+                }
+            }))
+            console.log(results)
+            resolve({
+                status: 'OK',
+                message: "Success",
+                data: results
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 
 const deleteManyRecruiter = (ids) => {
     return new Promise(async (resolve, reject) => {
@@ -445,5 +471,6 @@ module.exports = {
     changePasswordRecruiter,
     createLocation,
     updateLocation,
-    deleteLocation
+    deleteLocation,
+    getAllRecruiterCompany
 }

@@ -19,7 +19,6 @@ const CreateJobpostAi = require("./CreateJobpostAiRouter");
 const JobViewsHistory = require("./JobViewsHistoryRouter");
 const HistoryViewUser = require("./UserViewsHistoryRouter");
 const Report = require("./ReportRouter");
-const Notification = require("./NotificationRouter");
 const options = (swaggerJsdoc.Options = {
   definition: {
     openapi: "3.0.0",
@@ -54,7 +53,6 @@ const routes = (app) => {
   app.use("/api/job-views-history", JobViewsHistory);
   app.use("/api/history-view-user", HistoryViewUser);
   app.use("/api/report", Report);
-  app.use("/api/notification", Notification);
 };
 
 module.exports = routes;

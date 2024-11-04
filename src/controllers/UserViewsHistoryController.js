@@ -2,7 +2,7 @@ const UserViewsHistoryService = require('../services/UserViewsHistoryService')
 
 const create = async (req, res) => {
     try {
-        console.log(req.body)
+    
         const { userId, recruiterId } = req.body
         if (!userId || !recruiterId) {
             return res.status(200).json({
