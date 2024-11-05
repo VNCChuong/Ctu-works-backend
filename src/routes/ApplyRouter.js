@@ -1,13 +1,14 @@
 const express = require("express");
-const router = express.Router()
-const ApplyController = require('../controllers/ApplyController');
+const router = express.Router();
+const JobInfo = require("../controllers/JobInfoController");
 
-router.post('/create',  ApplyController.createApply)
+router.post("/create", JobInfo.createJobInfo);
 
-router.put('/update/:id',  ApplyController.updateApply)
+router.put("/update/:id", JobInfo.updateJobInfo);
 
-router.delete('/delete/:id',  ApplyController.deleteApply)
+router.delete("/delete/:id", JobInfo.deleteJobInfo);
 
-router.post('/get-my-apply/:id', ApplyController.getMyApply)
+router.post("/get-job-info/:id", JobInfo.getJobInfo);
 
-module.exports = router
+router.get("/related-jobs/:id", JobInfo.getRelatedJobs);
+module.exports = router;

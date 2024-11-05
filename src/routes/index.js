@@ -18,6 +18,7 @@ const LocationCompany = require("./LocationCompanyRounter");
 const CreateJobpostAi = require("./CreateJobpostAiRouter");
 const JobViewsHistory = require("./JobViewsHistoryRouter");
 const HistoryViewUser = require("./UserViewsHistoryRouter");
+const Notification = require("./NotificationRouter");
 const Report = require("./ReportRouter");
 const options = (swaggerJsdoc.Options = {
   definition: {
@@ -53,6 +54,7 @@ const routes = (app) => {
   app.use("/api/job-views-history", JobViewsHistory);
   app.use("/api/history-view-user", HistoryViewUser);
   app.use("/api/report", Report);
+  app.use("/api/notification", Notification);
 };
 
 module.exports = routes;
