@@ -20,10 +20,9 @@ const companySchema = new mongoose.Schema(
         companyScale: {
             type: String,
         },
-        // companyIndustries: {
-        //     type: String,
-        //     required: true
-        // },
+        companyIndustries: {
+            type: String,
+        },
         follower: {
             type: [String]
         },

@@ -144,10 +144,10 @@ const updateRecruiter = (id, data) => {
                 })
             }
             const { companyName, phoneNumber, companyLogo, companyAddress, companyWebsite
-                , companyFacebook, companyBenefits, companyScale, companyDescription, staffName } = formData
+                , companyFacebook, companyBenefits, companyScale, companyDescription, staffName, companyIndustries } = formData
             const dataCompany = {
                 companyName, companyAddress, companyScale, phoneNumber, companyWebsite,
-                companyFacebook, companyBenefits, companyLogo, companyDescription, staffName
+                companyFacebook, companyBenefits, companyLogo, companyDescription, staffName, companyIndustries
             }
 
             const updadteCompany = await Company.findByIdAndUpdate(formData.companyId, dataCompany, { new: true })
@@ -218,13 +218,13 @@ const getDetailsRecruiter = (id) => {
             const {
                 companyName, companyAddress, phoneNumber, companyWebsite, companyFacebook,
                 companyBenefits, companyLogo, staffName, companyScale, companyDescription,
-                follower, following,
+                follower, following, companyIndustries
             } = company
             const results = {
                 _id, role, companyId, email, locationCompanyId,
                 fullName, isVerified, follower, following, createdAt, updatedAt,
                 companyName, companyAddress, phoneNumber, companyWebsite, companyFacebook,
-                companyBenefits, companyLogo, staffName, companyScale, companyDescription,
+                companyBenefits, companyLogo, staffName, companyScale, companyDescription, companyIndustries
             };
             resolve({
                 status: 'OK',
