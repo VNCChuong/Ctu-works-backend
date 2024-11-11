@@ -9,11 +9,13 @@ const createJobPost = (recruiterId, newJobPost) => {
     const {
       jobTitle,
       jobLocation,
+      location,
       jobDescription,
       jobRequirements,
       jobType,
       minSalary,
       maxSalary,
+      canDeal,
       expirationDate,
       jobInformation,
       companyInfo,
@@ -42,7 +44,11 @@ const createJobPost = (recruiterId, newJobPost) => {
       companyEmail,
     } = companyInfo;
     const arrBenefits = Object.values(companyBenefits);
-    const arrLocations = Object.values(jobLocation);
+    try {
+      const arrLocations = Object.values(jobLocation);
+    } catch (error) {
+      const arrLocations = Object.values(location);
+    }
     const newArray = arrLocations.map((item) => item.title);
     try {
       const jobCompanyInfo = await JobCompanyInfo.create({
@@ -61,6 +67,7 @@ const createJobPost = (recruiterId, newJobPost) => {
         jobType,
         minSalary,
         maxSalary,
+        canDeal,
         jobLevel,
         jobIndustry,
         location: newArray,
@@ -154,6 +161,7 @@ const updateJobPost = (id, data) => {
         jobType,
         minSalary,
         maxSalary,
+        canDeal
       } = formData;
       const arrLocations = Object.values(location);
       let arrLocation = [];
@@ -175,6 +183,7 @@ const updateJobPost = (id, data) => {
           jobType,
           minSalary,
           maxSalary,
+          canDeal,
           jobLevel,
           jobIndustry,
           location: arrLocation,
@@ -281,6 +290,7 @@ const getAllJobPost = (filter) => {
             jobType,
             minSalary,
             maxSalary,
+            canDeal,
             jobLevel,
             jobIndustry,
           } = jobInfo;
@@ -336,6 +346,7 @@ const getAllJobPost = (filter) => {
             jobType,
             minSalary,
             maxSalary,
+            canDeal,
             jobLevel,
             jobIndustry,
           };
@@ -359,7 +370,6 @@ const getMyJobPost = async (id) => {
       createdAt: -1,
       updatedAt: -1,
     });
-    console.log(jobPost);
 
     if (!jobPost || !jobPost.length) {
       return {
@@ -394,6 +404,7 @@ const getMyJobPost = async (id) => {
           jobType,
           minSalary,
           maxSalary,
+          canDeal,
           jobLevel,
           jobIndustry,
         } = jobInfo;
@@ -457,6 +468,7 @@ const getMyJobPost = async (id) => {
           jobType,
           minSalary,
           maxSalary,
+          canDeal,
           jobLevel,
           jobIndustry,
         };
@@ -517,6 +529,7 @@ const getDetailsJobPost = (id) => {
         jobType,
         minSalary,
         maxSalary,
+        canDeal,
         jobLevel,
         jobIndustry,
       } = jobInfo;
@@ -579,6 +592,7 @@ const getDetailsJobPost = (id) => {
         jobType,
         minSalary,
         maxSalary,
+        canDeal,
         jobLevel,
         jobIndustry,
       };

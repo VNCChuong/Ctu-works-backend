@@ -31,7 +31,10 @@ const JobInfoSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-
+    canDeal: {
+        type: Boolean,
+        default: false
+    },
     datePosted: {
         type: Date,
         default: Date.now

@@ -149,8 +149,17 @@ const updateRecruiter = (id, data) => {
                 companyName, companyAddress, companyScale, phoneNumber, companyWebsite,
                 companyFacebook, companyBenefits, companyLogo, companyDescription, staffName, companyIndustries
             }
-
-            const updadteCompany = await Company.findByIdAndUpdate(formData.companyId, dataCompany, { new: true })
+            const arrBenefits = Object.values(companyBenefits);
+            let arrayBenefit = [];
+            const newArrayBenefit = arrBenefits.map((item, index) => {
+                if (item !== null) {
+                    arrayBenefit.push(item);
+                }
+            });
+            const updadteCompany = await Company.findByIdAndUpdate(formData.companyId, {
+                companyName, companyAddress, companyScale, phoneNumber, companyWebsite,
+                companyFacebook, companyBenefits: arrayBenefit, companyLogo, companyDescription, staffName, companyIndustries
+            }, { new: true })
             const updateRecruiter = await Recruiter.findByIdAndUpdate(id, formData, { new: true })
             resolve({
                 status: 'OK',

@@ -19,10 +19,12 @@ const userInfoSchema = new mongoose.Schema(
             required: true
         },
         //linh vuc hien tai
-        currentIndustries: {
-            type: String,
-            required: true
-        },
+        currentIndustries: [
+            {
+                type: String,
+                required: true
+            }
+        ],
         //nganh nghe hien tại
         currentJobFunction: {
             type: String,

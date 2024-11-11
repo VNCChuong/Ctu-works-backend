@@ -19,6 +19,7 @@ const CreateJobpostAi = require("./CreateJobpostAiRouter");
 const JobViewsHistory = require("./JobViewsHistoryRouter");
 const HistoryViewUser = require("./UserViewsHistoryRouter");
 const Notification = require("./NotificationRouter");
+const SendInvite = require("./SendInviteRouter");
 const Report = require("./ReportRouter");
 const Company = require("./CompanyRouter");
 const options = (swaggerJsdoc.Options = {
@@ -57,6 +58,7 @@ const routes = (app) => {
   app.use("/api/report", Report);
   app.use("/api/notification", Notification);
   app.use("/api/company", Company);
+  app.use("/api/send-invite", SendInvite);
 };
 
 module.exports = routes;
