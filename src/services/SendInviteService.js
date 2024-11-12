@@ -1,100 +1,101 @@
-const SendInvite = require("../models/SendInviteModel")
+const nodemailer = require("nodemailer");
+const dotenv = require("dotenv");
+dotenv.config();
+const User = require("../models/UserModel");
+const JobPost = require("../models/JobPostModel");
+const Recruiter = require("../models/RecruiterModel");
 
-const createSendInvite = (newSendInvite) => {
-    return new Promise(async (resolve, reject) => {
-        const { userId, recruiterId, jobPostId } = newSendInvite
-        try {
-            const create = await SendInvite.create({
-                jobPostId: jobPostId,
-                userId: userId,
-                recruiterId: recruiterId
-            })
-            if (create) {
-                resolve({
-                    status: 'OK',
-                    message: 'success',
-                    data: create,
-                })
-            }
-        } catch (e) {
-            reject(e)
-        }
-    })
-}
+const sendInvitationEmail = async (email, jobDetails, recruiterName) => {
+  let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: process.env.MAIL_ACCOUNT,
+      pass: process.env.MAIL_PASSWORD,
+    },
+  });
 
-const deleteSendInvite = (id) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const checkSendInvite = await SendInvite.findOne({
-                _id: id
-            })
-            if (checkSendInvite === null) {
-                resolve({
-                    status: 'OK',
-                    message: 'The send invite is not defined'
-                })
-            }
-            await SendInvite.findByIdAndDelete(id)
-            resolve({
-                status: 'OK',
-                message: "Delete send invite success",
-            })
-        } catch (e) {
-            reject(e)
-        }
-    })
-}
+  const mailOptions = {
+    from: {
+      name: "Ctu-works",
+      address: process.env.MAIL_ACCOUNT,
+    },
+    to: email,
+    subject: "Lời mời tuyển dụng từ CtuWorks",
+    html: `
+            <div style="background-color: #E6EFFF">
+                <img style="margin: 0 0 10px 33%;" src="https://upload.wikimedia.org/wikipedia/en/6/6e/Can_Tho_University_Logo.png" />
+                <div style="background-color: white; width: 600px; margin: 0 230px 30px 230px; padding: 20px 30px">
+                    <h1 style="text-align: center">Lời mời tuyển dụng từ nhà tuyển dụng</h1>
+                    <p>Xin chào,</p>
+                    <p>Bạn đã nhận được lời mời tuyển dụng cho vị trí <b>${jobDetails.jobTitle}</b> tại công ty <b>${jobDetails.companyName}</b>.</p>
+                    <p>Chi tiết công việc:</p>
+                    <p>${jobDetails.jobDescription}</p>
+                    <p>Hãy bấm vào nút bên dưới để xem chi tiết và ứng tuyển.</p>
+                    <a href="${jobDetails.link}" style="padding: 10px 20px; margin-left: 35%;
+                    background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">Xem chi tiết</a>
+                    <p>Nếu cần hỗ trợ, hãy liên hệ: contact@ctuworks.com</p>
+                    <p>Cám ơn và chúc bạn một ngày tốt lành.</p>
+                    <h4>CtuWorks<h4>
+                </div>
+                <div>.</div>
+            </div>
+        `,
+  };
 
+  await transporter.sendMail(mailOptions);
+};
 
+const sendJobInvitation = async (recruiterId, userId, jobId) => {
+  try {
+    const user = await User.findById(userId);
+    const job = await JobPost.findById(jobId)
+      .populate("jobInfoId")
+      .populate("jobCompanyInfoId");
+    const recruiter = await Recruiter.findById(recruiterId);
 
-const getMySendInvite = (id) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const sendInvite = await SendInvite.find({
-                recruiterId: id
-            }).sort({ createdAt: -1, updatedAt: -1 })
-            if (sendInvite === null) {
-                resolve({
-                    status: 'ERR',
-                    message: 'The send invite is not defined'
-                })
-            }
-            resolve({
-                status: 'OK',
-                message: 'SUCESSS',
-                data: sendInvite
-            })
-        } catch (e) {
-            reject(e)
-        }
-    })
-}
+    if (!user || !job || !recruiter) {
+      throw new Error("User, Job, or Recruiter not found");
+    }
 
+    const jobDetails = {
+      jobTitle: job.jobInfoId.jobTitle,
+      companyName: job.jobCompanyInfoId.companyName,
+      jobDescription: job.jobInfoId.jobDescription,
+      link: `${process.env.APP_URL}/job/${job._id}`,
+    };
 
-const cancelSendInvite = (id) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const sendInvite = await SendInvite.findByIdAndUpdate(id, { status: "Đã hủy" })
-            if (sendInvite === null) {
-                resolve({
-                    status: 'ERR',
-                    message: 'The send invite is not defind'
-                })
-            }
-            resolve({
-                status: 'OK',
-                message: 'success',
-                data: sendInvite
-            })
-        } catch (e) {
-            reject(e)
-        }
-    })
-}
+    console.log(jobDetails.link);
+    await sendInvitationEmail(user.email, jobDetails, recruiter.fullName);
+
+    return {
+      status: "OK",
+      message: "Invitation sent successfully",
+    };
+  } catch (error) {
+    return {
+      status: "ERR",
+      message: error.message,
+    };
+  }
+};
+
+const getAllInvitations = async () => {
+  // Logic để lấy tất cả lời mời
+};
+
+const getInvitationDetails = async (id) => {
+  // Logic để lấy chi tiết lời mời theo id
+};
+
+const deleteInvitation = async (id) => {
+  // Logic để xóa lời mời theo id
+};
 
 module.exports = {
-    createSendInvite,
-    deleteSendInvite,
-    getMySendInvite,
-    cancelSendInvite
-}
+  sendJobInvitation,
+  getAllInvitations,
+  getInvitationDetails,
+  deleteInvitation,
+};

@@ -1,7 +1,7 @@
-const nodemailer = require('nodemailer')
-const dotenv = require('dotenv');
-dotenv.config()
-var inlineBase64 = require('nodemailer-plugin-inline-base64');
+const nodemailer = require("nodemailer");
+const dotenv = require("dotenv");
+dotenv.config();
+var inlineBase64 = require("nodemailer-plugin-inline-base64");
 
 const sendEmailCreateOrder = async (email, orderItems) => {
   let transporter = nodemailer.createTransport({
@@ -13,18 +13,18 @@ const sendEmailCreateOrder = async (email, orderItems) => {
       pass: process.env.MAIL_PASSWORD, // generated ethereal password
     },
   });
-  transporter.use('compile', inlineBase64({ cidPrefix: 'somePrefix_' }));
+  transporter.use("compile", inlineBase64({ cidPrefix: "somePrefix_" }));
 
-  let listItem = '';
-  const attachImage = []
+  let listItem = "";
+  const attachImage = [];
   orderItems.forEach((order) => {
     listItem += `<div>
     <div>
       Bạn đã đặt sản phẩm <b>${order.name}</b> với số lượng: <b>${order.amount}</b> và giá là: <b>${order.price} VND</b></div>
       <div>Bên dưới là hình ảnh của sản phẩm</div>
-    </div>`
-    attachImage.push({ path: order.image })
-  })
+    </div>`;
+    attachImage.push({ path: order.image });
+  });
 
   // send mail with defined transport object
   let info = await transporter.sendMail({
@@ -35,9 +35,9 @@ const sendEmailCreateOrder = async (email, orderItems) => {
     html: `<div><b>message</b></div> ${listItem}`,
     attachments: attachImage,
   });
-}
+};
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   port: 587,
   secure: false,
   auth: {
@@ -49,11 +49,11 @@ const transporter = nodemailer.createTransport({
 const sendVerificationEmail = async (email, verificationLink) => {
   const mailOptions = {
     from: {
-      name: 'Ctu-works',
+      name: "Ctu-works",
       address: process.env.MAIL_ACCOUNT,
     },
     to: "chuongvo900@gmail.com",
-    subject: 'Xác thực email trên CtuWorks',
+    subject: "Xác thực email trên CtuWorks",
     html: `
       <div style="background-color: #E6EFFF">
         <img style="margin: 0 0 10px 33%;" src="https://upload.wikimedia.org/wikipedia/en/6/6e/Can_Tho_University_Logo.png" />
@@ -79,8 +79,7 @@ const sendVerificationEmail = async (email, verificationLink) => {
   transporter.sendMail(mailOptions);
 };
 
-
 module.exports = {
   sendEmailCreateOrder,
-  sendVerificationEmail
-}
+  sendVerificationEmail,
+};
