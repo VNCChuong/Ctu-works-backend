@@ -64,7 +64,7 @@ const getJobCompanyInfo = async (req, res) => {
                 message: 'The id is required'
             })
         }
-        console.log(id)
+        // console.log(id)
         const response = await JobCompanyInfo.getJobCompanyInfo(id)
         return res.status(200).json(response)
     } catch (e) {

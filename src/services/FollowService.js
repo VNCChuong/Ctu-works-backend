@@ -71,7 +71,7 @@ const createFollow = (recruiterId, data) => {
 const deleteFollow = (followId, userId, recruiterId) => {
     return new Promise(async (resolve, reject) => {
         try {
-            console.log(followId, userId, recruiterId)
+            // console.log(followId, userId, recruiterId)
             const follow = await Follow.find({ _id: followId })
             if (follow.length === 1) {
                 const checkFollow = await Follow.findOne({
@@ -153,13 +153,14 @@ const getMyFollow = (id) => {
             }).sort({ createdAt: -1, updatedAt: -1 })
             const results = await Promise.all(follow.map(async (fol) => {
                 const company = await Company.findById({ _id: fol.companyId.toHexString() })
+                const jobPost = await JobPost.find({ recruiterId: fol.recruiterId.toHexString() })
                 return {
                     ...fol._doc,
                     companyName: company.companyName,
                     companyIndustries: company.companyIndustries,
                     companyFollowing: company.following,
                     companyLogo: company.companyLogo,
-                    companyJob: company.companyJob,
+                    companyJob: jobPost.length,
                 }
             }))
             if (follow === null) {

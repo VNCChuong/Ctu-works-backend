@@ -262,7 +262,7 @@ const getAllRecruiterCompany = () => {
                     recruiterId: recruiter._id,
                 }
             }))
-            console.log(results)
+            // console.log(results)
             resolve({
                 status: 'OK',
                 message: "Success",

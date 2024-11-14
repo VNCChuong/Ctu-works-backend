@@ -66,7 +66,7 @@ const sendJobInvitation = async (recruiterId, userId, jobId) => {
       link: `${process.env.APP_URL}/job/${job._id}`,
     };
 
-    console.log(jobDetails.link);
+    // console.log(jobDetails.link);
     await sendInvitationEmail(user.email, jobDetails, recruiter.fullName);
 
     return {

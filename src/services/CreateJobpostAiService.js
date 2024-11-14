@@ -9,7 +9,7 @@ const Company = require("../models/CompanyModel")
 const CreateJobpostAi = require("../models/CreateJobpostAiModel")
 const createJob = (data) => {
     return new Promise(async (resolve, reject) => {
-        console.log(data)
+        // console.log(data)
         const { jobTitle, expirationDate, location,
             jobDescription, jobRequirements, jobType,
             minSalary, maxSalary, numberOfPositions,
@@ -18,13 +18,13 @@ const createJob = (data) => {
             gender, minAge, maxAge, maritalStatus, companyName, companyAddress,
             companySize, companyLogo, companyStaffName, companyBenefits, companyEmail,
         } = data
-        console.log(jobTitle, expirationDate, location,
-            jobDescription, jobRequirements, jobType,
-            minSalary, maxSalary, numberOfPositions,
-            jobLevel, jobIndustry, keywords, jobField,
-            language, minExperience, nationality, educationLevel,
-            gender, minAge, maxAge, maritalStatus, companyName, companyAddress,
-            companySize, companyLogo, companyStaffName, companyBenefits, companyEmail,)
+        // console.log(jobTitle, expirationDate, location,
+        //     jobDescription, jobRequirements, jobType,
+        //     minSalary, maxSalary, numberOfPositions,
+        //     jobLevel, jobIndustry, keywords, jobField,
+        //     language, minExperience, nationality, educationLevel,
+        //     gender, minAge, maxAge, maritalStatus, companyName, companyAddress,
+        //     companySize, companyLogo, companyStaffName, companyBenefits, companyEmail,)
         try {
 
             const createJob = await CreateJobpostAi.create({

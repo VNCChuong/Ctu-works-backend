@@ -44,12 +44,9 @@ const createJobPost = (recruiterId, newJobPost) => {
       companyEmail,
     } = companyInfo;
     const arrBenefits = Object.values(companyBenefits);
-    try {
-      const arrLocations = Object.values(jobLocation);
-    } catch (error) {
-      const arrLocations = Object.values(location);
-    }
+    const arrLocations = Object.values(location);
     const newArray = arrLocations.map((item) => item.title);
+
     try {
       const jobCompanyInfo = await JobCompanyInfo.create({
         companyName,

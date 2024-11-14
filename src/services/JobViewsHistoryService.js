@@ -20,7 +20,8 @@ const create = (newCreate) => {
                     })
                 }
             } else {
-                check.updateOne({ timeSpent: check.timeSpent + timeSpent })
+                const result = await JobViewsHistory.updateOne({ userId: userId, jobPostId: jobPostId },{ timeSpent: check.timeSpent + timeSpent })
+                check.save()
                 resolve({
                     status: 'OK',
                     message: 'Update success',

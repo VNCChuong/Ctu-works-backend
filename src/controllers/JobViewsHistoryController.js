@@ -2,7 +2,7 @@ const JobViewsHistoryService = require('../services/JobViewsHistoryService')
 
 const create = async (req, res) => {
     try {
-        console.log(req.body)
+        // console.log(req.body)
         const { userId, jobPostId } = req.body
         if (!userId || !jobPostId) {
             return res.status(200).json({

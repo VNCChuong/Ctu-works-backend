@@ -42,7 +42,7 @@ const searchHistory = async (req, res) => {
 
         const similarityScore = calculateSimilarity(candidateSkillNames, jobKeywords);
 
-        console.log(similarityScore)
+        // console.log(similarityScore)
         return { job, similarityScore };
       })
       .sort((a, b) => b.similarityScore - a.similarityScore)

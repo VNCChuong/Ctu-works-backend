@@ -46,7 +46,7 @@ async function searchHistory(req, res) {
 
     recommendedJobs.sort((a, b) => b.similarityScore - a.similarityScore);
     const top10Jobs = recommendedJobs.slice(0, 1).map(item => item.job);
-    console.log(top10Jobs) 
+    // console.log(top10Jobs) 
     res.json(top10Jobs);
   } catch (err) {
     console.error('Error searching jobs:', err);
