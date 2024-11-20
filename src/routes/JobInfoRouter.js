@@ -11,4 +11,6 @@ router.delete("/delete/:id", JobInfo.deleteJobInfo);
 router.post("/get-job-info/:id", JobInfo.getJobInfo);
 
 router.get("/related-jobs/:id", JobInfo.getRelatedJobs);
+
+router.get("/job-industry-counts", JobInfo.getJobIndustryCounts);
 module.exports = router;

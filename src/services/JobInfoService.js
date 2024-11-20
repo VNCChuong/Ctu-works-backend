@@ -3,16 +3,12 @@ const JobInfo = require("../models/JobInfoModel");
 const createJobInfo = (newJobInfo) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const createdJobInfo = await JobInfo.create({
-        newJobInfo,
+      const createdJobInfo = await JobInfo.create(newJobInfo);
+      resolve({
+        status: "OK",
+        message: "Success",
+        data: createdJobInfo,
       });
-      if (true) {
-        resolve({
-          status: "OK",
-          message: "Success",
-          data: createdJobInfo,
-        });
-      }
     } catch (e) {
       reject(e);
     }
@@ -23,25 +19,22 @@ const updateJobInfo = (newJobInfo) => {
   return new Promise(async (resolve, reject) => {
     try {
       const { id, data } = newJobInfo;
-      const jobInfo = await JobInfo.findById({
-        _id: id,
-      });
+      const jobInfo = await JobInfo.findById(id);
       if (jobInfo === null) {
         resolve({
           status: "ERR",
           message: "The data is not defined",
         });
+        return;
       }
-      const updateJobInfo = await JobInfo.findByIdAndUpdate(id, data, {
+      const updatedJobInfo = await JobInfo.findByIdAndUpdate(id, data, {
         new: true,
       });
-      if (updateJobInfo) {
-        resolve({
-          status: "OK",
-          message: "success",
-          data: updateJobInfo,
-        });
-      }
+      resolve({
+        status: "OK",
+        message: "Success",
+        data: updatedJobInfo,
+      });
     } catch (e) {
       reject(e);
     }
@@ -51,14 +44,13 @@ const updateJobInfo = (newJobInfo) => {
 const deleteJobInfo = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const check = await JobInfo.findById({
-        _id: id,
-      });
+      const check = await JobInfo.findById(id);
       if (check === null) {
         resolve({
           status: "OK",
           message: "The data is not defined",
         });
+        return;
       }
       await JobInfo.findByIdAndDelete(id);
       resolve({
@@ -74,18 +66,17 @@ const deleteJobInfo = (id) => {
 const getJobInfo = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const jobInfo = await JobInfo.find({
-        _id: id,
-      });
+      const jobInfo = await JobInfo.findById(id);
       if (jobInfo === null) {
         resolve({
           status: "ERR",
           message: "The Apply is not defined",
         });
+        return;
       }
       resolve({
         status: "OK",
-        message: "SUCESSS",
+        message: "Success",
         data: jobInfo,
       });
     } catch (e) {
@@ -124,10 +115,41 @@ const getRelatedJobs = (jobId) => {
   });
 };
 
+const getJobIndustryCounts = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const jobIndustryCounts = await JobInfo.aggregate([
+        {
+          $group: {
+            _id: "$jobIndustry",
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            jobIndustry: "$_id",
+            count: 1,
+          },
+        },
+      ]);
+
+      resolve({
+        status: "OK",
+        message: "Job industry counts fetched successfully",
+        data: jobIndustryCounts,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   createJobInfo,
   updateJobInfo,
   deleteJobInfo,
   getJobInfo,
   getRelatedJobs,
+  getJobIndustryCounts,
 };
