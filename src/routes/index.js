@@ -23,6 +23,7 @@ const SendInvite = require("./SendInviteRouter");
 const Report = require("./ReportRouter");
 const Company = require("./CompanyRouter");
 const CV = require("./CVRouter");
+const Search = require("./SearchRouter");
 const options = (swaggerJsdoc.Options = {
   definition: {
     openapi: "3.0.0",
@@ -61,6 +62,7 @@ const routes = (app) => {
   app.use("/api/company", Company);
   app.use("/api/send-invite", SendInvite);
   app.use("/api/cv", CV);
+  app.use("/api/search", Search);
 };
 
 module.exports = routes;
