@@ -6,7 +6,7 @@ const searchJobs = async (filters) => {
   try {
     const { keyword, jobLevel, location, companyName, jobType } = filters;
     const regex = new RegExp(keyword, "i");
-
+    console.log(regex, keyword, jobLevel);
     const matchingJobInfos = await JobInfo.find({
       $and: [
         {

@@ -3,6 +3,7 @@ const searchService = require("../services/SearchService");
 const searchJobs = async (req, res) => {
   try {
     const { keyword, jobLevel, location, companyName, jobType } = req.query;
+    console.log(req.query); 
     if (!keyword || keyword.trim() === "") {
       return res.status(400).json({
         status: "ERR",
@@ -17,6 +18,7 @@ const searchJobs = async (req, res) => {
       companyName: companyName ? companyName.trim() : null,
       jobType: jobType ? jobType.trim() : null,
     };
+    console.log(filters);
     const result = await searchService.searchJobs(filters);
 
     return res.status(200).json(result);
