@@ -4,7 +4,7 @@ dotenv.config();
 const User = require("../models/UserModel");
 const JobPost = require("../models/JobPostModel");
 const Recruiter = require("../models/RecruiterModel");
-
+const SendInvite = require("../models/SendInviteModel");
 const sendInvitationEmail = async (email, jobDetails, recruiterName) => {
   let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -67,8 +67,12 @@ const sendJobInvitation = async (recruiterId, userId, jobId) => {
     };
 
     // console.log(jobDetails.link);
-    await sendInvitationEmail(user.email, jobDetails, recruiter.fullName);
-
+    await sendInvitationEmail("chuongvo900@gmail.com", jobDetails, recruiter.fullName);
+    await SendInvite.create({
+      userId: userId,
+      jobPostId: jobId,
+      recruiterId: recruiterId,
+    });
     return {
       status: "OK",
       message: "Invitation sent successfully",
@@ -81,8 +85,21 @@ const sendJobInvitation = async (recruiterId, userId, jobId) => {
   }
 };
 
-const getAllInvitations = async () => {
-  // Logic để lấy tất cả lời mời
+const getAllInvitations = async (id) => {
+  try {
+    const invitations = await SendInvite.find({ recruiterId: id })
+
+    return {
+      status: "OK",
+      message: "Invitations retrieved successfully",
+      data: invitations,
+    };
+  } catch (error) {
+    return {
+      status: "ERR",
+      message: error.message,
+    };
+  }
 };
 
 const getInvitationDetails = async (id) => {

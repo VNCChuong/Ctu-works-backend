@@ -292,7 +292,8 @@ const deleteManyRecruiter = (ids) => {
 const changePasswordRecruiter = (userInfo) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const { id, oldPass, newPass } = userInfo
+            const { id, formData } = userInfo
+            const { password, newPassword } = formData
             const checkRecruiter = await Recruiter.findOne({
                 _id: id
             })
@@ -302,14 +303,14 @@ const changePasswordRecruiter = (userInfo) => {
                     message: 'The Recruiter is not defined'
                 })
             }
-            const comparePassword = bcrypt.compareSync(oldPass, checkRecruiter.password)
+            const comparePassword = bcrypt.compareSync(password, checkRecruiter.password)
             if (!comparePassword) {
                 resolve({
                     status: 'ERR',
                     message: "The password is incorrect 1"
                 })
             }
-            const hash = bcrypt.hashSync(newPass, 10)
+            const hash = bcrypt.hashSync(newPassword, 10)
             const updateRecruiter = await Recruiter.findByIdAndUpdate(
                 {
                     _id: id,
@@ -322,15 +323,14 @@ const changePasswordRecruiter = (userInfo) => {
                 }
             )
             const access_token = await genneralAccessToken({
-                id: checkUser.id,
-                isAdmin: checkUser.isAdmin
+                id: checkRecruiter.id,
+                isAdmin: checkRecruiter.isAdmin
             })
 
             const refresh_token = await genneralRefreshToken({
-                id: checkUser.id,
-                isAdmin: checkUser.isAdmin
+                id: checkRecruiter.id,
+                isAdmin: checkRecruiter.isAdmin
             })
-            // console.log('access_token',access_token)
             resolve({
                 status: 'OK',
                 message: "Success",
@@ -341,6 +341,7 @@ const changePasswordRecruiter = (userInfo) => {
 
         } catch (e) {
             reject(e)
+            console.log(e)
         }
     })
 }

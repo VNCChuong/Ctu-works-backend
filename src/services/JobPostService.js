@@ -508,6 +508,7 @@ const getDetailsJobPost = (id) => {
       const candidateExpectations = await CandidateExpectations.findById(
         jobPost.candidateExpectationsId
       );
+
       const jobInfo = await JobInfo.findById(jobPost.jobInfoId);
       const {
         companyName,
@@ -553,6 +554,7 @@ const getDetailsJobPost = (id) => {
         statusApproval,
         postViews,
         datePosted,
+        numberOfPositions
       } = jobPost;
       const results = {
         _id,
@@ -564,6 +566,7 @@ const getDetailsJobPost = (id) => {
         statusSeeking,
         statusApproval,
         postViews,
+        numberOfPositions,
         datePosted,
         companyName,
         companyAddress,

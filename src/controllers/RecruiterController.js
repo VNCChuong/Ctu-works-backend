@@ -212,8 +212,9 @@ const deleteManyRecruiter = async (req, res) => {
 
 const changePasswordRecruiter = async (req, res) => {
     try {
-        const { id, oldPass, newPass } = req.body
-        if (!id || !oldPass || !newPass) {
+        const { id, formData } = req.body
+        const { password, newPassword } = formData
+        if (!id || !password || !newPassword) {
             return res.status(200).json({
                 status: "ERR",
                 message: "Input required"
