@@ -10,6 +10,9 @@ const passport = require("passport");
 const { Server } = require("socket.io");
 const path = require("path");
 const session = require("express-session");
+const { OAuth2Client } = require("google-auth-library");
+const User = require("./models/UserModel");
+const jwt = require("jsonwebtoken");
 
 dotenv.config();
 const app = express();
@@ -44,36 +47,51 @@ app.use(
   })
 );
 
-// app.use(passport.initialize());
-// app.use(passport.session());
-
 routes(app);
 
-// require("./utils/Passport");
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-app.use(express.static(path.join(__dirname, "client")));
+app.post("/google-login", async (req, res) => {
+  try {
+    const { token } = req.body;
 
-app.get("/", (req, res) => {
-  res.sendFile("index.html", { root: __dirname });
-});
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
 
-app.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["email", "profile"] })
-);
+    const payload = ticket.getPayload();
+    const { sub, email, name, picture } = payload;
 
-app.get(
-  "/auth/google/callback",
-  passport.authenticate("google", {
-    successRedirect: "/auth/google/success",
-    failureRedirect: "/auth/google/failure",
-  })
-);
+    let user = await User.findOne({ googleId: sub });
+    if (!user) {
+      user = await User.create({
+        googleId: sub,
+        email,
+      });
+    }
 
-app.get("/auth/google/success", (req, res) => {
-  let name = req.user.email;
-  console.log("User logged in: ", req.user);
-  res.send("Login Success " + name);
+    const accessToken = jwt.sign(
+      { userId: user._id, email },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
+
+    const refreshToken = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
+
+    res.json({ access_token: accessToken, refresh_token: refreshToken });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Google login failed" });
+  }
 });
 
 mongoose
