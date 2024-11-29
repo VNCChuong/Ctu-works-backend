@@ -124,7 +124,18 @@ const getAllJobPost = async (req, res) => {
     return res.status(404).json({ message: e });
   }
 };
-
+const getAllJobPostAdmin = async (req, res) => {
+  try {
+    const { days, ...otherFilters } = req.query;
+    const response = await JobPostService.getAllJobPostAdmin({
+      days,
+      ...otherFilters,
+    });
+    return res.status(200).json(response);
+  } catch (e) {
+    return res.status(404).json({ message: e });
+  }
+};
 const getMyJobPost = async (req, res) => {
   try {
     const id = req.params.id;
@@ -195,7 +206,40 @@ const deleteManyJobPost = async (req, res) => {
     });
   }
 };
-
+const approvalJobpost = async (req, res) => {
+  try {
+    const jobPostId = req.params.id;
+    if (!jobPostId) {
+      return res.status(200).json({
+        status: "ERR",
+        message: "The jobPostId is required",
+      });
+    }
+    const response = await JobPostService.approvalJobpost(jobPostId);
+    return res.status(200).json(response);
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
+const rejectJobpost = async (req, res) => {
+  try {
+    const jobPostId = req.params.id;
+    if (!jobPostId) {
+      return res.status(200).json({
+        status: "ERR",
+        message: "The jobPostId is required",
+      });
+    }
+    const response = await JobPostService.rejectJobpost(jobPostId);
+    return res.status(200).json(response);
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
 module.exports = {
   createJobPost,
   updateJobPost,
@@ -205,4 +249,7 @@ module.exports = {
   getDetailsJobPost,
   cancelJobPost,
   deleteManyJobPost,
+  getAllJobPostAdmin,
+  approvalJobpost,
+  rejectJobpost,
 };

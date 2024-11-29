@@ -285,6 +285,8 @@ const getAllJobPost = (filter) => {
             jobDescription,
             jobRequirements,
             jobType,
+            location,
+
             minSalary,
             maxSalary,
             canDeal,
@@ -341,6 +343,125 @@ const getAllJobPost = (filter) => {
             jobDescription,
             jobRequirements,
             jobType,
+            location,
+            minSalary,
+            maxSalary,
+            canDeal,
+            jobLevel,
+            jobIndustry,
+          };
+        })
+      );
+
+      resolve({
+        status: "OK",
+        message: "SUCCESS",
+        data: results,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+const getAllJobPostAdmin = (filter) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const today = new Date();
+
+      let dateFilter = {};
+      if (filter.days) {
+        const daysAgo = new Date(today);
+        daysAgo.setDate(today.getDate() - filter.days);
+        dateFilter = { createdAt: { $gte: daysAgo } };
+      }
+
+      const jobPost = await JobPost.find().sort({ createdAt: -1, updatedAt: -1 });
+
+      const results = await Promise.all(
+        jobPost.map(async (job) => {
+          const jobCompanyInfo = await JobCompanyInfo.findById(
+            job.jobCompanyInfoId
+          );
+          const candidateExpectations = await CandidateExpectations.findById(
+            job.candidateExpectationsId
+          );
+          const jobInfo = await JobInfo.findById(job.jobInfoId);
+
+          const {
+            companyName,
+            companyAddress,
+            companySize,
+            companyBenefits,
+            companyLogo,
+            companyStaffName,
+            companyEmail,
+          } = jobCompanyInfo;
+          const {
+            jobTitle,
+            jobLocation,
+            jobDescription,
+            jobRequirements,
+            jobType,
+            location,
+            minSalary,
+            maxSalary,
+            canDeal,
+            jobLevel,
+            jobIndustry,
+          } = jobInfo;
+          const {
+            keywords,
+            jobField,
+            language,
+            minExperience,
+            nationality,
+            educationLevel,
+            gender,
+            maritalStatus,
+            minAge,
+            maxAge,
+          } = candidateExpectations;
+          const {
+            _id,
+            recruiterId,
+            expirationDate,
+            statusSeeking,
+            statusApproval,
+            postViews,
+            createdAt,
+          } = job;
+
+          return {
+            _id,
+            recruiterId,
+            expirationDate,
+            statusSeeking,
+            statusApproval,
+            postViews,
+            createdAt,
+            companyName,
+            companyAddress,
+            companySize,
+            companyBenefits,
+            companyLogo,
+            companyStaffName,
+            companyEmail,
+            keywords,
+            jobField,
+            language,
+            minExperience,
+            nationality,
+            educationLevel,
+            gender,
+            maritalStatus,
+            minAge,
+            maxAge,
+            jobTitle,
+            jobLocation,
+            jobDescription,
+            jobRequirements,
+            jobType,
+            location,
             minSalary,
             maxSalary,
             canDeal,
@@ -648,7 +769,60 @@ const deleteManyJobPost = (ids) => {
     }
   });
 };
+const approvalJobpost = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const jobPost = await JobPost.findByIdAndUpdate(
+        {
+          _id: id,
+        },
+        { $set: { statusApproval: true } },
+        { new: true }
+      );
 
+      if (jobPost === null) {
+        resolve({
+          status: "ERR",
+          message: "The jobPost is not defined",
+        });
+      }
+      resolve({
+        status: "OK",
+        message: "success",
+        data: jobPost,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+const rejectJobpost = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const jobPost = await JobPost.findByIdAndUpdate(
+        {
+          _id: id,
+        },
+        { $set: { statusApproval: false } },
+        { new: true }
+      );
+
+      if (jobPost === null) {
+        resolve({
+          status: "ERR",
+          message: "The jobPost is not defined",
+        });
+      }
+      resolve({
+        status: "OK",
+        message: "success",
+        data: jobPost,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
 module.exports = {
   createJobPost,
   updateJobPost,
@@ -658,4 +832,7 @@ module.exports = {
   getDetailsJobPost,
   cancelJobPost,
   deleteManyJobPost,
+  getAllJobPostAdmin,
+  approvalJobpost,
+  rejectJobpost
 };
