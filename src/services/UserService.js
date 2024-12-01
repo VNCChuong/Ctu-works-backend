@@ -380,6 +380,7 @@ const getDetailsUser = (id) => {
         maritalStatusId,
         avatar,
         workingPreferences,
+        userInfo,
       };
       if (user === null) {
         resolve({

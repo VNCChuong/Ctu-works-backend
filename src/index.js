@@ -72,7 +72,7 @@ app.post("/google-login", async (req, res) => {
     }
 
     const accessToken = jwt.sign(
-      { userId: user._id, email },
+      { userid: user._id, email },
       process.env.JWT_SECRET,
       {
         expiresIn: "1h",
@@ -80,7 +80,7 @@ app.post("/google-login", async (req, res) => {
     );
 
     const refreshToken = jwt.sign(
-      { userId: user._id },
+      { userid: user._id },
       process.env.JWT_SECRET,
       {
         expiresIn: "7d",
