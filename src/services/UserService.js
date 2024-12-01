@@ -204,6 +204,7 @@ const updateUser = (id, data) => {
         country,
         city,
         district,
+        avatar,
       } = data;
       const dataUserInfo = {
         MSSV,
@@ -223,6 +224,7 @@ const updateUser = (id, data) => {
         country,
         city,
         district,
+        avatar,
       };
       const updateUser = await UserInfo.findByIdAndUpdate(
         UserInfoId,
