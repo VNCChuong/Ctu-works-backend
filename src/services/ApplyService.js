@@ -138,6 +138,7 @@ const createApply = (newApply, io) => {
       address,
       gender,
       maritalStatusId,
+      cvUrl, // Ensure cvUrl is included
     } = newApply;
 
     try {
@@ -209,6 +210,7 @@ const createApply = (newApply, io) => {
         recruiterId: recruiterId,
         userInfoId: userInfoData._id,
         workingPreferencesId: workingPreferencesData._id,
+        cvUrl: cvUrl, // Ensure cvUrl is included
       });
 
       // Tạo thông báo cho nhà tuyển dụng
@@ -236,6 +238,8 @@ const createApply = (newApply, io) => {
     }
   });
 };
+
+module.exports = { createApply };
 
 const updateApply = (newApply) => {
   return new Promise(async (resolve, reject) => {
