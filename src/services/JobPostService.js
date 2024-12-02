@@ -158,7 +158,7 @@ const updateJobPost = (id, data) => {
         jobType,
         minSalary,
         maxSalary,
-        canDeal
+        canDeal,
       } = formData;
       const arrLocations = Object.values(location);
       let arrLocation = [];
@@ -250,26 +250,26 @@ const getAllJobPost = (filter) => {
       let dateFilter = {};
       if (filter.days) {
         const daysAgo = new Date(today);
-        daysAgo.setDate(today.getDate() - filter.days);
-        dateFilter = { createdAt: { $gte: daysAgo } };
+        daysAgo.setDate(today.getDate() - parseInt(filter.days, 10));
+        dateFilter = { datePosted: { $gte: daysAgo } };
       }
 
       const jobPost = await JobPost.find({
         ...dateFilter,
-        expirationDate: { $gt: today }, // Hạn đăng còn giá trị
-        statusSeeking: true, // Đang tìm kiếm ứng viên
-      }).sort({ createdAt: -1, updatedAt: -1 });
+        expirationDate: { $gt: today },
+        statusSeeking: true,
+      }).sort({ datePosted: -1 });
 
       const results = await Promise.all(
         jobPost.map(async (job) => {
           const jobCompanyInfo = await JobCompanyInfo.findById(
             job.jobCompanyInfoId
           );
+
           const candidateExpectations = await CandidateExpectations.findById(
             job.candidateExpectationsId
           );
           const jobInfo = await JobInfo.findById(job.jobInfoId);
-
           const {
             companyName,
             companyAddress,
@@ -363,6 +363,7 @@ const getAllJobPost = (filter) => {
     }
   });
 };
+
 const getAllJobPostAdmin = (filter) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -375,7 +376,10 @@ const getAllJobPostAdmin = (filter) => {
         dateFilter = { createdAt: { $gte: daysAgo } };
       }
 
-      const jobPost = await JobPost.find().sort({ createdAt: -1, updatedAt: -1 });
+      const jobPost = await JobPost.find().sort({
+        createdAt: -1,
+        updatedAt: -1,
+      });
 
       const results = await Promise.all(
         jobPost.map(async (job) => {
@@ -675,7 +679,7 @@ const getDetailsJobPost = (id) => {
         statusApproval,
         postViews,
         datePosted,
-        numberOfPositions
+        numberOfPositions,
       } = jobPost;
       const results = {
         _id,
@@ -834,5 +838,5 @@ module.exports = {
   deleteManyJobPost,
   getAllJobPostAdmin,
   approvalJobpost,
-  rejectJobpost
+  rejectJobpost,
 };

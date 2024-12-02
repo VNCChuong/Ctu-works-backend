@@ -4,9 +4,25 @@ const Company = require("../models/CompanyModel");
 
 const searchJobs = async (filters) => {
   try {
-    const { keyword, jobLevel, location, companyName, jobType } = filters;
+    const {
+      keyword,
+      jobLevel,
+      location,
+      companyName,
+      jobType,
+      minSalary,
+      maxSalary,
+    } = filters;
     const regex = new RegExp(keyword, "i");
-    console.log(regex, keyword, jobLevel);
+
+    const salaryFilter = {};
+    if (minSalary) {
+      salaryFilter.minSalary = { $gte: parseInt(minSalary, 10) };
+    }
+    if (maxSalary) {
+      salaryFilter.maxSalary = { $lte: parseInt(maxSalary, 10) };
+    }
+
     const matchingJobInfos = await JobInfo.find({
       $and: [
         {
@@ -19,6 +35,7 @@ const searchJobs = async (filters) => {
         jobLevel ? { jobLevel: jobLevel } : {},
         jobType ? { jobType: jobType } : {},
         location ? { location: { $regex: new RegExp(location, "i") } } : {},
+        salaryFilter,
       ],
     });
 
@@ -54,6 +71,10 @@ const searchJobs = async (filters) => {
       message: error.message,
     };
   }
+};
+
+module.exports = {
+  searchJobs,
 };
 
 module.exports = {

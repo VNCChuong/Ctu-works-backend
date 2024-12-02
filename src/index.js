@@ -27,7 +27,14 @@ app.set("io", io);
 const port = process.env.PORT || 3001;
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "500mb" }));
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+    limit: "500mb",
+    parameterLimit: 1000000,
+  })
+);
 app.use(cookieParser());
 app.use(express.json({ limit: "500mb" }));
 app.use(

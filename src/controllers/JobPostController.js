@@ -115,15 +115,22 @@ const deleteJobPost = async (req, res) => {
 const getAllJobPost = async (req, res) => {
   try {
     const { days, ...otherFilters } = req.query;
+
     const response = await JobPostService.getAllJobPost({
       days,
       ...otherFilters,
     });
     return res.status(200).json(response);
   } catch (e) {
-    return res.status(404).json({ message: e });
+    console.error("Error fetching job posts:", e);
+    return res.status(404).json({
+      status: "ERR",
+      message: "Error fetching job posts",
+      error: e.message || e,
+    });
   }
 };
+
 const getAllJobPostAdmin = async (req, res) => {
   try {
     const { days, ...otherFilters } = req.query;
