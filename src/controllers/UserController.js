@@ -14,7 +14,7 @@ const createUser = async (req, res) => {
         const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
         const isCheckEmail = reg.test(email)
         if (!fullName || !phoneNumber || !email || !password || !confirmPassword ||
-            !dateOfBirth || !gender || !country || !city || !district || !maritalStatusId ||
+            !dateOfBirth || !gender || !maritalStatusId ||
             !jobTitle || !yearsExperience || !currentDegree || !highestDegree || !currentSalary || !currentJobFunction || !currentIndustries ||
             !skillName ||
             !workingPreferences.companyIndustries

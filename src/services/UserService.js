@@ -269,7 +269,7 @@ const getAllUser = () => {
   return new Promise(async (resolve, reject) => {
     try {
       const allUser = await User.find().sort({ createdAt: -1, updatedAt: -1 });
-
+      console.log(allUser)
       const data = await Promise.all(
         allUser.map(async (item) => {
           try {
@@ -277,8 +277,8 @@ const getAllUser = () => {
             return userDetails.data;
           } catch (e) {
             console.error(
-              `Error getting job details for ${item.jobPostId}:`,
-              e
+              `Error getting job details for ${item.jobPostId}:`
+              
             );
             return null;
           }
@@ -302,6 +302,7 @@ const getDetailsUser = (id) => {
       const user = await User.findOne({
         _id: id,
       });
+      console.log(user)
       const userInfo = await UserInfo.findById({
         _id: user.userInfoId,
       });
@@ -336,6 +337,7 @@ const getDetailsUser = (id) => {
         userInfoId,
         seekJobMode,
         lastOnline,
+        isVerified,
         workingHistories,
         projects,
         educations,
@@ -344,6 +346,7 @@ const getDetailsUser = (id) => {
         certifications,
         activities,
         introduce,
+        updatedAt,
       } = user;
       const data = {
         _id,
@@ -352,6 +355,7 @@ const getDetailsUser = (id) => {
         userInfoId,
         seekJobMode,
         lastOnline,
+        isVerified,
         workingHistories,
         projects,
         skills,
@@ -383,6 +387,7 @@ const getDetailsUser = (id) => {
         avatar,
         workingPreferences,
         userInfo,
+        updatedAt
       };
       if (user === null) {
         resolve({

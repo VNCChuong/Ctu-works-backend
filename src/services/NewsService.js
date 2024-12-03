@@ -22,39 +22,31 @@ const createNews = (newNews) => {
   });
 };
 
-const updateNews = (newNews) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const { id, data } = newNews;
-      const news = await News.findById({
-        _id: id,
-      });
-      if (news === null) {
-        resolve({
-          status: "ERR",
-          message: "The news is not defined",
-        });
-      }
-      const updateNews = await News.findByIdAndUpdate(
-        {
-          _id: id,
-        },
-        {
-          data,
-        },
-        { new: true }
-      );
-      if (updateNews) {
-        resolve({
-          status: "OK",
-          message: "success",
-          data: updateNews,
-        });
-      }
-    } catch (e) {
-      reject(e);
+const updateNews = async (newNews) => {
+  try {
+    const { id, title, summary, content } = newNews;
+
+    const news = await News.findById(id);
+
+    if (!news) {
+      return { status: "ERR", message: "The news is not defined" };
     }
-  });
+
+    const updatedNews = await News.findByIdAndUpdate(
+      id,
+      { title, summary, content }, 
+      { new: true }
+    );
+
+    if (updatedNews) {
+      return { status: "OK", message: "success", data: updatedNews };
+    } else {
+      return { status: "ERR", message: "Failed to update news" };
+    }
+  } catch (error) {
+    console.error("Error updating news:", error);
+    return { status: "ERR", message: "An error occurred while updating the news", error: error.message };
+  }
 };
 
 const deleteNews = (id) => {
@@ -65,7 +57,7 @@ const deleteNews = (id) => {
       });
       if (checkNews === null) {
         resolve({
-          status: "OK",
+          status: "ERR",
           message: "The News is not defined",
         });
       }

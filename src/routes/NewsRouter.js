@@ -4,7 +4,7 @@ const NewsController = require('../controllers/NewsController');
 
 router.post('/create',  NewsController.createNews)
 
-router.put('/update/:id',  NewsController.deleteNews)
+router.post('/update-news/:id',  NewsController.updateNews)
 
 router.delete('/delete/:id',  NewsController.deleteNews)
 

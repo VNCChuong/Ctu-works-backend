@@ -19,8 +19,9 @@ const createNews = async (req, res) => {
 }
 const updateNews = async (req, res) => {
     try {
-        const { id, data } = req.body
-        if (!id || !data) {
+        const { id, title, summary, content } = req.body
+
+        if (!id || !title || !summary || !content) {
             return res.status(200).json({
                 status: 'ERR',
                 message: 'The input is required'
@@ -73,14 +74,14 @@ const getDetailNews = async (req, res) => {
 }
 const getAllNews = async (req, res) => {
     try {
-      const response = await NewsService.getAllNews();
-      return res.status(200).json(response);
+        const response = await NewsService.getAllNews();
+        return res.status(200).json(response);
     } catch (e) {
-      return res.status(404).json({
-        message: e,
-      });
+        return res.status(404).json({
+            message: e,
+        });
     }
-  };
+};
 
 module.exports = {
     createNews,

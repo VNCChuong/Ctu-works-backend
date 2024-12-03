@@ -45,7 +45,7 @@ const createJobPost = (recruiterId, newJobPost) => {
     } = companyInfo;
     const arrBenefits = Object.values(companyBenefits);
     const arrLocations = Object.values(location);
-    const newArray = arrLocations.map((item) => item.title);
+    const newArray = arrLocations.map((item) => item?.title);
 
     try {
       const jobCompanyInfo = await JobCompanyInfo.create({
@@ -253,13 +253,18 @@ const getAllJobPost = (filter) => {
         daysAgo.setDate(today.getDate() - parseInt(filter.days, 10));
         dateFilter = { datePosted: { $gte: daysAgo } };
       }
+      const jobPosts = await JobPost.find();
 
+      for (const job of jobPosts) {
+        if (job.expirationDate < today) {
+          await JobPost.findByIdAndUpdate(job._id, { statusSeeking: false }, { new: true });
+        }
+      }
       const jobPost = await JobPost.find({
         ...dateFilter,
         expirationDate: { $gt: today },
         statusSeeking: true,
       }).sort({ datePosted: -1 });
-
       const results = await Promise.all(
         jobPost.map(async (job) => {
           const jobCompanyInfo = await JobCompanyInfo.findById(

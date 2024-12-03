@@ -12,7 +12,7 @@ const createRecruiter = async (req, res) => {
 
         if (!fullName || !companyName || !phoneNumber
             || !companyAddress || !email || !password || !confirmPassword
-            || !companyDescription || !businessLicense) {
+            || !companyDescription) {
             return res.status(200).json({
                 status: 'ERR',
                 message: 'The input is required'
