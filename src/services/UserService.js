@@ -53,7 +53,10 @@ const createUser = (newUser) => {
       confirmPassword,
       MSSV,
     } = newUser;
+    // console.log(skillName)
     const { companyIndustries } = workingPreferences;
+    // let skillArray = skillName?.split(',').map(skill => skill.trim());
+    const skillObjects = skillName?.map(item => ({ skillName: item, skillLevel: 1 }));
     try {
       const checkUser = await User.findOne({
         email: email,
@@ -107,6 +110,12 @@ const createUser = (newUser) => {
         seekJobMode: false,
       });
 
+      await skillObjects?.map(async (item) => {
+        await User.updateOne(
+          { _id: createdUser._id },
+          { $push: { skills: item } }
+        )
+      })
       const verificationLink = `${process.env.APP_URL}/auth/verify/${verificationToken}`;
       await sendVerificationEmail(email, verificationLink);
 
@@ -255,6 +264,10 @@ const deleteUser = (id) => {
         });
       }
       await User.findByIdAndDelete(id);
+      await UserInfo.findByIdAndDelete(checkUser.userInfoId.toString());
+      await WorkingPreferences.findByIdAndDelete(
+        checkUser.workingPreferences.toString()
+      );
       resolve({
         status: "OK",
         message: "Delete user success",
@@ -306,7 +319,7 @@ const getDetailsUser = (id) => {
       const user = await User.findOne({
         _id: id,
       });
-      console.log(user);
+      // console.log(user);
       const userInfo = await UserInfo.findById({
         _id: user.userInfoId,
       });
@@ -543,31 +556,126 @@ const uploadfile = (path) => {
             columnToKey: {
               A: "email",
               B: "phoneNumber",
-              C: "MSSV",
-              D: "fullName",
-              E: "dateOfBirth",
-              F: "gender",
-              G: "industry",
-              H: "currentSalary",
-              I: "country",
-              J: "jobTitle",
-              K: "city",
-              L: "district",
-              M: "maritalStatusId",
-              N: "yearsExperience",
-              O: "currentDegree",
-              P: "highestDegree",
-              Q: "currentJobFunction",
-              R: "currentIndustries",
-              S: "skillName",
-              T: "workingPreferences.companyIndustries",
-              U: "password",
-              A: "password",
+              C: "fullName",
+              D: "dateOfBirth",
+              E: "gender",
+              F: "industry",
+              G: "currentSalary",
+              H: "country",
+              I: "jobTitle",
+              J: "city",
+              K: "district",
+              L: "maritalStatusId",
+              M: "yearsExperience",
+              N: "currentDegree",
+              O: "highestDegree",
+              P: "currentJobFunction",
+              Q: "currentIndustries",
+              R: "skillName",
+              S: "companyIndustries",
+              T: "password",
+              U: "confirmPassword",
+              V: "MSSV",
+              W: "address"
             },
           },
         ],
       });
-      User.insertMany(excelData.Table);
+      try {
+        excelData?.Table?.map(async (item) => {
+          const {
+            fullName,
+            phoneNumber,
+            email,
+            password,
+            dateOfBirth,
+            gender,
+            country,
+            city,
+            district,
+            address,
+            maritalStatusId,
+            jobTitle,
+            yearsExperience,
+            currentDegree,
+            highestDegree,
+            currentSalary,
+            currentJobFunction,
+            currentIndustries,
+            skillName,
+            companyIndustries,
+            confirmPassword,
+            MSSV,
+          } = item;
+          let skillArray = skillName?.split(',').map(skill => skill.trim());
+          const skillObjects = skillArray?.map(item => ({ skillName: item, skillLevel: 1 }));
+          try {
+            const checkUser = await User.findOne({
+              email: email,
+            });
+            if (checkUser !== null) {
+              resolve({
+                status: "ERR",
+                message: "The email is already",
+              });
+            }
+            const checkPhone = await UserInfo.findOne({
+              phoneNumber: phoneNumber,
+            });
+            if (checkPhone !== null) {
+              resolve({
+                status: "ERR",
+                message: "Phone number is already",
+              });
+            }
+            const hash = bcrypt.hashSync(password, 10);
+            const verificationToken = crypto.randomBytes(32).toString("hex");
+            const createUserInfo = await UserInfo.create({
+              MSSV,
+              fullName,
+              jobTitle,
+              currentDegree,
+              currentIndustries,
+              currentJobFunction,
+              yearsExperience,
+              address,
+              gender,
+              currentSalary,
+              maritalStatusId,
+              dateOfBirth,
+              phoneNumber,
+              highestDegree,
+              country,
+              city,
+              district,
+            });
+            const workingPreferences = await WorkingPreferences.create({
+              companyIndustries,
+            });
+            const createdUser = await User.create({
+              email,
+              password: hash,
+              workingPreferences,
+              userInfoId: createUserInfo._id,
+              isVerified: true,
+              verificationToken: '',
+              seekJobMode: false,
+            });
+            skillObjects?.map(async (item) => {
+              const createSkills = await User.updateOne(
+                { _id: createdUser._id },
+                { $push: { skills: item } }
+              )
+            })
+            const verificationLink = `${process.env.APP_URL}/auth/verify/${verificationToken}`;
+            await sendVerificationEmail(email, verificationLink);
+          } catch (e) {
+            console.log(e);
+          }
+        })
+      } catch (error) {
+        console.log(error)
+      }
       fs.unlinkSync(path);
       resolve({
         status: "OK",

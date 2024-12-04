@@ -11,14 +11,14 @@ const searchJobs = async (req, res) => {
       minSalary,
       maxSalary,
     } = req.query;
-    console.log(req.query);
+    // console.log(req.query);
     if (!keyword || keyword.trim() === "") {
       return res.status(400).json({
         status: "ERR",
         message: "Keyword is required",
       });
     }
-
+    
     const filters = {
       keyword: keyword.trim(),
       jobLevel: jobLevel ? jobLevel.trim() : null,
