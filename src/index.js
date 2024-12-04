@@ -12,6 +12,8 @@ const path = require("path");
 const session = require("express-session");
 const { OAuth2Client } = require("google-auth-library");
 const User = require("./models/UserModel");
+const UserInfo = require("./models/UserInfoModel");
+const WorkingPreferences = require("./models/WorkingPreferencesModel");
 const jwt = require("jsonwebtoken");
 
 dotenv.config();
@@ -57,7 +59,6 @@ app.use(
 routes(app);
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
 app.post("/google-login", async (req, res) => {
   try {
     const { token } = req.body;
@@ -71,12 +72,49 @@ app.post("/google-login", async (req, res) => {
     const { sub, email, name, picture } = payload;
 
     let user = await User.findOne({ googleId: sub });
+
     if (!user) {
+      // Tạo UserInfo
+      const userInfo = await UserInfo.create({
+        fullName: name || "Google User",
+        jobTitle: "Unknown",
+        phoneNumber: "123456789",
+        currentDegree: "Unknown",
+        currentIndustries: ["Unknown"],
+        currentJobFunction: "Unknown",
+        yearsExperience: 0,
+        currentSalary: 0,
+        highestDegree: "Unknown",
+        country: "Unknown",
+        city: "Unknown",
+        district: "Unknown",
+        address: "",
+        gender: 1,
+        maritalStatusId: 1,
+        dateOfBirth: "1970-01-01",
+      });
+
+      const workingPreferences = await WorkingPreferences.create({
+        locations: ["Unknown"],
+        jobFunction: "Unknown",
+        companyIndustries: ["Unknown"],
+        desiredJobLevel: "Entry",
+        salary: 0,
+        isRelocate: 1,
+        benefits: ["Unknown"],
+      });
+
       user = await User.create({
         googleId: sub,
         email,
+        userInfoId: userInfo._id,
+        workingPreferences: workingPreferences._id,
       });
     }
+
+    const isProfileComplete = Boolean(
+      user.userInfoId && user.workingPreferences
+    );
 
     const accessToken = jwt.sign(
       { userid: user._id, email },
@@ -94,7 +132,11 @@ app.post("/google-login", async (req, res) => {
       }
     );
 
-    res.json({ access_token: accessToken, refresh_token: refreshToken });
+    res.json({
+      access_token: accessToken,
+      refresh_token: refreshToken,
+      isProfileComplete: isProfileComplete,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Google login failed" });
