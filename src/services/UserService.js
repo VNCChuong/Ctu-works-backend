@@ -26,7 +26,7 @@ const Activity = mongoose.model("Activity", activitySchema);
 const Project = mongoose.model("Project", projectSchema);
 const WorkingHistory = mongoose.model("WorkingHistory", workingHistorySchema);
 const Education = mongoose.model("Education", educationSchema);
-
+const Apply = require("../models/ApplyModel");
 const createUser = (newUser) => {
   return new Promise(async (resolve, reject) => {
     const {
@@ -264,22 +264,26 @@ const deleteUser = (id) => {
     }
   });
 };
-
 const getAllUser = () => {
   return new Promise(async (resolve, reject) => {
     try {
       const allUser = await User.find().sort({ createdAt: -1, updatedAt: -1 });
-      console.log(allUser)
-      const data = await Promise.all(
-        allUser.map(async (item) => {
+
+      const usersWithData = await Promise.all(
+        allUser.map(async (user) => {
           try {
-            const userDetails = await getDetailsUser(item._id.toString());
-            return userDetails.data;
+            const userDetails = await getDetailsUser(user._id.toString());
+            const apply = await Apply.findOne({ userId: user._id })
+              .select("cvUrl")
+              .lean();
+
+            // Kết hợp userDetails với cvUrl
+            return {
+              ...userDetails.data, // Giữ lại tất cả dữ liệu từ userDetails
+              cvUrl: apply ? apply.cvUrl : null,
+            };
           } catch (e) {
-            console.error(
-              `Error getting job details for ${item.jobPostId}:`
-              
-            );
+            console.error(`Error getting details for user ${user._id}:`, e);
             return null;
           }
         })
@@ -288,7 +292,7 @@ const getAllUser = () => {
       resolve({
         status: "OK",
         message: "Success",
-        data: data,
+        data: usersWithData.filter((user) => user !== null), // Loại bỏ các phần tử null
       });
     } catch (e) {
       reject(e);
@@ -302,7 +306,7 @@ const getDetailsUser = (id) => {
       const user = await User.findOne({
         _id: id,
       });
-      console.log(user)
+      console.log(user);
       const userInfo = await UserInfo.findById({
         _id: user.userInfoId,
       });
@@ -387,7 +391,7 @@ const getDetailsUser = (id) => {
         avatar,
         workingPreferences,
         userInfo,
-        updatedAt
+        updatedAt,
       };
       if (user === null) {
         resolve({

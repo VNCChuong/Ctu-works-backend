@@ -9,6 +9,7 @@ const uploadPdfs = async (req, res) => {
         format: "pdf",
         use_filename: true,
         unique_filename: false,
+        flags: "attachment",
       })
     );
 
@@ -30,5 +31,4 @@ const uploadPdfs = async (req, res) => {
     });
   }
 };
-
 module.exports = { uploadPdfs };

@@ -145,6 +145,28 @@ const getJobIndustryCounts = () => {
   });
 };
 
+const getJobsByIndustry = (jobIndustry) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const jobs = await JobInfo.find({ jobIndustry });
+      if (jobs.length === 0) {
+        resolve({
+          status: "ERR",
+          message: "No jobs found for the specified industry",
+        });
+        return;
+      }
+      resolve({
+        status: "OK",
+        message: "Jobs fetched successfully",
+        data: jobs,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   createJobInfo,
   updateJobInfo,
@@ -152,4 +174,5 @@ module.exports = {
   getJobInfo,
   getRelatedJobs,
   getJobIndustryCounts,
+  getJobsByIndustry,
 };

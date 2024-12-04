@@ -120,6 +120,25 @@ const getJobIndustryCounts = async (req, res) => {
   }
 };
 
+const getJobsByIndustry = async (req, res) => {
+  try {
+    const { industry } = req.params;
+    if (!industry) {
+      return res.status(400).json({
+        status: "ERR",
+        message: "Industry is required",
+      });
+    }
+
+    const response = await JobInfoService.getJobsByIndustry(industry);
+    return res.status(200).json(response);
+  } catch (e) {
+    return res.status(500).json({
+      message: e.message,
+    });
+  }
+};
+
 module.exports = {
   createJobInfo,
   updateJobInfo,
@@ -127,4 +146,5 @@ module.exports = {
   getJobInfo,
   getRelatedJobs,
   getJobIndustryCounts,
+  getJobsByIndustry,
 };

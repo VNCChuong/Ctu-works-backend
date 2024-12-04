@@ -13,4 +13,7 @@ router.post("/get-job-info/:id", JobInfo.getJobInfo);
 router.get("/related-jobs/:id", JobInfo.getRelatedJobs);
 
 router.get("/job-industry-counts", JobInfo.getJobIndustryCounts);
+
+router.get("/jobs/industry/:industry", JobInfo.getJobsByIndustry);
+
 module.exports = router;
